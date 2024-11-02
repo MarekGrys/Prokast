@@ -21,8 +21,16 @@ namespace Prokast.Server.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Account_Log_In2>> GetAll() 
         {
-            var logins = _Log_InService.GetLogIns();
-            return logins;
+            try
+            {
+                var logins = _Log_InService.GetLogIns();
+                return logins;
+            }
+            catch (Exception ex) 
+            {
+                return NotFound(ex.Message);
+            }
+            
         }
     }
 }
