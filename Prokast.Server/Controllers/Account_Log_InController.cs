@@ -9,13 +9,26 @@ using Microsoft.EntityFrameworkCore;
 namespace Prokast.Server.Controllers
 {
     [Route("api/login")]
-    public class Account_Log_InController: ControllerBase
+    public class Account_Log_InController : ControllerBase
     {
         private readonly ILogInService _Log_InService;
+
+
 
         public Account_Log_InController(ILogInService logInService)
         {
             _Log_InService = logInService;
+        }
+        [HttpGet]
+        public ActionResult<AccountLogIn> CompareAccount([FromBody]string login, [FromBody]string password)
+        {
+            try 
+            { 
+                _Log_InService.CompareAccount(login, password);
+                return Ok();
+            }catch (Exception ex) { 
+                return NotFound(ex.Message);
+            }
         }
 
         [HttpGet]
