@@ -6,7 +6,7 @@ namespace Prokast.Server.Services
 {
     public interface ILogInService
     {
-        List<Account_Log_In2> GetLogIns();
+        List<AccountLogIn> GetLogIns();
     }
 
     public class LogInService: ILogInService
@@ -20,9 +20,9 @@ namespace Prokast.Server.Services
             _mapper = mapper;
         }
 
-        public List<Account_Log_In2> GetLogIns() 
+        public List<AccountLogIn> GetLogIns() 
         {
-            var logins = _dbContext.Account_Log_In2.ToList();
+            var logins = _dbContext.AccountLogIn.ToList();
             return logins;
         }
     }

@@ -19,7 +19,7 @@ namespace Prokast.Server.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Account_Log_In2>> GetAll() 
+        public ActionResult<IEnumerable<AccountLogIn>> GetAll() 
         {
             try
             {
