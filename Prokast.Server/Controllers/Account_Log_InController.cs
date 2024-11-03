@@ -1,9 +1,9 @@
-﻿using AutoMapper;
+﻿//using AutoMapper;
 using Prokast.Server.Entities;
-//using Prokast.Server.Models;
+using Prokast.Server.Models;
 using Prokast.Server.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+//using Microsoft.EntityFrameworkCore;
 
 
 namespace Prokast.Server.Controllers
@@ -19,12 +19,12 @@ namespace Prokast.Server.Controllers
         {
             _Log_InService = logInService;
         }
-        [HttpGet]
-        public ActionResult<AccountLogIn> CompareAccount([FromBody]string login, [FromBody]string password)
+        [HttpPost]
+        public ActionResult<AccountLogIn> Log_In([FromBody] LoginRequest loginRequest) 
         {
             try 
             { 
-                _Log_InService.CompareAccount(login, password);
+                _Log_InService.Log_In(loginRequest);
                 return Ok();
             }catch (Exception ex) { 
                 return NotFound(ex.Message);

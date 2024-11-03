@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Prokast.Server.Entities;
+using Prokast.Server.Models;
 using System.Text;
 using System;
 using System.Security.Cryptography;
@@ -15,7 +16,7 @@ namespace Prokast.Server.Services
     {
         List<AccountLogIn> GetLogIns();
         // string getHashed (string text);
-        void CompareAccount([FromBody] string login,[FromBody] string password);
+        void Log_In([FromBody] LoginRequest loginRequest);
     }
     
 
@@ -52,11 +53,11 @@ namespace Prokast.Server.Services
             var logins = _dbContext.AccountLogIn.ToList();
             return logins;
         }
-        public void CompareAccount([FromBody]string login, [FromBody]string password) {
+        public void Log_In([FromBody] LoginRequest loginRequest) {
 
-            var account = _dbContext.AccountLogIn.FirstOrDefault(x => x.Account_Login == login);
+            var account = _dbContext.AccountLogIn.FirstOrDefault(x => x.Account_Login == loginRequest.Login);
             if (account == null) { throw new Exception("Nie ma takiego konta"); }
-            if (account.Account_Password != getHashed(password)) { throw new Exception("Niepoprawne hasło"); }
+            if (account.Account_Password != getHashed(loginRequest.Password)) { throw new Exception("Niepoprawne hasło"); }
         }
     }
 }

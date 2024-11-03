@@ -1,6 +1,32 @@
 [
   {
     "ContainingType": "Prokast.Server.Controllers.Account_Log_InController",
+    "Method": "Log_In",
+    "RelativePath": "api/login",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "loginRequest",
+        "Type": "Prokast.Server.Models.LoginRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "Prokast.Server.Entities.AccountLogIn",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "Prokast.Server.Controllers.Account_Log_InController",
     "Method": "GetAll",
     "RelativePath": "api/login",
     "HttpMethod": "GET",
