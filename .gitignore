@@ -473,3 +473,5 @@ _[Ss]cripts
 *.ncrunchsolution
 *.dot[Cc]over
 Prokast.Server/appsettings.json
+Prokast.Server/bin/
+Prokast.Server/obj/
