@@ -12,20 +12,19 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Prokast.Server.Services
 {
-    public interface ILogInService
-    {
-        List<AccountLogIn> GetLogIns();
-        // string getHashed (string text);
-        void Log_In([FromBody] LoginRequest loginRequest);
-    }
-    
 
-    public class LogInService: ILogInService
+
+    public class LogInService :  ILogInService
     {
         private readonly ProkastServerDbContext _dbContext;
         private readonly IMapper _mapper;
-       
 
+
+        public LogInService(ProkastServerDbContext dbContext, IMapper mapper)
+        {
+            _dbContext = dbContext;
+            _mapper = mapper;
+        }
 
         public static string getHashed(string text)
         {
@@ -39,21 +38,14 @@ namespace Prokast.Server.Services
             }
             return hashString;
         }
-    
 
-
-    public LogInService(ProkastServerDbContext dbContext, IMapper mapper) 
-        {
-            _dbContext = dbContext;
-            _mapper = mapper;
-        }
-
-        public List<AccountLogIn> GetLogIns() 
+        public List<AccountLogIn> GetLogIns()
         {
             var logins = _dbContext.AccountLogIn.ToList();
             return logins;
         }
-        public void Log_In([FromBody] LoginRequest loginRequest) {
+        public void Log_In([FromBody] LoginRequest loginRequest)
+        {
 
             var account = _dbContext.AccountLogIn.FirstOrDefault(x => x.Account_Login == loginRequest.Login);
             if (account == null) { throw new Exception("Nie ma takiego konta"); }
