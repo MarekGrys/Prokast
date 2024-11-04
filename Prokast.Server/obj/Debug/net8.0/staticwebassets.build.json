@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "jT7XNGgslL8kV09TqiZ0/EPG1p+rikMIC8JLC1XEA58=",
+  "Source": "Prokast.Server",
+  "BasePath": "_content/Prokast.Server",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
