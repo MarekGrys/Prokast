@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Prokast.Server;
 using Prokast.Server.Entities;
 using Prokast.Server.Services;
@@ -12,7 +13,11 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<ProkastServerDbContext>();
+builder.Services.AddDbContext<ProkastServerDbContext>(opt=>
+{
+    opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+}
+);
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 builder.Services.AddScoped<ILogInService, LogInService>();
 
