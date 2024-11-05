@@ -472,6 +472,6 @@ _[Ss]cripts
 *.nupkg
 *.ncrunchsolution
 *.dot[Cc]over
-Prokast.Server/appsettings.json
-Prokast.Server/bin/
-Prokast.Server/obj/
+appsettings.json
+bin/
+obj/
