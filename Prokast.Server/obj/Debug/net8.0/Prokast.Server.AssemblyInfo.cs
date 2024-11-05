@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Prokast.Server")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e2235804fa2f8cd5391f87e0124bc36c87bf3a22")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c4065f6653057d083f37d9cba2bb54bfac58e7e7")]
 [assembly: System.Reflection.AssemblyProductAttribute("Prokast.Server")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Prokast.Server")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
