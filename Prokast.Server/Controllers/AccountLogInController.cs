@@ -9,18 +9,18 @@ using Microsoft.AspNetCore.Mvc;
 namespace Prokast.Server.Controllers
 {
     [Route("api/login")]
-    public class AccountLogInController : ControllerBase
+    public class AccountController : ControllerBase
     {
         private readonly ILogInService _LogInService;
 
 
 
-        public AccountLogInController(ILogInService logInService)
+        public AccountController(ILogInService logInService)
         {
             _LogInService = logInService;
         }
         [HttpPost]
-        public ActionResult<AccountLogIn> Log_In([FromBody] LoginRequest loginRequest) 
+        public ActionResult<Account> Log_In([FromBody] LoginRequest loginRequest) 
         {
             try 
             { 
@@ -32,7 +32,7 @@ namespace Prokast.Server.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<AccountLogIn>> GetAll() 
+        public ActionResult<IEnumerable<Account>> GetAll() 
         {
             try
             {

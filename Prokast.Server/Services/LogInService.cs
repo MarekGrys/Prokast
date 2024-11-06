@@ -39,15 +39,15 @@ namespace Prokast.Server.Services
             return hashString;
         }
 
-        public List<AccountLogIn> GetLogIns()
+        public List<Account> GetLogIns()
         {
-            var logins = _dbContext.AccountLogIn.ToList();
+            var logins = _dbContext.Account.ToList();
             return logins;
         }
         public void Log_In([FromBody] LoginRequest loginRequest)
         {
 
-            var account = _dbContext.AccountLogIn.FirstOrDefault(x => x.Account_Login == loginRequest.Login);
+            var account = _dbContext.Account.FirstOrDefault(x => x.Account_Login == loginRequest.Login);
             if (account == null) { throw new Exception("Nie ma takiego konta"); }
             if (account.Account_Password != getHashed(loginRequest.Password)) { throw new Exception("Niepoprawne hasło"); }
         }
