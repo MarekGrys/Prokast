@@ -20,7 +20,7 @@ namespace Prokast.Server.Controllers
             _LogInService = logInService;
         }
         [HttpPost]
-        public ActionResult<Account> Log_In([FromBody] LoginRequest loginRequest) 
+        public ActionResult<AccountLogIn> Log_In([FromBody] LoginRequest loginRequest) 
         {
             try 
             { 
@@ -32,7 +32,7 @@ namespace Prokast.Server.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Account>> GetAll() 
+        public ActionResult<IEnumerable<AccountLogIn>> GetAll() 
         {
             try
             {

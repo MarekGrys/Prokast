@@ -7,7 +7,7 @@ namespace Prokast.Server.Entities
     {
         public ProkastServerDbContext(DbContextOptions<ProkastServerDbContext> options) : base(options) { }
         
-        public DbSet<Account> Account { get; set; }
+        public DbSet<AccountLogIn> AccountLogIn { get; set; }
  
     }
 }
