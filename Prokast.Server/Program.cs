@@ -6,6 +6,7 @@ using Prokast.Server.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
 // Add services to the container.
 
@@ -21,6 +22,15 @@ builder.Services.AddDbContext<ProkastServerDbContext>(opt=>
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 builder.Services.AddScoped<ILogInService, LogInService>();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+                      builder =>
+                      {
+                          builder.WithOrigins("http://localhost:5500",
+                                              "http://localhost:3001");
+                      });
+});
 
 var app = builder.Build();
 
@@ -38,5 +48,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseCors(MyAllowSpecificOrigins);
 
 app.Run();
