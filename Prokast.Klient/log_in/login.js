@@ -4,7 +4,6 @@ async function login() {
     const login = document.getElementById('username').value;
     const password = document.getElementById('password').value;
 
-    // Sprawdzenie, czy pola nie są puste
     if (!login || !password) {
         alert('Proszę wypełnić wszystkie pola.');
         return;
@@ -16,30 +15,31 @@ async function login() {
             headers: {
                 'Content-Type': 'application/json'
             },
-            credentials: 'include', 
             body: JSON.stringify({ login, password })
         });
 
-        console.log("Otrzymano odpowiedź z API"); // Sprawdzenie, czy odpowiedź została odebrana
+        console.log("Otrzymano odpowiedź z API"); 
 
         // Sprawdzenie odpowiedzi z serwera
         if (response.ok) {
-            const data = await response.json();
-            console.log("Zalogowano pomyślnie", data); // Potwierdzenie poprawnego logowania
-            alert('Zalogowano pomyślnie');
+            
+            const text = await response.text(); 
+            const data = text ? JSON.parse(text) : {}; 
+            
+            window.location.href = '/Prokast.Klient/main_page/main.html';
+            console.log("Zalogowano pomyślnie", data); 
             localStorage.setItem('authToken', data.token);
+            alert('Zalogowano pomyślnie');
 
             
-            window.location.href = '/strona-glowna.html';
         } 
-        
         else {
-            console.log("Nieudane logowanie, status:", response.status); //  Błędu logowania
+            console.log("Nieudane logowanie, status:", response.status);
             alert('Błąd logowania! Sprawdź dane logowania.');
         }
     } 
     catch (error) {
         console.error('Wystąpił błąd:', error); 
-        alert('Nie umiesz to nie rób');
+        alert('Wystąpił błąd: ' + error.message);
     }
 }
