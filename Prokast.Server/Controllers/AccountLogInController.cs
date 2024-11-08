@@ -32,11 +32,11 @@ namespace Prokast.Server.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<AccountLogIn>> GetAll() 
+        public ActionResult<Response> GetAll([FromQuery] int clientID) 
         {
             try
             {
-                var logins = _LogInService.GetLogIns();
+                var logins = _LogInService.GetLogIns(clientID);
                 return logins;
             }
             catch (Exception ex) 

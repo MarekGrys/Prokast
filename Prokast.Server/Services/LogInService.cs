@@ -18,7 +18,7 @@ namespace Prokast.Server.Services
     {
         private readonly ProkastServerDbContext _dbContext;
         private readonly IMapper _mapper;
-
+        Random random = new Random();
 
         public LogInService(ProkastServerDbContext dbContext, IMapper mapper)
         {
@@ -39,17 +39,22 @@ namespace Prokast.Server.Services
             return hashString;
         }
 
-        public List<AccountLogIn> GetLogIns()
+        public Response GetLogIns(int clientID)
         {
             var logins = _dbContext.AccountLogIn.ToList();
-            return logins;
+            var response = new Response() {ID = random.Next(1,100000),ClientID = clientID, Model = logins};
+            return response;
         }
-        public void Log_In([FromBody] LoginRequest loginRequest)
+        public Response Log_In([FromBody] LoginRequest loginRequest)
         {
 
             var account = _dbContext.AccountLogIn.FirstOrDefault(x => x.Login == loginRequest.Login);
-            if (account == null) { throw new Exception("Nie ma takiego konta"); }
+            if (account == null) { throw new Exception("Nie ma takiego konta!"); }
+            var client = _dbContext.Clients.FirstOrDefault(x => x.AccountID == account.ID);
+            if (client == null) { throw new Exception("Nie ma takiego klienta!"); }
             if (account.Password != getHashed(loginRequest.Password)) { throw new Exception("Niepoprawne hasło"); }
+            var response = new Response() {ID = random.Next(1,100000), ClientID = client.ID};
+            return response;
         }
     }
 }
