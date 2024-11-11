@@ -2,7 +2,7 @@
 
 namespace Prokast.Server.Models
 {
-    public class ClientDto
+    public class Clients
     {
         [Required]
         public int AccountID { get; set; }
