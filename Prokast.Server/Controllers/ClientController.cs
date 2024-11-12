@@ -27,7 +27,7 @@ namespace RRegistration.Controllers
             try 
             {
                 _clientService.RegisterClient(registration);
-                return Ok();
+                return Created();
             } catch (Exception ex) 
             {
                 return BadRequest(ex.Message);
