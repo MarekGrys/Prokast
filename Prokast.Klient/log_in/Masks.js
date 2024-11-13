@@ -11,7 +11,12 @@ function initializeMasks() {
         IMask(postalCodeElement, { mask: '00-000' });
     }
 
+    const NIPElement = document.getElementById('NIP');
+    if (NIPElement) {
+        IMask(NIPElement, { mask: 'PL-00-000000-0' });
+    }
+    
 }
 
-
 document.addEventListener('DOMContentLoaded', initializeMasks);
+

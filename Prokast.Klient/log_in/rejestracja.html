@@ -14,55 +14,71 @@
     <div class="ramka">
         <form action="">
             <h1>Rejestracja</h1>
-
+            
+            <!--Login-->
             <div class="input-box">
                 <input type="text" maxlength="50" id="Login" placeholder="Login" required>
             </div>
 
+            <!--Password-->
             <div class="input-box">
                 <input type="password" minlength="8" maxlength="20" id="Password" placeholder="Hasło" required>
             </div>
+
+            <!--Password2-->
             <div class="input-box">
-                <input type="password" minlength="8" maxlength="20" id="Password2" placeholder="Powtórz hasło"
-                       required oninput="this.setCustomValidity(this.value !== Password.value ? 'Hasła muszą być identyczne!' : '')">
+                <input type="password" minlength="8" maxlength="20" id="Password2" placeholder="Powtórz hasło" required >
             </div>
 
+            <!--First Name-->
             <div class="input-box">
                 <input type="text" maxlength="50" id="First_Name" placeholder="Imię" required>
             </div>
+
+            <!--Last Name-->
             <div class="input-box">
                 <input type="text" maxlength="50" id="Last_Name" placeholder="Nazwisko" required>
             </div>
 
+
+            <!--Business Name-->
             <div class="input-box">
                 <input type="text" maxlength="100" id="Business_Name" placeholder="Nazwa Firmy" required>
             </div>
 
+            <!--Nip-->
             <div class="input-box">
-                <input type="text" id="NIP" data-val-regex-patern="^[A-Z]{2}-\d{3}-\d{6}-\d$" placeholder="NIP" required>
+                <input type="text" id="NIP"  placeholder="NIP" required>
             </div>
             
 
+            <!--Addresss-->
             <div class="input-box">
                 <input type="text" maxlength="100" id="Address" placeholder="Adres" required>
             </div>
 
+            <!--NIP-->
             <div class="input-box">
                 <input type="tel" pattern="\d*" inputmode="numeric"  id="Phone_Number" placeholder="Numer telefonu" required>
                 
             </div>
 
+            <!--Postal Code-->
             <div class="input-box">
                 <input type="tel" pattern="\d{5}" maxlength="6" inputmode="numeric" id="Postal_Code"  placeholder="Kod pocztowy" required>
             </div>
 
+
+            <!--City-->
             <div class="input-box">
                 <input type="text" maxlength="50" id="City" placeholder="Miasto" required>
             </div>
 
+            <!--Country-->
             <div class="input-box">
                 <input type="text" maxlength="50" id="Country" placeholder="Państwo" required>
             </div>
+
 
             <button type="button" onclick="registration()" class="btn">Zarejestruj</button>
 
