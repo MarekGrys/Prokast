@@ -1,7 +1,7 @@
 'use client'
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useRouter } from 'next/router';
+//import { useRouter } from 'next/router';
 
 function LoginForm() {
     const [Login, setLogin] = useState<string>("");
@@ -9,13 +9,13 @@ function LoginForm() {
     const [isMounted, setIsMounted] = useState(false);
     
 
-    // Ensure the component is only using the router on the client side
+    
     useEffect(() => {
         setIsMounted(true);
     }, []);
 
     const handleLogin = async (e: React.FormEvent) => {
-        const router = useRouter();
+        //const router = useRouter();
         e.preventDefault();
         try {
             const response = await axios.post("/api/login", {
@@ -25,7 +25,7 @@ function LoginForm() {
             console.log(response.data);
 
             if (response.status === 200) {
-                router.replace("/");  // Replace '/dashboard' with the page you want to redirect to
+               // router.replace("/afterLoginPage");  
             }
         } catch (error) {
             console.error("Login failed:", error);

@@ -22,6 +22,11 @@ export async function POST(req: Request) {
       { headers: { 'Content-Type': 'application/json' } }
     );
     
+    // Log response details on success
+    console.log("Response received from external API:");
+    console.log("Status:", response.status);
+    console.log("Data:", response.data);
+
     // Return the response from the external API
     return NextResponse.json(response.data, { status: 200 });
   } catch (error: any) {
