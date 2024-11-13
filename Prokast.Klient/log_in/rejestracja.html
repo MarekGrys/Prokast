@@ -5,47 +5,81 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prokast</title>
     <link rel="stylesheet" href="style.css">
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' 
-    rel='stylesheet'>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/imask"></script>
+    
 </head>
 <body>
 
     <div class="ramka">
         <form action="">
             <h1>Rejestracja</h1>
-            
+
             <div class="input-box">
-                <input type ="text" maxlength="50" id="First_Name"  placeholder="Imię"
-                required>
+                <input type="text" maxlength="50" id="Login" placeholder="Login" required>
             </div>
 
             <div class="input-box">
-                <input type ="text" maxlength="50" id="First_Name"  placeholder="Imię"
-                required>
+                <input type="password" minlength="8" maxlength="20" id="Password" placeholder="Hasło" required>
             </div>
-            
             <div class="input-box">
-                <input type ="text" maxlength="50" id="Last_Name"  placeholder="Nazwisko"
-                required>
+                <input type="password" minlength="8" maxlength="20" id="Password2" placeholder="Powtórz hasło"
+                       required oninput="this.setCustomValidity(this.value !== Password.value ? 'Hasła muszą być identyczne!' : '')">
             </div>
 
             <div class="input-box">
-                <input type ="text" maxlength="100" id="Buisness_Name"  placeholder="Nazwa Firmy"
-                required>
+                <input type="text" maxlength="50" id="First_Name" placeholder="Imię" required>
             </div>
-          
-        
-           
-            <button type="submit" class="btn">Zarejestruj</button>
-           
+            <div class="input-box">
+                <input type="text" maxlength="50" id="Last_Name" placeholder="Nazwisko" required>
+            </div>
+
+            <div class="input-box">
+                <input type="text" maxlength="100" id="Business_Name" placeholder="Nazwa Firmy" required>
+            </div>
+
+            <div class="input-box">
+                <input type="text" id="NIP" data-val-regex-patern="^[A-Z]{2}-\d{3}-\d{6}-\d$" placeholder="NIP" required>
+            </div>
+            
+
+            <div class="input-box">
+                <input type="text" maxlength="100" id="Address" placeholder="Adres" required>
+            </div>
+
+            <div class="input-box">
+                <input type="tel" pattern="\d*" inputmode="numeric"  id="Phone_Number" placeholder="Numer telefonu" required>
+                
+            </div>
+
+            <div class="input-box">
+                <input type="tel" pattern="\d{5}" maxlength="6" inputmode="numeric" id="Postal_Code"  placeholder="Kod pocztowy" required>
+            </div>
+
+            <div class="input-box">
+                <input type="text" maxlength="50" id="City" placeholder="Miasto" required>
+            </div>
+
+            <div class="input-box">
+                <input type="text" maxlength="50" id="Country" placeholder="Państwo" required>
+            </div>
+
+            <button type="button" onclick="registration()" class="btn">Zarejestruj</button>
+
             <div class="register-link">
-                <p>Powrót do logowania <a 
-                    href="login.html">Logowanie</a></p>
+                <p>Powrót do logowania <a href="login.html">Logowanie</a></p>
             </div>
 
+            <script src="Masks.js"></script>
+           
+
             
+
         </form>
     </div>
-    
+
+
+    <!-- Skrypt rejestracji (zakładam, że plik registration.js istnieje) -->
+    <script src="registration.js"></script>
 </body>
 </html>
