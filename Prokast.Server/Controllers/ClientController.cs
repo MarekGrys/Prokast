@@ -1,16 +1,11 @@
-﻿
-
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-
 using Microsoft.AspNetCore.Mvc;
-
 using Prokast.Server.Models;
 using Prokast.Server.Services;
-namespace RRegistration.Controllers
+namespace Prokast.Server.Controllers
 {
     [Route("api/client")]
     public class ClientController : ControllerBase
