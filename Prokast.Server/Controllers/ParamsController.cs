@@ -3,6 +3,7 @@ using Prokast.Server.Entities;
 using Prokast.Server.Services;
 using Prokast.Server.Models;
 
+
 namespace Prokast.Server.Controllers
 {
     [Route("api/params")]
@@ -27,5 +28,51 @@ namespace Prokast.Server.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet]
+        public ActionResult<Response> GetAllParams([FromQuery] int clientID) 
+        {
+            try
+            {
+                var lista = _paramsService.GetAllParams(clientID);
+                if (lista.Model is string) return NotFound(lista);
+                return lista;
+            }
+            catch (Exception ex) 
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("{ID}")]
+        public ActionResult<Response> GetParamsByID([FromQuery] int clientID, [FromRoute] int ID)
+        {
+            try
+            {
+                var param = _paramsService.GetParamsByID(clientID, ID);
+                if (param.Model is string) return NotFound(param);
+                return param;
+            }catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("/name/{name}")]
+        public ActionResult<Response> GetParamsByName([FromQuery] int clientID, [FromRoute] string name)
+        {
+            try
+            {
+                var param = _paramsService.GetParamsByName(clientID, name);
+                if (param.Model is string) return NotFound(param);
+                return param;
+            }
+            catch(Exception ex) 
+            {
+                return BadRequest(ex.Message);
+            }
+            
+        }
+        
     }
 }
