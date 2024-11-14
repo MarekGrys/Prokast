@@ -44,6 +44,11 @@ namespace Prokast.Server.Services
         public Response RegisterClient([FromBody] Registration registration) 
         { 
             var reg = _mapper.Map<Registration>(registration);
+            if (reg == null)
+            {
+                var responseNull = new Response() { ID = random.Next(1, 100000), Model = "Błędne dane rejestracji" };
+                return responseNull;
+            }
             var account = new AccountLogIn
             {
                 Login = registration.Login,

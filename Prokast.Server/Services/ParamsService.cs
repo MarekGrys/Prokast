@@ -21,15 +21,22 @@ namespace Prokast.Server.Services
 
         public Response CreateCustomParam([FromBody] CustomParamsDto customParamsDto, int clientID ) 
         {
-            var param = _mapper.Map<CustomParamsDto>(customParamsDto);
             
+            var param = _mapper.Map<CustomParamsDto>(customParamsDto);
+            if (param == null)
+            {
+                var responseNull = new Response() { ID = random.Next(1, 100000), ClientID = clientID, Model = "Błędnie podane dane" };
+                return responseNull;
+            }
+
             var customParam = new CustomParams
             {
-                Name = param.Name,
+                Name = param.Name.ToString(),
                 Type = param.Type.ToString(),
                 Value = param.Value.ToString(),
                 ClientID = clientID
             };
+            
 
             _dbContext.CustomParams.Add(customParam);
             _dbContext.SaveChanges();

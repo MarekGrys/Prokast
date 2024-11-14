@@ -17,12 +17,12 @@ namespace Prokast.Server.Controllers
         }
 
         [HttpPost]
-        public ActionResult<CustomParams> CreateCustonParam([FromBody] CustomParamsDto customParamsDto, [FromQuery] int clientID)
+        public ActionResult<Response> CreateCustonParam([FromBody] CustomParamsDto customParamsDto, [FromQuery] int clientID)
         {
             try 
             {
-                _paramsService.CreateCustomParam(customParamsDto, clientID);
-                return Created();
+                var response = _paramsService.CreateCustomParam(customParamsDto, clientID);
+                return response;
             } catch (Exception ex) 
             {
                 return BadRequest(ex.Message);

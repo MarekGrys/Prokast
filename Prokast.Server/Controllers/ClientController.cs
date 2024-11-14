@@ -17,12 +17,12 @@ namespace Prokast.Server.Controllers
             _clientService = clientService;
         }
         [HttpPost]
-        public ActionResult<Clients> RegisterClient([FromBody] Registration registration)
+        public ActionResult<Response> RegisterClient([FromBody] Registration registration)
         {
             try 
             {
-                _clientService.RegisterClient(registration);
-                return Created();
+                var response = _clientService.RegisterClient(registration);
+                return response;
             } catch (Exception ex) 
             {
                 return BadRequest(ex.Message);
