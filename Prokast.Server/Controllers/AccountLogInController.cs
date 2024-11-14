@@ -20,12 +20,12 @@ namespace Prokast.Server.Controllers
             _LogInService = logInService;
         }
         [HttpPost]
-        public ActionResult<AccountLogIn> Log_In([FromBody] LoginRequest loginRequest) 
+        public ActionResult<Response> Log_In([FromBody] LoginRequest loginRequest) 
         {
             try 
             { 
-                _LogInService.Log_In(loginRequest);
-                return Ok();
+                var response = _LogInService.Log_In(loginRequest);
+                return response;
             }catch (Exception ex) { 
                 return NotFound(ex.Message);
             }
