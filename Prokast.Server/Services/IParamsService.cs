@@ -10,5 +10,7 @@ namespace Prokast.Server.Services
         Response GetAllParams(int clientID);
         Response GetParamsByID(int clientID, int ID);
         Response GetParamsByName(int clientID, string name);
+        Response EditParams(int clientID, int ID, CustomParamsDto data);
+        Response DeleteParams(int clientID, int ID);
     }
 }

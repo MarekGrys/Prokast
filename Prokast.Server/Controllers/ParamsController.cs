@@ -82,5 +82,51 @@ namespace Prokast.Server.Controllers
         }
         #endregion
 
+
+
+
+
+        #region GetParamsByID
+        [HttpPut("{ID}")]
+        public ActionResult<Response> EditParams([FromQuery] int clientID, [FromRoute] int ID, [FromBody] CustomParamsDto data)
+        {
+            if (!ModelState.IsValid) 
+            {
+                return BadRequest("Błędne dane");
+            }
+            try
+            {
+                var param = _paramsService.EditParams(clientID, ID, data);
+                
+                if (param==null) return NotFound(param);
+                return param;
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        #endregion
+        
+        [HttpDelete("{ID}")]
+        public ActionResult<Response> DeleteParams([FromQuery] int clientID, [FromRoute] int ID)
+        {
+            
+            try
+            {
+                var param = _paramsService.DeleteParams(clientID, ID);
+
+                if (param == null) return NotFound(param);
+                return param;
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+
+
     }
 }
