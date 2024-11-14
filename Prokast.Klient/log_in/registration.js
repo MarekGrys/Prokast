@@ -1,27 +1,30 @@
 async function registration() {
     const Login = document.getElementById("Login").value;
-    const FirstName = document.getElementById('First_Name').value;
-    const lastName = document.getElementById('Last_Name').value;
-    const businessName = document.getElementById('Buisness_Name').value;
-    const nip = document.getElementById('NIP').value;
-    const address = document.getElementById('Address').value;
-    const phoneNumber = document.getElementById('Phone_Number').value;
-    const postalCode = document.getElementById('Postal_Code').value;
-    const city = document.getElementById('City').value;
-    const country = document.getElementById('Country').value;
+    const Password = document.getElementById("Password").value;
+    const FirstName = document.getElementById('FirstName').value;
+    const LastName = document.getElementById('LastName').value;
+    const BusinessName = document.getElementById('BusinessName').value;
+    const NIP = document.getElementById('NIP').value;
+    const Address = document.getElementById('Address').value;
+    const PhoneNumber = document.getElementById('PhoneNumber').value;
+    const PostalCode = document.getElementById('PostalCode').value;
+    const City = document.getElementById('City').value;
+    const Country = document.getElementById('Country').value;
+    
 
 
     const userData = {
         login: Login,
+        password: Password,
         firstName: FirstName,
-        lastName: lastName,
-        businessName: businessName,
-        nip: nip,
-        address: address,
-        phoneNumber: phoneNumber,
-        postalCode: postalCode,
-        city: city,
-        country: country
+        lastName: LastName,
+        businessName: BusinessName,
+        nip: NIP,
+        address: Address,
+        phoneNumber: PhoneNumber,
+        postalCode: PostalCode,
+        city: City,
+        country: Country
     };
 
     try {

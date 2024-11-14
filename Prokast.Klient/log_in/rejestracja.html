@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prokast</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="registration.css">
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
     <script src="https://unpkg.com/imask"></script>
     
@@ -17,7 +17,7 @@
             
             <!--Login-->
             <div class="input-box">
-                <input type="text" maxlength="50" id="Login" placeholder="Login" required>
+                <input type="email" maxlength="50" id="Login" placeholder="Login" required>
             </div>
 
             <!--Password-->
@@ -28,22 +28,23 @@
             <!--Password2-->
             <div class="input-box">
                 <input type="password" minlength="8" maxlength="20" id="Password2" placeholder="Powtórz hasło" required >
+                <span id="passwordMessage" class="message"></span>
             </div>
 
             <!--First Name-->
             <div class="input-box">
-                <input type="text" maxlength="50" id="First_Name" placeholder="Imię" required>
+                <input type="text" maxlength="50" id="FirstName" placeholder="Imię" required>
             </div>
 
             <!--Last Name-->
             <div class="input-box">
-                <input type="text" maxlength="50" id="Last_Name" placeholder="Nazwisko" required>
+                <input type="text" maxlength="50" id="LastName" placeholder="Nazwisko" required>
             </div>
 
 
             <!--Business Name-->
             <div class="input-box">
-                <input type="text" maxlength="100" id="Business_Name" placeholder="Nazwa Firmy" required>
+                <input type="text" maxlength="100" id="BusinessName" placeholder="Nazwa Firmy" required>
             </div>
 
             <!--Nip-->
@@ -59,13 +60,13 @@
 
             <!--NIP-->
             <div class="input-box">
-                <input type="tel" pattern="\d*" inputmode="numeric"  id="Phone_Number" placeholder="Numer telefonu" required>
+                <input type="tel" pattern="\d*" inputmode="numeric"  id="PhoneNumber" placeholder="Numer telefonu" required>
                 
             </div>
 
             <!--Postal Code-->
             <div class="input-box">
-                <input type="tel" pattern="\d{5}" maxlength="6" inputmode="numeric" id="Postal_Code"  placeholder="Kod pocztowy" required>
+                <input type="tel" pattern="\d{5}" maxlength="6" inputmode="numeric" id="PostalCode"  placeholder="Kod pocztowy" required>
             </div>
 
 
@@ -80,21 +81,20 @@
             </div>
 
 
-            <button type="button" onclick="registration()" class="btn">Zarejestruj</button>
+            <button type="button" onclick="validateAndRegister()" class="btn">Zarejestruj</button>
 
             <div class="register-link">
                 <p>Powrót do logowania <a href="login.html">Logowanie</a></p>
             </div>
 
-            <script src="Masks.js"></script>
-           
-
             
-
+           
         </form>
     </div>
 
-
+    <script src="Masks.js"></script>
+    <script src="checkpsw.js"></script> 
     <script src="registration.js"></script>
+    
 </body>
 </html>
