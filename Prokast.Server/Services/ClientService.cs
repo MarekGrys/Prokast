@@ -12,6 +12,7 @@ using System.Linq;
 
 namespace Prokast.Server.Services
 {
+    
     public class ClientService: IClientService
     {
         private readonly ProkastServerDbContext _dbContext;
@@ -37,10 +38,7 @@ namespace Prokast.Server.Services
             return hashString;
         }
 
-
-
-
-
+        #region RegisterClient
         public Response RegisterClient([FromBody] Registration registration) 
         { 
             var reg = _mapper.Map<Registration>(registration);
@@ -80,6 +78,7 @@ namespace Prokast.Server.Services
             return response;
 
         }
+        #endregion
 
     }
 }

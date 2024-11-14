@@ -39,12 +39,16 @@ namespace Prokast.Server.Services
             return hashString;
         }
 
+        #region GetAll
         public Response GetLogIns(int clientID)
         {
             var logins = _dbContext.AccountLogIn.ToList();
             var response = new Response() {ID = random.Next(1,100000),ClientID = clientID, Model = logins};
             return response;
         }
+        #endregion
+
+        #region LogIn
         public Response Log_In([FromBody] LoginRequest loginRequest)
         {
 
@@ -56,5 +60,6 @@ namespace Prokast.Server.Services
             var response = new Response() {ID = random.Next(1,100000), ClientID = client.ID, Model = loginRequest};
             return response;
         }
+        #endregion
     }
 }

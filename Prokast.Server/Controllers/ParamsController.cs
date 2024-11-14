@@ -16,6 +16,7 @@ namespace Prokast.Server.Controllers
             _paramsService = paramsService;
         }
 
+        #region CreateCustomParam
         [HttpPost]
         public ActionResult<Response> CreateCustonParam([FromBody] CustomParamsDto customParamsDto, [FromQuery] int clientID)
         {
@@ -28,7 +29,9 @@ namespace Prokast.Server.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        #endregion
 
+        #region GetAllParams
         [HttpGet]
         public ActionResult<Response> GetAllParams([FromQuery] int clientID) 
         {
@@ -43,7 +46,9 @@ namespace Prokast.Server.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        #endregion
 
+        #region GetParamsByID
         [HttpGet("{ID}")]
         public ActionResult<Response> GetParamsByID([FromQuery] int clientID, [FromRoute] int ID)
         {
@@ -57,7 +62,9 @@ namespace Prokast.Server.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        #endregion
 
+        #region getParamsByName
         [HttpGet("/name/{name}")]
         public ActionResult<Response> GetParamsByName([FromQuery] int clientID, [FromRoute] string name)
         {
@@ -73,6 +80,7 @@ namespace Prokast.Server.Controllers
             }
             
         }
-        
+        #endregion
+
     }
 }

@@ -16,6 +16,8 @@ namespace Prokast.Server.Controllers
         {
             _clientService = clientService;
         }
+
+        #region RegisterClient
         [HttpPost]
         public ActionResult<Response> RegisterClient([FromBody] Registration registration)
         {
@@ -28,5 +30,6 @@ namespace Prokast.Server.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        #endregion
     }
 }

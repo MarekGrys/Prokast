@@ -19,6 +19,7 @@ namespace Prokast.Server.Services
             _mapper = mapper;
         }
 
+        #region CreateCustonParam
         public Response CreateCustomParam([FromBody] CustomParamsDto customParamsDto, int clientID ) 
         {
             
@@ -44,7 +45,9 @@ namespace Prokast.Server.Services
             var response = new Response() { ID = random.Next(1,100000), ClientID = clientID, Model = param };
             return response;
         }
+        #endregion
 
+        #region GetAllParams
         public Response GetAllParams(int clientID)
         {
             var paramList = _dbContext.CustomParams.Where(x => x.ClientID == clientID).ToList();
@@ -56,7 +59,9 @@ namespace Prokast.Server.Services
             }
             return response;
         }
+        #endregion
 
+        #region GetParamsByID
         public Response GetParamsByID(int clientID, int ID)
         {
             var param = _dbContext.CustomParams.Where(x => x.ClientID == clientID && x.ID == ID);
@@ -69,7 +74,9 @@ namespace Prokast.Server.Services
             return response;
 
         }
+        #endregion
 
+        #region GetParamsByName
         public Response GetParamsByName(int clientID, string name) 
         {
             var param = _dbContext.CustomParams.Where(x => x.ClientID == clientID && x.Name == name).ToList();
@@ -81,6 +88,6 @@ namespace Prokast.Server.Services
             }
             return response;
         }
-
+        #endregion
     }
 }

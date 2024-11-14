@@ -19,6 +19,8 @@ namespace Prokast.Server.Controllers
         {
             _LogInService = logInService;
         }
+
+        #region LogIn
         [HttpPost]
         public ActionResult<Response> Log_In([FromBody] LoginRequest loginRequest) 
         {
@@ -30,7 +32,9 @@ namespace Prokast.Server.Controllers
                 return NotFound(ex.Message);
             }
         }
+        #endregion
 
+        #region GetAll
         [HttpGet]
         public ActionResult<Response> GetAll([FromQuery] int clientID) 
         {
@@ -44,5 +48,6 @@ namespace Prokast.Server.Controllers
                 return NotFound(ex.Message);
             }   
         }
+        #endregion
     }
 }
