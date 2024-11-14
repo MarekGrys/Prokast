@@ -57,7 +57,7 @@ namespace Prokast.Server.Services
             var client = _dbContext.Clients.FirstOrDefault(x => x.AccountID == account.ID);
             if (client == null) { throw new Exception("Nie ma takiego klienta!"); }
             if (account.Password != getHashed(loginRequest.Password)) { throw new Exception("Niepoprawne hasło"); }
-            var response = new Response() {ID = random.Next(1,100000), ClientID = client.ID, Model = loginRequest};
+            var response = new Response() {ID = random.Next(1,100000), ClientID = client.ID, Model = "Zalogowano"};
             return response;
         }
         #endregion
