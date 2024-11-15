@@ -66,7 +66,7 @@ namespace Prokast.Server.Controllers
         #endregion
 
         #region getParamsByName
-        [HttpGet("/name/{name}")]
+        [HttpGet("name/{name}")]
         public ActionResult<Response> GetParamsByName([FromQuery] int clientID, [FromRoute] string name)
         {
             try
