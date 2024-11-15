@@ -130,7 +130,7 @@ namespace Prokast.Server.Services
             _dbContext.Remove(findParam);
             _dbContext.SaveChanges();
 
-            var response = new Response() { ID = random.Next(1, 100000), ClientID = clientID, Model = findParam };
+            var response = new Response() { ID = random.Next(1, 100000), ClientID = clientID, Model = "Parametr został usumięty" };
 
             return response;
         }

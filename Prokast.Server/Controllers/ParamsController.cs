@@ -23,7 +23,7 @@ namespace Prokast.Server.Controllers
             try 
             {
                 var response = _paramsService.CreateCustomParam(customParamsDto, clientID);
-                return response;
+                return Ok(response);
             } catch (Exception ex) 
             {
                 return BadRequest(ex.Message);
@@ -37,9 +37,9 @@ namespace Prokast.Server.Controllers
         {
             try
             {
-                var lista = _paramsService.GetAllParams(clientID);
-                if (lista.Model is string) return NotFound(lista);
-                return lista;
+                var result = _paramsService.GetAllParams(clientID);
+                if (result.Model is string) return NotFound(result);
+                return result;
             }
             catch (Exception ex) 
             {
@@ -54,9 +54,9 @@ namespace Prokast.Server.Controllers
         {
             try
             {
-                var param = _paramsService.GetParamsByID(clientID, ID);
-                if (param.Model is string) return NotFound(param);
-                return param;
+                var result = _paramsService.GetParamsByID(clientID, ID);
+                if (result.Model is string) return NotFound(result);
+                return result;
             }catch (Exception ex)
             {
                 return BadRequest(ex.Message);
@@ -70,9 +70,9 @@ namespace Prokast.Server.Controllers
         {
             try
             {
-                var param = _paramsService.GetParamsByName(clientID, name);
-                if (param.Model is string) return NotFound(param);
-                return param;
+                var result = _paramsService.GetParamsByName(clientID, name);
+                if (result.Model is string) return NotFound(result);
+                return result;
             }
             catch(Exception ex) 
             {
@@ -82,11 +82,7 @@ namespace Prokast.Server.Controllers
         }
         #endregion
 
-
-
-
-
-        #region GetParamsByID
+        #region EditParams
         [HttpPut("{ID}")]
         public ActionResult<Response> EditParams([FromQuery] int clientID, [FromRoute] int ID, [FromBody] CustomParamsDto data)
         {
@@ -107,7 +103,8 @@ namespace Prokast.Server.Controllers
             }
         }
         #endregion
-        
+
+        #region DeleteParams
         [HttpDelete("{ID}")]
         public ActionResult<Response> DeleteParams([FromQuery] int clientID, [FromRoute] int ID)
         {
@@ -124,7 +121,7 @@ namespace Prokast.Server.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
+        #endregion
 
 
 
