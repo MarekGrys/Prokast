@@ -24,7 +24,8 @@ namespace Prokast.Server.Controllers
             try 
             {
                 var response = _clientService.RegisterClient(registration);
-                return response;
+                if (response.Model is string) return BadRequest(response);
+                return Created();
             } catch (Exception ex) 
             {
                 return BadRequest(ex.Message);

@@ -27,9 +27,9 @@ namespace Prokast.Server.Controllers
             try 
             { 
                 var response = _LogInService.Log_In(loginRequest);
-                return response;
+                return Ok(response);
             }catch (Exception ex) { 
-                return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
         #endregion

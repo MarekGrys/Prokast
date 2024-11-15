@@ -22,8 +22,9 @@ namespace Prokast.Server.Controllers
         {
             try 
             {
-                var response = _paramsService.CreateCustomParam(customParamsDto, clientID);
-                return Ok(response);
+                var result = _paramsService.CreateCustomParam(customParamsDto, clientID);
+                if (result.Model is string) return BadRequest(result);
+                return Created();
             } catch (Exception ex) 
             {
                 return BadRequest(ex.Message);
@@ -38,8 +39,8 @@ namespace Prokast.Server.Controllers
             try
             {
                 var result = _paramsService.GetAllParams(clientID);
-                if (result.Model is string) return NotFound(result);
-                return result;
+                if (result.Model is string) return BadRequest(result);
+                return Ok(result);
             }
             catch (Exception ex) 
             {
@@ -55,8 +56,8 @@ namespace Prokast.Server.Controllers
             try
             {
                 var result = _paramsService.GetParamsByID(clientID, ID);
-                if (result.Model is string) return NotFound(result);
-                return result;
+                if (result.Model is string) return BadRequest(result);
+                return Ok(result);
             }catch (Exception ex)
             {
                 return BadRequest(ex.Message);
@@ -71,8 +72,8 @@ namespace Prokast.Server.Controllers
             try
             {
                 var result = _paramsService.GetParamsByName(clientID, name);
-                if (result.Model is string) return NotFound(result);
-                return result;
+                if (result.Model is string) return BadRequest(result);
+                return Ok(result);
             }
             catch(Exception ex) 
             {
@@ -92,10 +93,11 @@ namespace Prokast.Server.Controllers
             }
             try
             {
-                var param = _paramsService.EditParams(clientID, ID, data);
-                
-                if (param==null) return NotFound(param);
-                return param;
+                var result = _paramsService.EditParams(clientID, ID, data);
+                if (result.Model is string) return BadRequest(result);
+
+                if (result==null) return NotFound(result);
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -111,10 +113,11 @@ namespace Prokast.Server.Controllers
             
             try
             {
-                var param = _paramsService.DeleteParams(clientID, ID);
+                var result = _paramsService.DeleteParams(clientID, ID);
+                if (result.Model is string) return BadRequest(result);
 
-                if (param == null) return NotFound(param);
-                return param;
+                if (result == null) return NotFound(result);
+                return Ok(result);
             }
             catch (Exception ex)
             {
