@@ -8,7 +8,8 @@ namespace Prokast.Server.Entities
         public ProkastServerDbContext(DbContextOptions<ProkastServerDbContext> options) : base(options) { }
         
         public DbSet<AccountLogIn> AccountLogIn { get; set; }
-        public DbSet<Client> Clients {  get; set; }
+        public DbSet<Client> Clients { get; set; }
+        public DbSet<CustomParams> CustomParams { get; set; }
  
     }
 }

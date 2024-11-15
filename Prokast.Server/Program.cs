@@ -29,6 +29,7 @@ builder.Services.AddDbContext<ProkastServerDbContext>(opt=>
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 builder.Services.AddScoped<ILogInService, LogInService>();
 builder.Services.AddScoped<IClientService, ClientService>();
+builder.Services.AddScoped<IParamsService, ParamsService>();
 
 var app = builder.Build();
 
