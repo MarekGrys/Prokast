@@ -12,6 +12,9 @@ export default {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        'loginImageColor' : '#a0c7d5',
+        'menuColor' : '#015183',
+        'backGroundColor': '#F0F6FD',
       },
     },
   },
