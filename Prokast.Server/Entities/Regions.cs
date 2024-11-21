@@ -8,5 +8,7 @@ namespace Prokast.Server.Entities
         public int ID { get; set; }
         [Required]
         public string Name { get; set; }
+        
+
     }
 }
