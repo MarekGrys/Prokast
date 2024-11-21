@@ -16,8 +16,6 @@ namespace Prokast.Server.Controllers
             _paramsService = paramsService;
         }
 
-       
-
         #region GetAllParams
         [HttpGet]
         public ActionResult<Response> GetAllParams()
@@ -25,7 +23,7 @@ namespace Prokast.Server.Controllers
             try
             {
                 var lista = _paramsService.GetAllParams();
-                if (lista.Model is string) return NotFound(lista);
+                if (lista.Model is string) return BadRequest(lista);
                 return lista;
             }
             catch (Exception ex)
@@ -42,7 +40,7 @@ namespace Prokast.Server.Controllers
             try
             {
                 var param = _paramsService.GetParamsByID(ID);
-                if (param.Model is string) return NotFound(param);
+                if (param.Model is string) return BadRequest(param);
                 return param;
             }
             catch (Exception ex)
@@ -59,7 +57,7 @@ namespace Prokast.Server.Controllers
             try
             {
                 var param = _paramsService.GetParamsByName(name);
-                if (param.Model is string) return NotFound(param);
+                if (param.Model is string) return BadRequest(param);
                 return param;
             }
             catch (Exception ex)
@@ -69,15 +67,5 @@ namespace Prokast.Server.Controllers
 
         }
         #endregion
-
-
-
-
-
-        
-
-
-
-
     }
 }
