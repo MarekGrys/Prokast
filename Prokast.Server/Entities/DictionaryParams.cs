@@ -15,5 +15,7 @@ namespace Prokast.Server.Entities
         public string Type { get; set; }
         [Required]
         public string Value { get; set; }  
+        [Required]
+        public int OptionID { get; set; }
     }
 }

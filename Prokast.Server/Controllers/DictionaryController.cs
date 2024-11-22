@@ -24,7 +24,7 @@ namespace Prokast.Server.Controllers
             {
                 var lista = _paramsService.GetAllParams();
                 if (lista.Model is string) return BadRequest(lista);
-                return lista;
+                return Ok(lista);
             }
             catch (Exception ex)
             {
@@ -41,7 +41,7 @@ namespace Prokast.Server.Controllers
             {
                 var param = _paramsService.GetParamsByID(ID);
                 if (param.Model is string) return BadRequest(param);
-                return param;
+                return Ok(param);
             }
             catch (Exception ex)
             {
@@ -58,7 +58,7 @@ namespace Prokast.Server.Controllers
             {
                 var param = _paramsService.GetParamsByName(name);
                 if (param.Model is string) return BadRequest(param);
-                return param;
+                return Ok(param);
             }
             catch (Exception ex)
             {
