@@ -19,8 +19,6 @@ namespace Prokast.Server.Services
             _mapper = mapper;
         }
 
-        
-
         #region GetAllParams
         public Response GetAllParams()
         {
@@ -66,8 +64,6 @@ namespace Prokast.Server.Services
         }
         #endregion
 
-       
-
-        
+  
     }
 }
