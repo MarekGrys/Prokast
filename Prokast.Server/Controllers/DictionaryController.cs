@@ -51,7 +51,7 @@ namespace Prokast.Server.Controllers
         #endregion
 
         #region getParamsByName
-        [HttpGet("/DictionaryName/{name}")]
+        [HttpGet("DictionaryName/{name}")]
         public ActionResult<Response> GetParamsByName( [FromRoute] string name)
         {
             try
@@ -65,6 +65,38 @@ namespace Prokast.Server.Controllers
                 return BadRequest(ex.Message);
             }
 
+        }
+        #endregion
+
+        #region ReturningValuesByName
+        [HttpGet("Region/{region}")]
+        public ActionResult<Response> GetParamsByRegion ( [FromRoute] int region)
+        {
+            try
+            {
+                var param = _paramsService.GetParamsByRegion(region);
+                if (param.Model is string) return BadRequest(param);
+                return Ok(param);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("Name/{name}")]
+        public ActionResult<Response> GetValuesByName ( [FromRoute] string name)
+        {
+            try
+            {
+                var param = _paramsService.GetValuesByName(name);
+                if (param.Model is string) return BadRequest(param);
+                return Ok(param);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         #endregion
     }

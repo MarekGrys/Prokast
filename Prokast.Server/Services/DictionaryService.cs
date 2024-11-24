@@ -64,6 +64,48 @@ namespace Prokast.Server.Services
         }
         #endregion
 
-  
+        #region ReturningValuesByName
+        public Response GetParamsByRegion (int region)
+        {
+            var param = _dbContext.DictionaryParams.Where(x => x.IdRegion == region).ToList();
+
+            List<string> paramList = new List<string>();
+            foreach ( var x in param)
+            {
+                if (!paramList.Contains(x.Name))
+                {
+                    paramList.Add(x.Name);
+                }
+                
+            }
+
+            var response = new Response() { ID = random.Next(1, 100000), Model = paramList };
+            if (param.Count() == 0)
+            {
+                var responseNull = new Response() { ID = random.Next(1, 100000), Model = "Nie ma takiego regionu" };
+                response = responseNull;
+            }
+            return response;
+        }
+
+        public Response GetValuesByName (string name)
+        {
+            var param = _dbContext.DictionaryParams.Where(x => x.Name == name).ToList();
+
+            List<string> paramList = new List<string>();
+            foreach( var x in param)
+            {
+                paramList.Add(x.Value);
+            }
+            var response = new Response() { ID = random.Next(1, 100000), Model = paramList };
+            if (param.Count() == 0)
+            {
+                var responseNull = new Response() { ID = random.Next(1, 100000), Model = "Błędna nazwa" };
+                response = responseNull;
+            }
+            return response;
+        }
+        #endregion
+
     }
 }
