@@ -22,7 +22,7 @@ async function params() {
         console.log("Otrzymano odpowiedź z API");
 
         if (response.ok) {
-            alert('Rejestracja powiodła się!');
+            alert('Dodanie parametru powiodło się!');
             window.location.href = 'params.html'; 
         } else {
             const errorText = await response.text();
