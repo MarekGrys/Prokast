@@ -12,6 +12,6 @@ namespace Prokast.Server.Models
         [Required]
         public DateTime CreatedDate { get; set; } = DateTime.Now;
         
-        public object? Model { get; set; }
+        
     }
 }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Prokast.Server.Entities;
 using Prokast.Server.Models;
+using Prokast.Server.Models.ResponseModels;
 
 
 namespace Prokast.Server.Services
@@ -23,10 +24,10 @@ namespace Prokast.Server.Services
         public Response GetAllParams()
         {
             var paramList = _dbContext.DictionaryParams.ToList();
-            var response = new Response() { ID = random.Next(1, 100000), Model = paramList };
+            var response = new DictionaryGetResponse() { ID = random.Next(1, 100000), Model = paramList };
             if (paramList.Count() == 0)
             {
-                var responseNull = new Response() { ID = random.Next(1, 100000),  Model = "Brak parametrów" };
+                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000),  errorMsg = "Brak parametrów" };
                 return responseNull;
             }
             return response;
@@ -36,11 +37,11 @@ namespace Prokast.Server.Services
         #region GetParamsByID
         public Response GetParamsByID( int ID)
         {
-            var param = _dbContext.DictionaryParams.Where(x => x.ID == ID);
-            var response = new Response() { ID = random.Next(1, 100000),  Model = param };
+            var param = _dbContext.DictionaryParams.Where(x => x.ID == ID).ToList();
+            var response = new DictionaryGetResponse() { ID = random.Next(1, 100000),  Model = param};
             if (param.Count() == 0)
             {
-                var responseNull = new Response() { ID = random.Next(1, 100000),  Model = "Nie ma takiego parametru" };
+                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000),  errorMsg = "Nie ma takiego parametru" };
                 return responseNull;
             }
             return response;
@@ -54,11 +55,11 @@ namespace Prokast.Server.Services
             var param = _dbContext.DictionaryParams.Where(x => x.Name == name).ToList();
 
 
-            var response = new Response() { ID = random.Next(1, 100000), Model = param };
+            var response = new DictionaryGetResponse() { ID = random.Next(1, 100000), Model = param };
             if (param.Count() == 0)
             {
-                var responseNull = new Response() { ID = random.Next(1, 100000), Model = "Nie ma modelu z taką nazwą" };
-                response = responseNull;
+                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), errorMsg = "Nie ma modelu z taką nazwą" };
+                return responseNull;
             }
             return response;
         }
@@ -79,11 +80,11 @@ namespace Prokast.Server.Services
                 
             }
 
-            var response = new Response() { ID = random.Next(1, 100000), Model = paramList };
+            var response = new DictionaryUniqueGetResponse() { ID = random.Next(1, 100000), Model = paramList };
             if (param.Count() == 0)
             {
-                var responseNull = new Response() { ID = random.Next(1, 100000), Model = "Nie ma takiego regionu" };
-                response = responseNull;
+                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), errorMsg = "Nie ma takiego regionu" };
+                return responseNull;
             }
             return response;
         }
@@ -97,11 +98,11 @@ namespace Prokast.Server.Services
             {
                 paramList.Add(x.Value);
             }
-            var response = new Response() { ID = random.Next(1, 100000), Model = paramList };
+            var response = new DictionaryUniqueGetResponse() { ID = random.Next(1, 100000), Model = paramList };
             if (param.Count() == 0)
             {
-                var responseNull = new Response() { ID = random.Next(1, 100000), Model = "Błędna nazwa" };
-                response = responseNull;
+                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), errorMsg = "Błędna nazwa" };
+                return responseNull;
             }
             return response;
         }

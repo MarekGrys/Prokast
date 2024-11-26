@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using System;
 using System.Security.Cryptography;
 using System.Linq;
+using Prokast.Server.Models.ResponseModels;
 
 namespace Prokast.Server.Services
 {
@@ -44,7 +45,7 @@ namespace Prokast.Server.Services
             var reg = _mapper.Map<Registration>(registration);
             if (reg == null)
             {
-                var responseNull = new Response() { ID = random.Next(1, 100000), Model = "Błędne dane rejestracji" };
+                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), errorMsg = "Błędne dane rejestracji" };
                 return responseNull;
             }
             var account = new AccountLogIn
@@ -74,7 +75,7 @@ namespace Prokast.Server.Services
             _dbContext.Clients.Add(client);
             _dbContext.SaveChanges(); 
 
-            var response = new Response() { ID = random.Next(1, 100000), ClientID = test.ID, Model = reg };
+            var response = new ClientRegisterResponse() { ID = random.Next(1, 100000), ClientID = test.ID, Registration = reg };
             return response;
 
         }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Prokast.Server.Entities;
 using Prokast.Server.Models;
+using Prokast.Server.Models.ResponseModels;
 
 
 namespace Prokast.Server.Services
@@ -26,7 +27,7 @@ namespace Prokast.Server.Services
             var param = _mapper.Map<CustomParamsDto>(customParamsDto);
             if (param == null)
             {
-                var responseNull = new Response() { ID = random.Next(1, 100000), ClientID = clientID, Model = "Błędnie podane dane" };
+                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Błędnie podane dane" };
                 return responseNull;
             }
 
@@ -42,7 +43,7 @@ namespace Prokast.Server.Services
             _dbContext.CustomParams.Add(customParam);
             _dbContext.SaveChanges();
 
-            var response = new Response() { ID = random.Next(1,100000), ClientID = clientID, Model = param };
+            var response = new Response() { ID = random.Next(1,100000), ClientID = clientID};
             return response;
         }
         #endregion
@@ -51,10 +52,10 @@ namespace Prokast.Server.Services
         public Response GetAllParams(int clientID)
         {
             var paramList = _dbContext.CustomParams.Where(x => x.ClientID == clientID).ToList();
-            var response = new Response() { ID = random.Next(1,100000), ClientID = clientID, Model = paramList };
+            var response = new ParamsGetResponse() { ID = random.Next(1,100000), ClientID = clientID, Model = paramList };
             if(paramList.Count() == 0)
             {
-                var responseNull = new Response() { ID = random.Next(1, 100000), ClientID = clientID, Model = "Klient nie ma parametrów" };
+                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Klient nie ma parametrów" };
                 return responseNull;
             }
             return response;
@@ -64,11 +65,11 @@ namespace Prokast.Server.Services
         #region GetParamsByID
         public Response GetParamsByID(int clientID, int ID)
         {
-            var param = _dbContext.CustomParams.Where(x => x.ClientID == clientID && x.ID == ID);
-            var response = new Response() { ID = random.Next(1, 100000), ClientID = clientID, Model = param };
+            var param = _dbContext.CustomParams.Where(x => x.ClientID == clientID && x.ID == ID).ToList();
+            var response = new ParamsGetResponse() { ID = random.Next(1, 100000), ClientID = clientID, Model = param };
             if (param.Count() == 0)
             {
-                var responseNull = new Response() { ID = random.Next(1, 100000), ClientID = clientID, Model = "Nie ma takiego parametru" };
+                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Nie ma takiego parametru" };
                 return responseNull;
             }   
             return response;
@@ -82,11 +83,11 @@ namespace Prokast.Server.Services
             var param = _dbContext.CustomParams.Where(x => x.ClientID == clientID && x.Name.Contains(name)).ToList();
 
             
-            var response = new Response() { ID = random.Next(1, 100000), ClientID = clientID, Model = param };
+            var response = new ParamsGetResponse() { ID = random.Next(1, 100000), ClientID = clientID, Model = param };
             if (param.Count() == 0)
             {
-                var responseNull = new Response() { ID = random.Next(1, 100000), ClientID = clientID, Model = "Nie ma modelu z taką nazwą" };
-                response = responseNull;
+                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Nie ma modelu z taką nazwą" };
+                return responseNull;
             }
             return response;
         }
@@ -100,7 +101,7 @@ namespace Prokast.Server.Services
 
             if (findParam == null)
             {
-                var responseNull = new Response() { ID = random.Next(1, 100000), ClientID = clientID, Model = "Nie ma takiego modelu!" };
+                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Nie ma takiego modelu!" };
                 return responseNull;
             }
 
@@ -109,7 +110,7 @@ namespace Prokast.Server.Services
             findParam.Value = data.Value;
             _dbContext.SaveChanges();
 
-            var response = new Response() { ID = random.Next(1, 100000), ClientID = clientID, Model = findParam };
+            var response = new ParamsEditResponse() { ID = random.Next(1, 100000), ClientID = clientID, customParams = findParam };
             
             return response;
         }
@@ -123,14 +124,14 @@ namespace Prokast.Server.Services
 
             if (findParam == null)
             {
-                var responseNull = new Response() { ID = random.Next(1, 100000), ClientID = clientID, Model = "Nie ma takiego modelu!" };
+                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Nie ma takiego modelu!" };
                 return responseNull;
             }
 
             _dbContext.Remove(findParam);
             _dbContext.SaveChanges();
 
-            var response = new Response() { ID = random.Next(1, 100000), ClientID = clientID, Model = "Parametr został usumięty" };
+            var response = new ParamsDeleteResponse() { ID = random.Next(1, 100000), ClientID = clientID, deleteMsg = "Parametr został usumięty" };
 
             return response;
         }
