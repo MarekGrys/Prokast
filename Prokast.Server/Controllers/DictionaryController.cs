@@ -2,6 +2,7 @@
 using Prokast.Server.Entities;
 using Prokast.Server.Services;
 using Prokast.Server.Models;
+using Prokast.Server.Models.ResponseModels;
 
 
 namespace Prokast.Server.Controllers
@@ -18,12 +19,14 @@ namespace Prokast.Server.Controllers
 
         #region GetAllParams
         [HttpGet]
+        [ProducesResponseType(typeof(DictionaryGetResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         public ActionResult<Response> GetAllParams()
         {
             try
             {
                 var lista = _paramsService.GetAllParams();
-                if (lista.Model is string) return BadRequest(lista);
+                if (lista is ErrorResponse) return BadRequest(lista);
                 return Ok(lista);
             }
             catch (Exception ex)
@@ -35,12 +38,14 @@ namespace Prokast.Server.Controllers
 
         #region GetParamsByID
         [HttpGet("{ID}")]
+        [ProducesResponseType(typeof(DictionaryGetResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         public ActionResult<Response> GetParamsByID( [FromRoute] int ID)
         {
             try
             {
                 var param = _paramsService.GetParamsByID(ID);
-                if (param.Model is string) return BadRequest(param);
+                if (param is ErrorResponse) return BadRequest(param);
                 return Ok(param);
             }
             catch (Exception ex)
@@ -52,12 +57,14 @@ namespace Prokast.Server.Controllers
 
         #region getParamsByName
         [HttpGet("DictionaryName/{name}")]
+        [ProducesResponseType(typeof(DictionaryGetResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         public ActionResult<Response> GetParamsByName( [FromRoute] string name)
         {
             try
             {
                 var param = _paramsService.GetParamsByName(name);
-                if (param.Model is string) return BadRequest(param);
+                if (param is ErrorResponse) return BadRequest(param);
                 return Ok(param);
             }
             catch (Exception ex)
@@ -70,12 +77,14 @@ namespace Prokast.Server.Controllers
 
         #region ReturningValuesByName
         [HttpGet("Region/{region}")]
+        [ProducesResponseType(typeof(DictionaryGetResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         public ActionResult<Response> GetParamsByRegion ( [FromRoute] int region)
         {
             try
             {
                 var param = _paramsService.GetParamsByRegion(region);
-                if (param.Model is string) return BadRequest(param);
+                if (param is ErrorResponse) return BadRequest(param);
                 return Ok(param);
             }
             catch (Exception ex)
@@ -85,12 +94,14 @@ namespace Prokast.Server.Controllers
         }
 
         [HttpGet("Name/{name}")]
+        [ProducesResponseType(typeof(DictionaryGetResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         public ActionResult<Response> GetValuesByName ( [FromRoute] string name)
         {
             try
             {
                 var param = _paramsService.GetValuesByName(name);
-                if (param.Model is string) return BadRequest(param);
+                if (param is ErrorResponse) return BadRequest(param);
                 return Ok(param);
             }
             catch (Exception ex)

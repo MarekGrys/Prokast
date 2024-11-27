@@ -7,6 +7,7 @@ using System;
 using System.Security.Cryptography;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using Prokast.Server.Models.ResponseModels;
 
 
 
@@ -43,7 +44,12 @@ namespace Prokast.Server.Services
         public Response GetLogIns(int clientID)
         {
             var logins = _dbContext.AccountLogIn.ToList();
-            var response = new Response() {ID = random.Next(1,100000),ClientID = clientID, Model = logins};
+            if (logins.Count() == 0)
+            {
+                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Klient nie ma parametrów" };
+                return responseNull;
+            }
+            var response = new LogInGetResponse() {ID = random.Next(1,100000),ClientID = clientID, Model = logins};
             return response;
         }
         #endregion
@@ -53,17 +59,33 @@ namespace Prokast.Server.Services
         {
 
             var account = _dbContext.AccountLogIn.FirstOrDefault(x => x.Login == loginRequest.Login);
-            if (account == null) { throw new Exception("Nie ma takiego konta!"); }
+            if (account == null)
+            {
+                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = -1, errorMsg = "Nie ma takiego konta" };
+                return responseNull;
+            }
+
             var client = _dbContext.Clients.FirstOrDefault(x => x.AccountID == account.ID);
-            if (client == null) { throw new Exception("Nie ma takiego klienta!"); }
-            if (account.Password != getHashed(loginRequest.Password)) { throw new Exception("Niepoprawne hasło"); }
+            if (client == null)
+            {
+                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = -1, errorMsg = "Błędny login" };
+                return responseNull;
+            }
+                
+
+            if (account.Password != getHashed(loginRequest.Password))
+            {
+                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = -1, errorMsg = "Błędne hasło" };
+                return responseNull;
+            }
+
             if (client.Subscription is null || client.Subscription < DateTime.Now)
             {
-                var responseFalse = new Response() { ID = random.Next(1, 100000), ClientID = client.ID, Model = new { isSubscribed = false } };
+                var responseFalse = new LogInLoginResponse() { ID = random.Next(1, 100000), ClientID = client.ID, IsSubscribed = false };
                 return responseFalse;
             }
 
-            var response = new Response() {ID = random.Next(1,100000), ClientID = client.ID, Model = new {isSubscribed = true } };
+            var response = new LogInLoginResponse() {ID = random.Next(1,100000), ClientID = client.ID, IsSubscribed = true };
             return response;
         }
         #endregion

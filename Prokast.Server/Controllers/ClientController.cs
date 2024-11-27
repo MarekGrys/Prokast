@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using Microsoft.AspNetCore.Mvc;
 using Prokast.Server.Models;
+using Prokast.Server.Models.ResponseModels;
 using Prokast.Server.Services;
 namespace Prokast.Server.Controllers
 {
@@ -19,12 +20,14 @@ namespace Prokast.Server.Controllers
 
         #region RegisterClient
         [HttpPost]
+        [ProducesResponseType(typeof(ClientRegisterResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         public ActionResult<Response> RegisterClient([FromBody] Registration registration)
         {
             try 
             {
                 var response = _clientService.RegisterClient(registration);
-                if (response.Model is string) return BadRequest(response);
+                if (response is ErrorResponse) return BadRequest(response);
                 return Created();
             } catch (Exception ex) 
             {
