@@ -12,6 +12,8 @@ namespace Prokast.Server.Entities
         public DbSet<CustomParams> CustomParams { get; set; }
         public DbSet<DictionaryParams> DictionaryParams { get; set; }
         public DbSet<Regions> Regions { get; set; }
+        public DbSet<PriceLists> PriceLists { get; set; }
+        public DbSet<Prices> Prices { get; set; }
  
     }
 }

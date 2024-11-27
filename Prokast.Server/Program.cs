@@ -31,6 +31,7 @@ builder.Services.AddScoped<ILogInService, LogInService>();
 builder.Services.AddScoped<IClientService, ClientService>();
 builder.Services.AddScoped<IParamsService, ParamsService>();
 builder.Services.AddScoped<IDictionaryService, DictionaryService>();
+builder.Services.AddScoped<IPricesService, PricesService>();
 
 var app = builder.Build();
 
