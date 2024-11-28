@@ -2,7 +2,7 @@
 
 namespace Prokast.Server.Models
 {
-    public class PriceListsDto
+    public class PriceListsCreateDto
     {
         [Required]
         public string Name { get; set; }

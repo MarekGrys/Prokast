@@ -20,9 +20,10 @@ namespace Prokast.Server.Services
             _mapper = mapper;
         }
 
-        public Response CreatePriceList([FromBody] PriceListsDto priceLists, int clientID)
+        #region Create
+        public Response CreatePriceList([FromBody] PriceListsCreateDto priceLists, int clientID)
         {
-            var input = _mapper.Map<PriceListsDto>(priceLists);
+            var input = _mapper.Map<PriceListsCreateDto>(priceLists);
             if (input == null)
             {
                 var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Błędnie podane dane" };
@@ -74,5 +75,96 @@ namespace Prokast.Server.Services
             var response = new Response() { ID = random.Next(1, 100000), ClientID = clientID };
             return response;
         }
+        #endregion
+
+        #region Get
+        public Response GetAllPriceLists(int clientID)
+        {
+            var priceList = _dbContext.PriceLists.Where(x => x.ClientID == clientID).ToList();
+            if (priceList.Count() == 0)
+            {
+                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Klient nie ma parametrów" };
+                return responseNull;
+            }
+
+            List<PriceListDto> priceListList = new List<PriceListDto>();
+            foreach (var price in priceList)
+            {
+                var prices = _dbContext.Prices.Where(x => x.PriceListID == price.ID).ToList();
+                PriceListDto priceListDto = new PriceListDto()
+                {
+                    Name = price.Name,
+                    Prices = prices
+                };
+                priceListList.Add(priceListDto);
+
+            }
+            var response = new PriceListsGetResponse() { ID = random.Next(1,100000), ClientID = clientID, Model = priceListList };
+            return response;
+        }
+
+        public Response GetPriceListsByName (int clientID, string name)
+        {
+            var priceList = _dbContext.PriceLists.Where(x =>x.ClientID == clientID && x.Name.Contains(name)).ToList();
+            if (priceList.Count() == 0)
+            {
+                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Klient nie ma parametrów o takiej nazwie" };
+                return responseNull;
+            }
+
+            List<PriceListDto> priceListList = new List<PriceListDto>();
+            foreach (var price in priceList)
+            {
+                var prices = _dbContext.Prices.Where(x => x.PriceListID == price.ID).ToList();
+                PriceListDto priceListDto = new PriceListDto()
+                {
+                    Name = price.Name,
+                    Prices = prices
+                };
+                priceListList.Add(priceListDto);
+
+            }
+            var response = new PriceListsGetResponse() { ID = random.Next(1, 100000), ClientID = clientID, Model = priceListList };
+            return response;
+        }
+
+        public Response GetAllPrices(int clientID, int priceListID)
+        {
+            var priceList = _dbContext.Prices.Where(x => x.PriceListID == priceListID).ToList();
+            if (priceList.Count() == 0)
+            {
+                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Cennik nie ma cen lub nie istnieje" };
+                return responseNull;
+            }
+            var response = new PricesGetResponse() { ID = random.Next(1, 100000), ClientID = clientID, Model = priceList };
+            return response;
+        }
+
+        public Response GetPricesByRegion (int clientID,int priceListID, int regionID)
+        {
+            var priceList = _dbContext.Prices.Where(x => x.PriceListID==priceListID && x.RegionID == regionID).ToList();
+            if (priceList.Count() == 0)
+            {
+                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Cennik nie ma cen lub nie istnieje" };
+                return responseNull;
+            }
+            var response = new PricesGetResponse() { ID = random.Next(1, 100000), ClientID = clientID, Model = priceList };
+            return response;
+        }
+
+        public Response GetPricesByName (int clientID,int priceListID, string name)
+        {
+            var priceList = _dbContext.Prices.Where(x => x.PriceListID == priceListID && x.Name.Contains(name)).ToList();
+            if (priceList.Count() == 0)
+            {
+                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Cennik nie ma cen lub nie istnieje" };
+                return responseNull;
+            }
+            var response = new PricesGetResponse() { ID = random.Next(1, 100000), ClientID = clientID, Model = priceList };
+            return response;
+        }
+        #endregion
+
+
     }
 }
