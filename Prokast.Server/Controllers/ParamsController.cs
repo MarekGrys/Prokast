@@ -119,7 +119,7 @@ namespace Prokast.Server.Controllers
 
         #region DeleteParams
         [HttpDelete("{ID}")]
-        [ProducesResponseType(typeof(ParamsDeleteResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(DeleteResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         public ActionResult<Response> DeleteParams([FromQuery] int clientID, [FromRoute] int ID)
         {

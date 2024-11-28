@@ -165,6 +165,7 @@ namespace Prokast.Server.Services
         }
         #endregion
 
+        #region Edit
         public Response EditPrice(EditPriceDto editPriceDto,int clientID, int priceListID, int priceID)
         {
             var price = _dbContext.Prices.FirstOrDefault(x => x.PriceListID == priceListID && x.ID == priceID);
@@ -183,6 +184,46 @@ namespace Prokast.Server.Services
             var response = new PricesEditResponse() { ID = random.Next(1, 100000), ClientID = clientID, Model = editPriceDto };
             return response;
 
+        }
+        #endregion
+
+        public Response DeletePrice(int clientID, int priceListID, int priceID)
+        {
+            var price = _dbContext.Prices.FirstOrDefault(x => x.PriceListID == priceListID && x.ID == priceID);
+            if (price == null)
+            {
+                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Nie ma takiej ceny!" };
+                return responseNull;
+            }
+
+            _dbContext.Remove(price);
+            _dbContext.SaveChanges();
+
+            var response = new DeleteResponse() { ID = random.Next(1, 100000), ClientID = clientID, deleteMsg = "Cena została usunięta" };
+            return response;
+        }
+
+        public Response DeletePriceList(int clientID, int priceListID)
+        {
+            var priceList = _dbContext.PriceLists.FirstOrDefault(x => x.ID == priceListID && x.ClientID == clientID);
+            if (priceList == null)
+            {
+                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Nie ma takiego cennika!" };
+                return responseNull;
+            }
+
+            var prices = _dbContext.Prices.Where(x => x.PriceListID == priceListID);
+
+            foreach ( var price in prices)
+            {
+                _dbContext.Remove(price);
+            }
+            
+            _dbContext.Remove(priceList);
+            _dbContext.SaveChanges();
+
+            var response = new DeleteResponse() { ID = random.Next(1, 100000), ClientID = clientID, deleteMsg = "Cennik został usunięty" };
+            return response;
         }
     }
 }

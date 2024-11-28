@@ -132,7 +132,7 @@ namespace Prokast.Server.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPut("/prices/{priceID}")]
+        [HttpPut("prices/{priceID}")]
         [ProducesResponseType(typeof(ParamsEditResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         public ActionResult<Response> EditPrice(EditPriceDto editPriceDto, [FromQuery] int clientID, [FromQuery] int priceListID,[FromRoute] int priceID)
@@ -144,6 +144,42 @@ namespace Prokast.Server.Controllers
             try
             {
                 var result = _priceService.EditPrice(editPriceDto, clientID, priceListID, priceID);
+                if (result is ErrorResponse) return BadRequest(result);
+
+                if (result == null) return NotFound(result);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpDelete("prices/{priceID}")]
+        [ProducesResponseType(typeof(DeleteResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        public ActionResult<Response> DeletePrice([FromQuery] int clientID, [FromQuery] int priceListID, [FromRoute] int priceID)
+        {
+            try
+            {
+                var result = _priceService.DeletePrice(clientID, priceListID, priceID);
+                if (result is ErrorResponse) return BadRequest(result);
+
+                if (result == null) return NotFound(result);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpDelete("{priceListID}")]
+        [ProducesResponseType(typeof(DeleteResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        public ActionResult<Response> DeletePriceList([FromQuery] int clientID, [FromRoute] int priceListID)
+        {
+            try
+            {
+                var result = _priceService.DeletePriceList(clientID, priceListID);
                 if (result is ErrorResponse) return BadRequest(result);
 
                 if (result == null) return NotFound(result);
