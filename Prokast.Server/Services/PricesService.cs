@@ -165,6 +165,24 @@ namespace Prokast.Server.Services
         }
         #endregion
 
+        public Response EditPrice(EditPriceDto editPriceDto,int clientID, int priceListID, int priceID)
+        {
+            var price = _dbContext.Prices.FirstOrDefault(x => x.PriceListID == priceListID && x.ID == priceID);
+            if (price == null)
+            {
+                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Nie ma takiegj ceny!" };
+                return responseNull;
+            }
 
+            price.Name = editPriceDto.Name;
+            price.Netto = editPriceDto.Netto;
+            price.VAT = editPriceDto.VAT;
+            
+            _dbContext.SaveChanges();
+
+            var response = new PricesEditResponse() { ID = random.Next(1, 100000), ClientID = clientID, Model = editPriceDto };
+            return response;
+
+        }
     }
 }

@@ -4,6 +4,7 @@ using Prokast.Server.Services;
 using Prokast.Server.Models;
 using Prokast.Server.Models.ResponseModels;
 using System.Diagnostics;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 
 
@@ -125,6 +126,28 @@ namespace Prokast.Server.Controllers
                 var lista = _priceService.GetPricesByName(clientID, priceListID, name);
                 if (lista is ErrorResponse) return BadRequest(lista);
                 return Ok(lista);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPut("/prices/{priceID}")]
+        [ProducesResponseType(typeof(ParamsEditResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        public ActionResult<Response> EditPrice(EditPriceDto editPriceDto, [FromQuery] int clientID, [FromQuery] int priceListID,[FromRoute] int priceID)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Błędne dane");
+            }
+            try
+            {
+                var result = _priceService.EditPrice(editPriceDto, clientID, priceListID, priceID);
+                if (result is ErrorResponse) return BadRequest(result);
+
+                if (result == null) return NotFound(result);
+                return Ok(result);
             }
             catch (Exception ex)
             {

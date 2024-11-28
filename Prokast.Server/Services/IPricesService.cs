@@ -13,5 +13,6 @@ namespace Prokast.Server.Services
         Response GetAllPrices(int clientID, int priceListID);
         Response GetPricesByRegion(int clientID, int priceListID, int regionID);
         Response GetPricesByName(int clientID, int priceListID, string name);
+        Response EditPrice(EditPriceDto editPriceDto, int clientID, int priceListID, int priceID);
     }
 }
