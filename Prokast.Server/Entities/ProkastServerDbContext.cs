@@ -14,6 +14,7 @@ namespace Prokast.Server.Entities
         public DbSet<Regions> Regions { get; set; }
         public DbSet<PriceLists> PriceLists { get; set; }
         public DbSet<Prices> Prices { get; set; }
+        public DbSet<AdditionalName> AdditionalName { get; set; }
  
     }
 }
