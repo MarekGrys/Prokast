@@ -1,5 +1,7 @@
 const apiUrl = 'https://prokast-axgwbmd6cnezbmet.polandcentral-01.azurewebsites.net/api/params';
 
+let currentParameterName = ''; // Przechowuje nazwę wybranego parametru
+
 // Funkcja ładowania parametrów do listy rozwijanej
 async function loadParameters() {
     try {
@@ -32,38 +34,71 @@ async function loadParameters() {
     }
 }
 
-// Funkcja wczytująca dane wybranego parametru do formularza
 async function loadParameterData() {
     const select = document.getElementById("parameter-select");
     const selectedId = select.value;
 
     if (selectedId) {
         try {
+            // Pobierz dane parametru z API
             const response = await fetch(`${apiUrl}/${selectedId}`, { method: 'GET' });
             if (!response.ok) throw new Error(`Błąd HTTP: ${response.status}`);
             const parameter = await response.json();
+
             console.log("Dane wybranego parametru (loadParameterData):", parameter);
 
-            document.getElementById("name").value = parameter.name || '';
-            document.getElementById("type").value = parameter.type || '';
-            document.getElementById("value").value = parameter.value || '';
+            // Pobierz dane modelu z odpowiedzi API
+            const modelData = parameter.model?.[0]; // Zakładamy, że model to tablica, bierzemy pierwszy element
+
+            if (modelData) {
+                // Pobierz nazwę parametru z wybranej opcji w select
+                currentParameterName = select.options[select.selectedIndex].textContent || '';
+
+                // Wypełnij pola formularza danymi z serwera
+                document.getElementById("type").value = modelData.type || ''; // Wczytaj rodzaj
+                document.getElementById("value").value = modelData.value || ''; // Wczytaj wartość
+
+                console.log("Wartość currentParameterName z select:", currentParameterName);
+                console.log("Wartość type z modelu:", modelData.type);
+                console.log("Wartość value z modelu:", modelData.value);
+            } else {
+                console.error("Model danych jest pusty lub brak danych w odpowiedzi.");
+            }
         } catch (error) {
             console.error("Błąd podczas ładowania danych parametru:", error);
         }
     }
 }
 
-// Funkcja zapisania zmian w danych parametru
 async function saveParameterData() {
     const select = document.getElementById("parameter-select");
     const selectedId = select.value;
 
     if (selectedId) {
-        const name = document.getElementById("name").value;
         const type = document.getElementById("type").value;
         const value = document.getElementById("value").value;
 
-        const parameterData = { name, type, value };
+        console.log("Wartość name:", currentParameterName); // Debugowanie
+        console.log("Wartość type:", type); // Debugowanie
+        console.log("Wartość value:", value); // Debugowanie
+
+        // Sprawdź, czy wszystkie wymagane pola są wypełnione
+        if (
+            typeof currentParameterName !== 'string' || currentParameterName.trim() === '' ||
+            typeof type !== 'string' || type.trim() === '' ||
+            typeof value !== 'string' || value.trim() === ''
+        ) {
+            alert("Wszystkie pola muszą być wypełnione.");
+            return;
+        }
+
+        const parameterData = { 
+            name: currentParameterName, // Dodaj nazwę parametru
+            type, 
+            value 
+        };
+
+        console.log("Wysyłane dane:", parameterData); // Debugowanie danych
 
         try {
             const response = await fetch(`${apiUrl}/${selectedId}`, {
@@ -76,6 +111,7 @@ async function saveParameterData() {
                 alert("Parametr został zaktualizowany!");
             } else {
                 const errorText = await response.text();
+                console.error("Szczegóły błędu:", errorText); // Debugowanie błędu
                 alert(`Błąd: ${errorText}`);
             }
         } catch (error) {
@@ -94,13 +130,17 @@ async function deleteParameter() {
         if (confirmDelete) {
             try {
                 const response = await fetch(`${apiUrl}/${selectedId}`, {
-                    method: 'DELETE',
+                    method: 'DELETE'
                 });
 
                 if (response.ok) {
                     alert("Parametr został usunięty!");
-                    location.reload(true); // Odśwież listę parametrów
-                     // Wyczyść formularz
+                    loadParameters(); // Odśwież listę parametrów
+                    // Wyczyść formularz
+                    document.getElementById("type").value = '';
+                    document.getElementById("value").value = '';
+                } else if (response.status === 404) {
+                    alert("Parametr nie istnieje.");
                 } else {
                     const errorText = await response.text();
                     alert(`Błąd podczas usuwania: ${errorText}`);
@@ -112,14 +152,8 @@ async function deleteParameter() {
     }
 }
 
-
-
-
-
-
 document.getElementById("parameter-select").addEventListener("change", loadParameterData);
 document.getElementById("save-button").addEventListener("click", saveParameterData);
 document.getElementById("delete-button").addEventListener("click", deleteParameter);
-
 
 window.onload = loadParameters;

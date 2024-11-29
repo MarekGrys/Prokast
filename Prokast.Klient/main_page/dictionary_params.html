@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="params.css">
     <link href="https://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet">
-    <title>Edycja Parametrów</title>
+    <title>Parametry słownikowe</title>
 </head>
 <body>
     <nav>
@@ -31,26 +31,13 @@
     </nav>
 
     <main>
-        <h1>Edytuj Parametr</h1>
-        <label for="parameter-select">Wybierz parametr do edycji:</label>
-        <select id="parameter-select">
+        <h1>Parametry słownikowe</h1>
+        <label for="region">Wybierz region:</label>
+        <select id="region">
             <!-- Opcje zostaną załadowane dynamicznie -->
         </select>
-
-        <h2>Edycja Parametru</h2>
-
-        <label for="type">Rodzaj:</label>
-        <input type="text" id="type" placeholder="Rodzaj parametru">
-
-        <label for="value">Wartość:</label>
-        <input type="text" id="value" placeholder="Wartość parametru">
-
-        <div>
-            <button id="save-button">Zapisz zmiany</button>
-            <button id="delete-button">Usuń parametr</button>
-        </div>
     </main>
 
-    <script src="edit_params.js"></script>
+    <script src="dictionary_params.js"></script>
 </body>
 </html>
