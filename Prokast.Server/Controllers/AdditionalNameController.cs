@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿
+using Microsoft.AspNetCore.Mvc;
 using Prokast.Server.Entities;
 using Prokast.Server.Services;
 using Prokast.Server.Models;
@@ -7,28 +8,29 @@ using Prokast.Server.Models.ResponseModels;
 
 namespace Prokast.Server.Controllers
 {
-    [Route("api/params")]
-    public class ParamsController: ControllerBase
+    [Route("api/addName")]
+    public class AdditionalNameController : ControllerBase
     {
-        private readonly IParamsService _paramsService;
+        private readonly IAdditionalNameService _additionalNameService;
 
-        public ParamsController(IParamsService paramsService)
+        public AdditionalNameController(IAdditionalNameService additionalNameService)
         {
-            _paramsService = paramsService;
+            _additionalNameService = additionalNameService;
         }
 
         #region CreateCustomParam
         [HttpPost]
         [ProducesResponseType(typeof(Response), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
-        public ActionResult<Response> CreateCustonParam([FromBody] CustomParamsDto customParamsDto, [FromQuery] int clientID)
+        public ActionResult<Response> CreateAdditionalName([FromBody] AdditionalNameDto additionalNameDto, [FromQuery] int clientID)
         {
-            try 
+            try
             {
-                var result = _paramsService.CreateCustomParam(customParamsDto, clientID);
+                var result = _additionalNameService.CreateAdditionalName(additionalNameDto, clientID);
                 if (result is ErrorResponse) return BadRequest(result);
                 return Created();
-            } catch (Exception ex) 
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -37,17 +39,17 @@ namespace Prokast.Server.Controllers
 
         #region GetAllParams
         [HttpGet]
-        [ProducesResponseType(typeof(ParamsGetResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(AdditionalNameGetResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
-        public ActionResult<Response> GetAllParams([FromQuery] int clientID) 
+        public ActionResult<Response> GetAllNames([FromQuery] int clientID)
         {
             try
             {
-                var result = _paramsService.GetAllParams(clientID);
+                var result = _additionalNameService.GetAllNames(clientID);
                 if (result is ErrorResponse) return BadRequest(result);
                 return Ok(result);
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -56,58 +58,80 @@ namespace Prokast.Server.Controllers
 
         #region GetParamsByID
         [HttpGet("{ID}")]
-        [ProducesResponseType(typeof(ParamsGetResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(AdditionalNameGetResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
-        public ActionResult<Response> GetParamsByID([FromQuery] int clientID, [FromRoute] int ID)
+        public ActionResult<Response> GetNamesByID([FromRoute] int ID, [FromQuery] int clientID )
         {
             try
             {
-                var result = _paramsService.GetParamsByID(clientID, ID);
+                var result = _additionalNameService.GetNamesByID( ID, clientID);
                 if (result is ErrorResponse) return BadRequest(result);
                 return Ok(result);
-            }catch (Exception ex)
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet("Title/{ID}")]
+        [ProducesResponseType(typeof(AdditionalNameGetResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        public ActionResult<Response> GetNamesByIDNames([FromRoute] int ID, [FromQuery] string Title, [FromQuery] int clientID) 
+        {
+            try
+            {
+                var result = _additionalNameService.GetNamesByIDNames(ID, Title ,clientID);
+                if (result is ErrorResponse) return BadRequest(result);
+                return Ok(result);
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
         #endregion
 
-        #region getParamsByName
-        [HttpGet("name/{name}")]
-        [ProducesResponseType(typeof(ParamsGetResponse), StatusCodes.Status200OK)]
+        [HttpGet("Region/{ID}")]
+        [ProducesResponseType(typeof(AdditionalNameGetResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
-        public ActionResult<Response> GetParamsByName([FromQuery] int clientID, [FromRoute] string name)
+        public ActionResult<Response> GetNamesByIDRegion([FromRoute] int ID, [FromQuery] int Region, [FromQuery] int clientID)
         {
             try
             {
-                var result = _paramsService.GetParamsByName(clientID, name);
+                var result = _additionalNameService.GetNamesByIDRegion(ID, Region, clientID);
                 if (result is ErrorResponse) return BadRequest(result);
                 return Ok(result);
             }
-            catch(Exception ex) 
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
-            
         }
-        #endregion
+
+
+
+
+
+
+
+        
 
         #region EditParams
         [HttpPut("{ID}")]
-        [ProducesResponseType(typeof(ParamsEditResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(AdditionalNameEditResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
-        public ActionResult<Response> EditParams([FromQuery] int clientID, [FromRoute] int ID, [FromBody] CustomParamsDto data)
+        public ActionResult<Response> EditAdditionalName([FromQuery] int clientID, [FromRoute] int ID, [FromBody]  AdditionalNameDto data) 
         {
-            if (!ModelState.IsValid) 
+            if (!ModelState.IsValid)
             {
                 return BadRequest("Błędne dane");
             }
             try
             {
-                var result = _paramsService.EditParams(clientID, ID, data);
+                var result = _additionalNameService.EditAdditionalName(clientID, ID, data);
                 if (result is ErrorResponse) return BadRequest(result);
 
-                if (result==null) return NotFound(result);
+                if (result == null) return NotFound(result);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -123,10 +147,10 @@ namespace Prokast.Server.Controllers
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         public ActionResult<Response> DeleteParams([FromQuery] int clientID, [FromRoute] int ID)
         {
-            
+
             try
             {
-                var result = _paramsService.DeleteParams(clientID, ID);
+                var result = _additionalNameService.DeleteAdditionalName(clientID, ID);
                 if (result is ErrorResponse) return BadRequest(result);
 
                 if (result == null) return NotFound(result);

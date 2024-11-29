@@ -2,8 +2,8 @@
 
 namespace Prokast.Server.Models.ResponseModels
 {
-    public class ParamsDeleteResponse: Response
+    public class PricesGetResponse: Response
     {
-        public string deleteMsg { get; set; }
+        public List<Prices> Model { get; set; }
     }
 }

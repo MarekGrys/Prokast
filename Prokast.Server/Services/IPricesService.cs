@@ -1,0 +1,20 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using Prokast.Server.Entities;
+using Prokast.Server.Models;
+
+namespace Prokast.Server.Services
+{
+    public interface IPricesService
+    {
+        Response CreatePriceList([FromBody] PriceListsCreateDto priceLists, int clientID);
+        Response CreatePrice([FromBody] PricesDto prices, int priceListID, int clientID);
+        Response GetAllPriceLists(int clientID);
+        Response GetPriceListsByName(int clientID, string name);
+        Response GetAllPrices(int clientID, int priceListID);
+        Response GetPricesByRegion(int clientID, int priceListID, int regionID);
+        Response GetPricesByName(int clientID, int priceListID, string name);
+        Response EditPrice(EditPriceDto editPriceDto, int clientID, int priceListID, int priceID);
+        Response DeletePrice(int clientID, int priceListID, int priceID);
+        Response DeletePriceList(int clientID, int priceListID);
+    }
+}
