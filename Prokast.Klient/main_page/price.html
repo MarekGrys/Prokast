@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="params.css">
+    <link rel="stylesheet" type="text/css" href="price.css">
     <link href="https://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet">
-    <title>Dodawanie Parametrów</title>
+    <title>Cennik</title>
 </head>
 <body>
     <nav> 
@@ -32,26 +32,31 @@
     </nav>
 
     <main>
-        <h1>Dodaj Parametry</h1>
-        <form action="#" >
-            <!-- Pole na nazwę parametru -->
-            <label for="parameter-name">Nazwa parametru:</label>
-            <input type="text" id="name" placeholder="Wprowadź nazwę" required>
-            
-            <!-- Pole na rodzaj parametru -->
-            <label for="parameter-type">Rodzaj parametru:</label>
-            <input type="text" id="type" placeholder="Podaj rodzaj" required>
-    
-            <!-- Pole na ilość parametru -->
-            <label for="parameter-value">Wartość:</label>
-            <input type="text" id="value" placeholder="Wprowadź wartość" required>
-    
-            <!-- Przycisk wysyłania -->
-            <button type="button" id="'button" class="button" onclick="params()" >Dodaj parametr</button>
+        <!-- Przycisk "Dodaj Cennik" -->
+        <form>
+            <button type="button" id="button" class="button">Dodaj cennik</button>
         </form>
-    </main>
-
-    <script src="params.js"></script>
     
+        <!-- Modalne okno -->
+        <div id="modal" class="modal">
+            <div class="modal-content">
+                <span class="close" id="closeModal">&times;</span>
+                <h2>Dodaj Cennik</h2>
+                <form id="priceForm"> 
+                    <input type="text" id="name" name="priceList" placeholder="wpisz nazwę cennika" required>
+                    <br><br>
+                    <button type="button" onclick="PriceListNamePOST()">Dodaj</button>
+                </form>
+            </div>
+        </div>
+        <h2>Twój cennik</h2>
+        <!-- Pole do wyświetlania danych -->
+        <div id="data-display" >
+            <ul id="data-name"></ul>
+        </div>
+    </main>
+    
+
+    <script src="price.js"></script>
 </body>
 </html>
