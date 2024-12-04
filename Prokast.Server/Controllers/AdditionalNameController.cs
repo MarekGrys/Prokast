@@ -18,7 +18,7 @@ namespace Prokast.Server.Controllers
             _additionalNameService = additionalNameService;
         }
 
-        #region CreateCustomParam
+        
         [HttpPost]
         [ProducesResponseType(typeof(Response), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
@@ -35,9 +35,9 @@ namespace Prokast.Server.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        #endregion
+       
 
-        #region GetAllParams
+       
         [HttpGet]
         [ProducesResponseType(typeof(AdditionalNameGetResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
@@ -54,9 +54,9 @@ namespace Prokast.Server.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        #endregion
+        
 
-        #region GetParamsByID
+        
         [HttpGet("{ID}")]
         [ProducesResponseType(typeof(AdditionalNameGetResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
@@ -89,7 +89,7 @@ namespace Prokast.Server.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        #endregion
+        
 
         [HttpGet("Region/{ID}")]
         [ProducesResponseType(typeof(AdditionalNameGetResponse), StatusCodes.Status200OK)]
