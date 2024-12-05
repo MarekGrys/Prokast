@@ -51,7 +51,7 @@ namespace Prokast.Server.Services
             _dbContext.Products.Add(product);
             _dbContext.SaveChanges();
 
-            var newProduct = _dbContext.Products.FirstOrDefault(x => x.ClientID == clientID);
+            var newProduct = _dbContext.Products.FirstOrDefault(x => x.ClientID == clientID && x.Name == input.Name);
 
             foreach (var item in input.AdditionalNames)
             {
@@ -87,7 +87,7 @@ namespace Prokast.Server.Services
             _dbContext.PriceLists.Add(priceList);
             _dbContext.SaveChanges();
             
-            var newPriceList = _dbContext.PriceLists.FirstOrDefault(x => x.Name == input.PriceList.Name);
+            var newPriceList = _dbContext.PriceLists.FirstOrDefault(x => x.Name == input.PriceList.Name && x.ClientID == clientID);
             foreach(var item in input.Prices)
             {
                 var price = new Prices
@@ -106,7 +106,7 @@ namespace Prokast.Server.Services
             List<int> additionalNames = new List<int>();
             foreach (var item in input.AdditionalNames)
             {
-                additionalNames.Add(_dbContext.AdditionalName.FirstOrDefault(x => x.Title == item.Title).ID);
+                additionalNames.Add(_dbContext.AdditionalName.FirstOrDefault(x => x.Title == item.Title && x.ClientID == clientID).ID);
             }
             
             List<int> dictionaryParams = new List<int>();
@@ -118,7 +118,7 @@ namespace Prokast.Server.Services
             List<int> customParams = new List<int>();
             foreach (var item in input.CustomParams)
             {
-                customParams.Add(_dbContext.CustomParams.FirstOrDefault(x => x.Name == item.Name).ID);
+                customParams.Add(_dbContext.CustomParams.FirstOrDefault(x => x.Name == item.Name && x.ClientID == clientID).ID);
             }
 
             newProduct.AdditionalNames = string.Join(",", additionalNames);         
@@ -132,5 +132,17 @@ namespace Prokast.Server.Services
             return response;
         }
         #endregion
+
+        public Response GetProducts([FromBody] ProductGetFilter productGetFilter, int clientID)
+        {
+            var input = _mapper.Map<ProductGetFilter>(productGetFilter);
+            var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Błędnie podane dane" };
+            if (input == null)
+            {
+                return responseNull;
+            }
+
+            
+        }
     }
 }
