@@ -134,6 +134,7 @@ namespace Prokast.Server.Services
         }
         #endregion
 
+        #region Get
         public Response GetProducts([FromBody] ProductGetFilter productGetFilter, int clientID)
         {
             var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Błędnie podane dane" };
@@ -223,5 +224,6 @@ namespace Prokast.Server.Services
             return response;
 
         }
+        #endregion
     }
 }
