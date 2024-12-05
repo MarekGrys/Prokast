@@ -136,15 +136,23 @@ namespace Prokast.Server.Services
 
         public Response GetProducts([FromBody] ProductGetFilter productGetFilter, int clientID)
         {
-            var products = _dbContext.Products.Where(x => x.ClientID == clientID);
-            var input = _mapper.Map<ProductGetFilter>(productGetFilter);
             var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Błędnie podane dane" };
+            var products = _dbContext.Products.Where(x => x.ClientID == clientID);
+           
+            var input = _mapper.Map<ProductGetFilter>(productGetFilter);
+           
             if (input == null)
             {
                 return responseNull;
             }
 
-            if(input.ProductIDList != null && input.ProductIDList.Count != 0)
+            if (!products.Any())
+            {
+                responseNull.errorMsg = "Klient nie ma produktów";
+                return responseNull;
+            }
+
+            if (input.ProductIDList != null && input.ProductIDList.Count != 0)
             {
                 products = products.Where(x => input.ProductIDList.Contains(x.ID));
             }
