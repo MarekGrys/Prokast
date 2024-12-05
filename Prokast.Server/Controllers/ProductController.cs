@@ -34,5 +34,22 @@ namespace Prokast.Server.Controllers
             }
         }
         #endregion
+
+        [HttpPost("Get")]
+        [ProducesResponseType(typeof(ProductsGetResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        public ActionResult<Response> GetProducts([FromBody] ProductGetFilter filter, int clientID)
+        {
+            try
+            {
+                var result = _productService.GetProducts(filter, clientID);
+                if (result is ErrorResponse) return BadRequest(result);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

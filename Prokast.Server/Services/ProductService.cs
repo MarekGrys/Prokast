@@ -4,6 +4,7 @@ using Prokast.Server.Entities;
 using Prokast.Server.Models;
 using Prokast.Server.Models.ResponseModels;
 using System.Collections.Immutable;
+using System.Linq;
 
 namespace Prokast.Server.Services
 {
@@ -135,6 +136,7 @@ namespace Prokast.Server.Services
 
         public Response GetProducts([FromBody] ProductGetFilter productGetFilter, int clientID)
         {
+            var products = _dbContext.Products.Where(x => x.ClientID == clientID);
             var input = _mapper.Map<ProductGetFilter>(productGetFilter);
             var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Błędnie podane dane" };
             if (input == null)
@@ -142,7 +144,76 @@ namespace Prokast.Server.Services
                 return responseNull;
             }
 
+            if(input.ProductIDList != null && input.ProductIDList.Count != 0)
+            {
+                products = products.Where(x => input.ProductIDList.Contains(x.ID));
+            }
             
+           if(input.CreationDate != null)
+            {
+                products = products.Where(x => x.AdditionDate < input.CreationDate);
+            }
+
+            if (input.ModificationDate != null)
+            {
+                products = products.Where(x => x.ModificationDate < input.ModificationDate);
+            }
+
+            if (input.ProductName != null)
+            {
+                products = products.Where(x => x.Name.Contains(input.ProductName));
+            }
+
+            var productList = products.ToList();
+
+            var returnList = new List<ProductGet>();
+
+            var additionalNames = _dbContext.AdditionalName.ToList();
+            var customParams = _dbContext.CustomParams.ToList();
+            var dictionaryParams = _dbContext.DictionaryParams.ToList();
+            var priceList = _dbContext.PriceLists.ToList();
+            var prices = _dbContext.Prices.ToList();
+            foreach (var product in productList)
+            {
+                var productAdditionalNames = additionalNames.Where(x => product.AdditionalNames.Split(",").ToList().
+                    Contains(x.ID.ToString())).ToList();
+
+                var productCustomParams = customParams.Where(x => product.CustomParams.Split(",").ToList().
+                    Contains(x.ID.ToString())).ToList();
+
+                var productDictionaryParams = dictionaryParams.Where(x => product.DictionaryParams.Split(",").ToList().
+                    Contains(x.ID.ToString())).ToList();
+
+                var productPriceLists = priceList.FirstOrDefault(x => x.ID == product.PriceListID);
+
+                var productPrices = prices.Where(x => x.PriceListID == productPriceLists.ID).ToList();
+
+                returnList.Add(new ProductGet() 
+                {
+                    ID = product.ID,
+                    ClientID = clientID,
+                    Name = product.Name,
+                    SKU = product.SKU,
+                    EAN = product.EAN,
+                    Description = product.Description,
+                    AdditionalNames = productAdditionalNames,
+                    DictionaryParams = productDictionaryParams,
+                    CustomParams = productCustomParams,
+                    PriceList = new PriceListAll() 
+                    {
+                        ID = productPriceLists.ID,
+                        Name= productPriceLists.Name,
+                        ClientID= clientID,
+                        Prices = productPrices
+                    },
+                    AdditionDate = product.AdditionDate,
+                    ModificationDate = product.ModificationDate
+                });
+
+            }
+            var response = new ProductsGetResponse() { ID = random.Next(0, 100000), ClientID = clientID, Model = returnList };
+            return response;
+
         }
     }
 }

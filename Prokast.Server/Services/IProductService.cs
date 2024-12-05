@@ -6,5 +6,6 @@ namespace Prokast.Server.Services
     public interface IProductService
     {
         Response CreateProduct([FromBody] ProductCreateDto productCreateDto, int clientID);
+        Response GetProducts([FromBody] ProductGetFilter productGetFilter, int clientID);
     }
 }
