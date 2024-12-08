@@ -225,5 +225,88 @@ namespace Prokast.Server.Services
 
         }
         #endregion
+
+
+        #region Delete
+        public  DeleteResponse DeleteProduct(int clientID, int productID, int priceListID)
+        {
+            var products = _dbContext.Products.FirstOrDefault(x => x.ClientID == clientID && x.ID == productID);
+            if (products == null)
+            {
+                var responseNull = new DeleteResponse() { ID = random.Next(1, 100000), ClientID = clientID, deleteMsg = "Nie ma takiego produktu!" };
+                return responseNull;
+            }
+
+            var prices = _dbContext.Prices.ToList();
+
+
+            var _priceList = _dbContext.PriceLists.ToList();
+            
+            
+                var additionalNames = _dbContext.AdditionalName.ToList();
+            
+            
+                var productAdditionalNames = additionalNames.Where(x => products.AdditionalNames.Split(",").ToList().
+                    Contains(x.ID.ToString())).ToList();
+
+                var productPriceLists = _priceList.FirstOrDefault(x => x.ID == products.PriceListID);
+
+            var productPrices = prices.Where(x => x.PriceListID == productPriceLists.ID).ToList();
+
+
+
+
+            foreach (var item in productAdditionalNames)
+            {
+                _dbContext.Remove(item);
+            }
+            foreach (var item in productPrices)
+            {
+                _dbContext.Remove(item);
+
+            }                
+            _dbContext.Remove(productPriceLists);
+            _dbContext.Remove(products);
+            _dbContext.SaveChanges();
+
+                
+
+            
+            var response = new DeleteResponse() { ID = random.Next(1, 100000), ClientID = clientID, deleteMsg = "Produkt został usunięty" };
+            return response;
+
+        }
+
+        #endregion
+
+
+
+        #region Edit
+        public Response EditProduct(ProductEdit productEdit, int clientID, int productID)
+        {
+            var product = _dbContext.Products.FirstOrDefault(x => x.ID == productID && x.ClientID == clientID);
+            if (product == null)
+            {
+                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Nie ma takiego produktu!" };
+                return responseNull;
+            }
+
+            product.Name = productEdit.Name;
+            product.SKU = productEdit.SKU;
+            product.EAN = productEdit.EAN;
+            product.Description = productEdit.Description;
+            product.ModificationDate = DateTime.Now;
+            _dbContext.SaveChanges();
+
+            var response = new ProductEditResponse() { ID = random.Next(1, 100000), ClientID = clientID, Model = productEdit };
+            return response;
+
+        }
+
+        #endregion
+
+
+
+
     }
 }

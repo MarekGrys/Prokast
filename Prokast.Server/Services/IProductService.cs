@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Prokast.Server.Models;
+using Prokast.Server.Models.ResponseModels;
 
 namespace Prokast.Server.Services
 {
@@ -7,5 +8,8 @@ namespace Prokast.Server.Services
     {
         Response CreateProduct([FromBody] ProductCreateDto productCreateDto, int clientID);
         Response GetProducts([FromBody] ProductGetFilter productGetFilter, int clientID);
-    }
+        DeleteResponse DeleteProduct(int clientID, int productID,/* int additionalNamesID,*/ int priceListID);
+        Response EditProduct(ProductEdit productEdit, int clientID, int productID);
+        
+        }
 }
