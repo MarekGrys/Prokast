@@ -2,6 +2,6 @@
 {
     public class PriceListsGetResponse: Response
     {
-        public List<PriceListDto> Model { get; set; }
+        public List<PriceListGet> Model { get; set; }
     }
 }
