@@ -87,16 +87,17 @@ namespace Prokast.Server.Services
                 return responseNull;
             }
 
-            List<PriceListDto> priceListList = new List<PriceListDto>();
+            List<PriceListGet> priceListList = new List<PriceListGet>();
             foreach (var price in priceList)
             {
                 var prices = _dbContext.Prices.Where(x => x.PriceListID == price.ID).ToList();
-                PriceListDto priceListDto = new PriceListDto()
+                PriceListGet priceListGet = new PriceListGet()
                 {
+                    ID = price.ID,
                     Name = price.Name,
                     Prices = prices
                 };
-                priceListList.Add(priceListDto);
+                priceListList.Add(priceListGet);
 
             }
             var response = new PriceListsGetResponse() { ID = random.Next(1,100000), ClientID = clientID, Model = priceListList };
@@ -112,16 +113,17 @@ namespace Prokast.Server.Services
                 return responseNull;
             }
 
-            List<PriceListDto> priceListList = new List<PriceListDto>();
+            List<PriceListGet> priceListList = new List<PriceListGet>();
             foreach (var price in priceList)
             {
                 var prices = _dbContext.Prices.Where(x => x.PriceListID == price.ID).ToList();
-                PriceListDto priceListDto = new PriceListDto()
+                PriceListGet priceListGet = new PriceListGet()
                 {
+                    ID= price.ID,
                     Name = price.Name,
                     Prices = prices
                 };
-                priceListList.Add(priceListDto);
+                priceListList.Add(priceListGet);
 
             }
             var response = new PriceListsGetResponse() { ID = random.Next(1, 100000), ClientID = clientID, Model = priceListList };

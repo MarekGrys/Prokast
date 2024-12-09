@@ -57,11 +57,11 @@ namespace Prokast.Server.Controllers
         [HttpDelete("products/{productID}")]
         [ProducesResponseType(typeof(DeleteResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
-        public ActionResult<Response> DeleteProduct([FromQuery] int clientID, [FromRoute] int productID, /*[FromQuery] int additionalNamesID,*/ [FromQuery] int priceListID)
+        public ActionResult<Response> DeleteProduct([FromQuery] int clientID, [FromRoute] int productID)
         {
             try
             {
-                var result = _productService.DeleteProduct(clientID, productID,/* additionalNamesID,*/ priceListID);
+                var result = _productService.DeleteProduct(clientID, productID);
                 if (result is ErrorResponse) return BadRequest(result);
 
                 if (result == null) return NotFound(result);
@@ -77,7 +77,7 @@ namespace Prokast.Server.Controllers
         [HttpPut("products/{productID}")]
         [ProducesResponseType(typeof(ProductEditResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
-        public ActionResult<Response> EditProduct(ProductEdit productEdit, [FromQuery] int clientID, [FromRoute] int productID)
+        public ActionResult<Response> EditProduct([FromBody] ProductEdit productEdit, [FromQuery] int clientID, [FromRoute] int productID)
         {
             if (!ModelState.IsValid)
             {

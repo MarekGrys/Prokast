@@ -228,7 +228,7 @@ namespace Prokast.Server.Services
 
 
         #region Delete
-        public  DeleteResponse DeleteProduct(int clientID, int productID, int priceListID)
+        public  DeleteResponse DeleteProduct(int clientID, int productID)
         {
             var products = _dbContext.Products.FirstOrDefault(x => x.ClientID == clientID && x.ID == productID);
             if (products == null)
@@ -269,9 +269,6 @@ namespace Prokast.Server.Services
             _dbContext.Remove(products);
             _dbContext.SaveChanges();
 
-                
-
-            
             var response = new DeleteResponse() { ID = random.Next(1, 100000), ClientID = clientID, deleteMsg = "Produkt został usunięty" };
             return response;
 
