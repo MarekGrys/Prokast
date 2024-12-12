@@ -239,17 +239,14 @@ namespace Prokast.Server.Services
 
             var prices = _dbContext.Prices.ToList();
 
-
             var _priceList = _dbContext.PriceLists.ToList();
             
-            
-                var additionalNames = _dbContext.AdditionalName.ToList();
-            
-            
-                var productAdditionalNames = additionalNames.Where(x => products.AdditionalNames.Split(",").ToList().
-                    Contains(x.ID.ToString())).ToList();
+            var additionalNames = _dbContext.AdditionalName.ToList();
+        
+            var productAdditionalNames = additionalNames.Where(x => products.AdditionalNames.Split(",").ToList().
+                Contains(x.ID.ToString())).ToList();
 
-                var productPriceLists = _priceList.FirstOrDefault(x => x.ID == products.PriceListID);
+            var productPriceLists = _priceList.FirstOrDefault(x => x.ID == products.PriceListID);
 
             var productPrices = prices.Where(x => x.PriceListID == productPriceLists.ID).ToList();
 
