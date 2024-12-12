@@ -95,5 +95,45 @@ namespace Prokast.Server.Services
             return response;
 
         }
+
+        public Response EditAdditionalDescription(int clientID, int ID, AdditionalDescriptionCreateDto data)
+        {
+            var findDescription = _dbContext.AdditionalDescriptions.FirstOrDefault(x => x.ClientID == clientID && x.ID == ID);
+
+
+            if (findDescription == null)
+            {
+                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Nie ma takiego modelu!" };
+                return responseNull;
+            }
+
+            findDescription.Title = data.Title;
+            findDescription.Region = data.Region;
+            findDescription.Value = data.Value;
+            _dbContext.SaveChanges();
+
+            var response = new AdditionalDescriptionEditResponse() { ID = random.Next(1, 100000), ClientID = clientID, AdditionalDescriptionEdit = findDescription };
+
+            return response;
+        }
+
+        public Response DeleteAdditionalDescription(int clientID, int ID)
+        {
+            var findAdditionalDescription = _dbContext.AdditionalDescriptions.FirstOrDefault(x => x.ClientID == clientID && x.ID == ID);
+
+
+            if (findAdditionalDescription == null)
+            {
+                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Nie ma takiego modelu!" };
+                return responseNull;
+            }
+
+            _dbContext.AdditionalDescriptions.Remove(findAdditionalDescription);
+            _dbContext.SaveChanges();
+
+            var response = new DeleteResponse() { ID = random.Next(1, 100000), ClientID = clientID, deleteMsg = "Parametr został usumięty" };
+
+            return response;
+        }
     }
 }

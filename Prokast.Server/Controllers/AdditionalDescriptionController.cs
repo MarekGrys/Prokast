@@ -100,5 +100,48 @@ namespace Prokast.Server.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpPut("{ID}")]
+        [ProducesResponseType(typeof(AdditionalDescriptionEditResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        public ActionResult<Response> EditAdditionalDescription([FromQuery] int clientID, [FromRoute] int ID, [FromBody] AdditionalDescriptionCreateDto data)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Błędne dane");
+            }
+            try
+            {
+                var result = _additionalDescriptionService.EditAdditionalDescription(clientID, ID, data);
+                if (result is ErrorResponse) return BadRequest(result);
+
+                if (result == null) return NotFound(result);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete("{ID}")]
+        [ProducesResponseType(typeof(DeleteResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        public ActionResult<Response> DeleteDescription([FromQuery] int clientID, [FromRoute] int ID)
+        {
+
+            try
+            {
+                var result = _additionalDescriptionService.DeleteAdditionalDescription(clientID, ID);
+                if (result is ErrorResponse) return BadRequest(result);
+
+                if (result == null) return NotFound(result);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

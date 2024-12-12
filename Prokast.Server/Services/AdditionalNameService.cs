@@ -131,7 +131,7 @@ namespace Prokast.Server.Services
                 return responseNull;
             }
 
-            _dbContext.Remove(findAdditionalName);
+            _dbContext.AdditionalName.Remove(findAdditionalName);
             _dbContext.SaveChanges();
 
             var response = new DeleteResponse() { ID = random.Next(1, 100000), ClientID = clientID, deleteMsg = "Parametr został usumięty" };
