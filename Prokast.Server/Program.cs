@@ -34,6 +34,7 @@ builder.Services.AddScoped<IDictionaryService, DictionaryService>();
 builder.Services.AddScoped<IPricesService, PricesService>();
 builder.Services.AddScoped<IOthersService, OthersService>();
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IAdditionalDescriptionService, AdditionalDescriptionService>();
 
 var app = builder.Build();
 
