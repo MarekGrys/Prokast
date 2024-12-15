@@ -45,6 +45,7 @@ namespace Prokast.Server.Services
                 AdditionalNames = "-1",
                 DictionaryParams = "-1",
                 CustomParams = "-1",
+                Photos = "-1",
                 PriceListID = -1
                 
             };
@@ -80,6 +81,22 @@ namespace Prokast.Server.Services
                 _dbContext.SaveChanges();
             }
 
+            foreach (var item in input.Photos)
+            {
+                var param = new Photo
+                {
+                    Name = item.Name.ToString(),
+                    
+
+                    Value = item.Value.ToString(),
+                    ProductId = newProduct.ID,
+                    ClientID = clientID
+                };
+                _dbContext.Photos.Add(param);
+                _dbContext.SaveChanges();
+            }
+
+
             var priceList = new PriceLists
             {
                 Name = input.PriceList.Name,
@@ -114,6 +131,14 @@ namespace Prokast.Server.Services
             foreach (var item in input.DictionaryParams)
             {
                 dictionaryParams.Add(_dbContext.DictionaryParams.FirstOrDefault(x => x.Name == item.Name).ID);
+
+
+            }
+
+            List<int> photos = new List<int>();
+            foreach (var item in input.Photos)
+            {
+                photos.Add(_dbContext.Photos.FirstOrDefault(x => x.Name == item.Name && x.ClientID == clientID).Id);
             }
 
             List<int> customParams = new List<int>();
@@ -125,6 +150,7 @@ namespace Prokast.Server.Services
             newProduct.AdditionalNames = string.Join(",", additionalNames);         
             newProduct.DictionaryParams = string.Join(",", dictionaryParams);
             newProduct.CustomParams = string.Join(",", customParams);
+            newProduct.Photos = string.Join(",", photos);
             newProduct.PriceListID = newPriceList.ID;
 
             _dbContext.SaveChanges();

@@ -20,6 +20,7 @@ namespace Prokast.Server.Models
         [Required]
         public List<AdditionalName>? AdditionalNames { get; set; }
         public List<DictionaryParams>? DictionaryParams { get; set; }
+        public List<Photo> Photos { get; set; }
         public List<CustomParams>? CustomParams { get; set; }
         [Required]
         public PriceListAll PriceList { get; set; }
