@@ -40,7 +40,7 @@ namespace Prokast.Server.Services
         }
 
         #region RegisterClient
-        public Response RegisterClient([FromBody] Registration registration) 
+        public async Task<Response> RegisterClient([FromBody] Registration registration) 
         { 
             var reg = _mapper.Map<Registration>(registration);
             if (reg == null)
@@ -54,8 +54,8 @@ namespace Prokast.Server.Services
                 Password = getHashed(registration.Password)
             };
            
-            _dbContext.AccountLogIn.Add(account);
-            _dbContext.SaveChanges(); 
+            await _dbContext.AccountLogIn.AddAsync(account);
+            await _dbContext.SaveChangesAsync(); 
                 var test = _dbContext.AccountLogIn.FirstOrDefault(x => x.Login == account.Login);
 
             var client = new Client
@@ -72,8 +72,8 @@ namespace Prokast.Server.Services
                 Country = reg.Country
 
             };
-            _dbContext.Clients.Add(client);
-            _dbContext.SaveChanges(); 
+            await _dbContext.Clients.AddAsync(client);
+            await _dbContext.SaveChangesAsync(); 
 
             var response = new ClientRegisterResponse() { ID = random.Next(1, 100000), ClientID = test.ID, Registration = reg };
             return response;

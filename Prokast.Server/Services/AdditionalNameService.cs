@@ -24,7 +24,7 @@ namespace Prokast.Server.Services
             _mapper = mapper;
         }
 
-        public Response GetAllNames(int clientID)
+        public async Task<Response> GetAllNames(int clientID)
         {
             var addNameList = _dbContext.AdditionalName.Where( x => x.ClientID == clientID).ToList();
             var response = new AdditionalNameGetResponse() { ID = random.Next(1, 100000), Model = addNameList };
@@ -36,7 +36,7 @@ namespace Prokast.Server.Services
             return response;
         }
 
-        public Response GetNamesByID(int ID, int clientID)
+        public async Task<Response> GetNamesByID(int ID, int clientID)
         {
             var addName = _dbContext.AdditionalName.Where(x => x.ID == ID && x.ClientID == clientID).ToList();
             var response = new AdditionalNameGetResponse() { ID = random.Next(1, 100000), Model = addName };
@@ -48,7 +48,7 @@ namespace Prokast.Server.Services
             return response;
 
         }
-        public Response GetNamesByIDNames(int ID, string Title, int clientID)
+        public async Task<Response> GetNamesByIDNames(int ID, string Title, int clientID)
         {
             var addName = _dbContext.AdditionalName.Where(x => x.ID == ID && x.Title.Contains(Title) && x.ClientID == clientID).ToList();
             var response = new AdditionalNameGetResponse() { ID = random.Next(1, 100000), Model = addName };
@@ -60,7 +60,7 @@ namespace Prokast.Server.Services
             return response;
 
         }
-        public Response GetNamesByIDRegion(int ID, int Region, int clientID)
+        public async Task<Response> GetNamesByIDRegion(int ID, int Region, int clientID)
         {
             var addName = _dbContext.AdditionalName.Where(x => x.ID == ID && x.Region == Region && x.ClientID == clientID).ToList();
             var response = new AdditionalNameGetResponse() { ID = random.Next(1, 100000), Model = addName };
@@ -73,7 +73,7 @@ namespace Prokast.Server.Services
 
         }
 
-        public Response CreateAdditionalName([FromBody] AdditionalNameDto additionalNameDto, int clientID)
+        public async Task<Response> CreateAdditionalName([FromBody] AdditionalNameDto additionalNameDto, int clientID)
         {
 
             var addName = _mapper.Map<AdditionalNameDto>(additionalNameDto);
@@ -93,14 +93,14 @@ namespace Prokast.Server.Services
             };
 
 
-            _dbContext.AdditionalName.Add(newName);
-            _dbContext.SaveChanges();
+            await _dbContext.AdditionalName.AddAsync(newName);
+            await _dbContext.SaveChangesAsync();
 
             var response = new Response() { ID = random.Next(1, 100000), ClientID = clientID };
             return response;
         }
 
-        public Response EditAdditionalName(int clientID, int ID, AdditionalNameDto data)
+        public async Task<Response> EditAdditionalName(int clientID, int ID, AdditionalNameDto data)
         {
             var findName = _dbContext.AdditionalName.FirstOrDefault(x => x.ClientID == clientID && x.ID == ID);
 
@@ -114,13 +114,13 @@ namespace Prokast.Server.Services
             findName.Title = data.Title;
             findName.Region = data.Region;
             findName.Value = data.Value;
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
 
             var response = new AdditionalNameEditResponse() { ID = random.Next(1, 100000), ClientID = clientID, additionalNameEdit = findName };
 
             return response;
         }
-        public Response DeleteAdditionalName(int clientID, int ID)
+        public async Task<Response> DeleteAdditionalName(int clientID, int ID)
         {
             var findAdditionalName = _dbContext.AdditionalName.FirstOrDefault(x => x.ClientID == clientID && x.ID == ID);
 
@@ -132,7 +132,7 @@ namespace Prokast.Server.Services
             }
 
             _dbContext.AdditionalName.Remove(findAdditionalName);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
 
             var response = new DeleteResponse() { ID = random.Next(1, 100000), ClientID = clientID, deleteMsg = "Parametr został usumięty" };
 

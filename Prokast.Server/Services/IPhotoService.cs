@@ -6,9 +6,9 @@ namespace Prokast.Server.Services
 {
     public interface IPhotoService 
     {
-        Response GetAllPhotos(int clientID);
-        Response GetPhotosByID(int clientID, int ID);
-        Response EditPhotos(int clientID, int ID, PhotoEdit data);
-        Response DeletePhotos(int clientID, int ID);
+        Task<Response> GetAllPhotos(int clientID);
+        Task<Response> GetPhotosByID(int clientID, int ID);
+        Task<Response> EditPhotos(int clientID, int ID, PhotoEdit data);
+        Task<Response> DeletePhotos(int clientID, int ID);
     }
 }

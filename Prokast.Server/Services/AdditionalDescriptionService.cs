@@ -19,7 +19,7 @@ namespace Prokast.Server.Services
         }
 
         #region Create
-        public Response CreateAdditionalDescription([FromBody] AdditionalDescriptionCreateDto description, int clientID)
+        public async Task<Response> CreateAdditionalDescription([FromBody] AdditionalDescriptionCreateDto description, int clientID)
         {
             var input = _mapper.Map<AdditionalDescriptionCreateDto>(description);
 
@@ -37,8 +37,8 @@ namespace Prokast.Server.Services
                 Value = input.Value,
             };
 
-            _dbContext.AdditionalDescriptions.Add(additionalDescription);
-            _dbContext.SaveChanges();
+            await _dbContext.AdditionalDescriptions.AddAsync(additionalDescription);
+            await _dbContext.SaveChangesAsync();
 
             var response = new Response() { ID = random.Next(1, 100000), ClientID = clientID };
             return response;
@@ -46,7 +46,7 @@ namespace Prokast.Server.Services
         #endregion
 
 
-        public Response GetAllDescriptions(int clientID)
+        public async Task<Response> GetAllDescriptions(int clientID)
         {
             var addDescList = _dbContext.AdditionalDescriptions.Where(x => x.ClientID == clientID).ToList();
             var response = new AdditionalDescriptionGetResponse() { ID = random.Next(1, 100000), Model = addDescList };
@@ -58,7 +58,7 @@ namespace Prokast.Server.Services
             return response;
         }
 
-        public Response GetDescriptionsByID(int ID, int clientID)
+        public async Task<Response> GetDescriptionsByID(int ID, int clientID)
         {
             var addDesc = _dbContext.AdditionalDescriptions.Where(x => x.ID == ID && x.ClientID == clientID).ToList();
             var response = new AdditionalDescriptionGetResponse() { ID = random.Next(1, 100000), Model = addDesc };
@@ -70,7 +70,7 @@ namespace Prokast.Server.Services
             return response;
         }
 
-        public Response GetDescriptionsByNames(string Title, int clientID)
+        public async Task<Response> GetDescriptionsByNames(string Title, int clientID)
         {
             var addDesc = _dbContext.AdditionalDescriptions.Where(x => x.Title.Contains(Title) && x.ClientID == clientID).ToList();
             var response = new AdditionalDescriptionGetResponse() { ID = random.Next(1, 100000), Model = addDesc };
@@ -83,7 +83,7 @@ namespace Prokast.Server.Services
 
         }
 
-        public Response GetDescriptionByRegion(int Region, int clientID)
+        public async Task<Response> GetDescriptionByRegion(int Region, int clientID)
         {
             var addDesc = _dbContext.AdditionalDescriptions.Where(x => x.Region == Region && x.ClientID == clientID).ToList();
             var response = new AdditionalDescriptionGetResponse() { ID = random.Next(1, 100000), Model = addDesc };
@@ -96,7 +96,7 @@ namespace Prokast.Server.Services
 
         }
 
-        public Response EditAdditionalDescription(int clientID, int ID, AdditionalDescriptionCreateDto data)
+        public async Task<Response> EditAdditionalDescription(int clientID, int ID, AdditionalDescriptionCreateDto data)
         {
             var findDescription = _dbContext.AdditionalDescriptions.FirstOrDefault(x => x.ClientID == clientID && x.ID == ID);
 
@@ -110,14 +110,14 @@ namespace Prokast.Server.Services
             findDescription.Title = data.Title;
             findDescription.Region = data.Region;
             findDescription.Value = data.Value;
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
 
             var response = new AdditionalDescriptionEditResponse() { ID = random.Next(1, 100000), ClientID = clientID, AdditionalDescriptionEdit = findDescription };
 
             return response;
         }
 
-        public Response DeleteAdditionalDescription(int clientID, int ID)
+        public async Task<Response> DeleteAdditionalDescription(int clientID, int ID)
         {
             var findAdditionalDescription = _dbContext.AdditionalDescriptions.FirstOrDefault(x => x.ClientID == clientID && x.ID == ID);
 
@@ -129,7 +129,7 @@ namespace Prokast.Server.Services
             }
 
             _dbContext.AdditionalDescriptions.Remove(findAdditionalDescription);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
 
             var response = new DeleteResponse() { ID = random.Next(1, 100000), ClientID = clientID, deleteMsg = "Parametr został usumięty" };
 

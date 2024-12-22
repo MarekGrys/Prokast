@@ -21,7 +21,7 @@ namespace Prokast.Server.Services
         }
 
         #region Create
-        public Response CreateProduct([FromBody] ProductCreateDto productCreateDto, int clientID)
+        public async Task<Response> CreateProduct([FromBody] ProductCreateDto productCreateDto, int clientID)
         {
             var input = _mapper.Map<ProductCreateDto>(productCreateDto);
             var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Błędnie podane dane" };
@@ -50,8 +50,8 @@ namespace Prokast.Server.Services
                 
             };
 
-            _dbContext.Products.Add(product);
-            _dbContext.SaveChanges();
+            await _dbContext.Products.AddAsync(product);
+            await _dbContext.SaveChangesAsync();
 
             var newProduct = _dbContext.Products.FirstOrDefault(x => x.ClientID == clientID && x.Name == input.Name);
 
@@ -64,8 +64,8 @@ namespace Prokast.Server.Services
                     Region = item.Region,
                     Value = item.Value.ToString()
                 };
-                _dbContext.AdditionalName.Add(name);
-                _dbContext.SaveChanges();
+                await _dbContext.AdditionalName.AddAsync(name);
+                await _dbContext.SaveChangesAsync();
             }
 
             foreach(var item in input.CustomParams)
@@ -77,8 +77,8 @@ namespace Prokast.Server.Services
                     Value = item.Value.ToString(),
                     ClientID = clientID
                 };               
-                _dbContext.CustomParams.Add(param);
-                _dbContext.SaveChanges();
+                await _dbContext.CustomParams.AddAsync(param);
+                await _dbContext.SaveChangesAsync();
             }
 
             foreach (var item in input.Photos)
@@ -92,8 +92,8 @@ namespace Prokast.Server.Services
                     ProductId = newProduct.ID,
                     ClientID = clientID
                 };
-                _dbContext.Photos.Add(param);
-                _dbContext.SaveChanges();
+                await _dbContext.Photos.AddAsync(param);
+                await _dbContext.SaveChangesAsync();
             }
 
 
@@ -102,8 +102,8 @@ namespace Prokast.Server.Services
                 Name = input.PriceList.Name,
                 ClientID = clientID,
             };
-            _dbContext.PriceLists.Add(priceList);
-            _dbContext.SaveChanges();
+            await _dbContext.PriceLists.AddAsync(priceList);
+            await _dbContext.SaveChangesAsync();
             
             var newPriceList = _dbContext.PriceLists.FirstOrDefault(x => x.Name == input.PriceList.Name && x.ClientID == clientID);
             foreach(var item in input.Prices)
@@ -117,8 +117,8 @@ namespace Prokast.Server.Services
                     Brutto = item.Brutto,
                     PriceListID = newPriceList.ID
                 };
-                _dbContext.Prices.Add(price);
-                _dbContext.SaveChanges();
+                await _dbContext.Prices.AddAsync(price);
+                await _dbContext.SaveChangesAsync();
             }
 
             List<int> additionalNames = new List<int>();
@@ -153,7 +153,7 @@ namespace Prokast.Server.Services
             newProduct.Photos = string.Join(",", photos);
             newProduct.PriceListID = newPriceList.ID;
 
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
 
             var response = new Response() { ID = random.Next(1, 100000), ClientID = clientID };
             return response;
@@ -161,7 +161,7 @@ namespace Prokast.Server.Services
         #endregion
 
         #region Get
-        public Response GetProducts([FromBody] ProductGetFilter productGetFilter, int clientID)
+        public async Task<Response> GetProducts([FromBody] ProductGetFilter productGetFilter, int clientID)
         {
             var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Błędnie podane dane" };
             var products = _dbContext.Products.Where(x => x.ClientID == clientID);
@@ -254,7 +254,7 @@ namespace Prokast.Server.Services
 
 
         #region Delete
-        public  DeleteResponse DeleteProduct(int clientID, int productID)
+        public async Task<DeleteResponse> DeleteProduct(int clientID, int productID)
         {
             var products = _dbContext.Products.FirstOrDefault(x => x.ClientID == clientID && x.ID == productID);
             if (products == null)
@@ -290,7 +290,7 @@ namespace Prokast.Server.Services
             }                
             _dbContext.Remove(productPriceLists);
             _dbContext.Remove(products);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
 
             var response = new DeleteResponse() { ID = random.Next(1, 100000), ClientID = clientID, deleteMsg = "Produkt został usunięty" };
             return response;
@@ -302,7 +302,7 @@ namespace Prokast.Server.Services
 
 
         #region Edit
-        public Response EditProduct(ProductEdit productEdit, int clientID, int productID)
+        public async Task<Response> EditProduct(ProductEdit productEdit, int clientID, int productID)
         {
             var product = _dbContext.Products.FirstOrDefault(x => x.ID == productID && x.ClientID == clientID);
             if (product == null)
@@ -316,7 +316,7 @@ namespace Prokast.Server.Services
             product.EAN = productEdit.EAN;
             product.Description = productEdit.Description;
             product.ModificationDate = DateTime.Now;
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
 
             var response = new ProductEditResponse() { ID = random.Next(1, 100000), ClientID = clientID, Model = productEdit };
             return response;

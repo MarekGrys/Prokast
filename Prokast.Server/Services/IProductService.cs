@@ -6,10 +6,10 @@ namespace Prokast.Server.Services
 {
     public interface IProductService
     {
-        Response CreateProduct([FromBody] ProductCreateDto productCreateDto, int clientID);
-        Response GetProducts([FromBody] ProductGetFilter productGetFilter, int clientID);
-        DeleteResponse DeleteProduct(int clientID, int productID);
-        Response EditProduct(ProductEdit productEdit, int clientID, int productID);
+        Task<Response> CreateProduct([FromBody] ProductCreateDto productCreateDto, int clientID);
+        Task<Response> GetProducts([FromBody] ProductGetFilter productGetFilter, int clientID);
+        Task<DeleteResponse> DeleteProduct(int clientID, int productID);
+        Task<Response> EditProduct(ProductEdit productEdit, int clientID, int productID);
         
         }
 }

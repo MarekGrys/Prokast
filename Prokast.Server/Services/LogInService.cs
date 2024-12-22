@@ -41,7 +41,7 @@ namespace Prokast.Server.Services
         }
 
         #region GetAll
-        public Response GetLogIns(int clientID)
+        public async Task<Response> GetLogIns(int clientID)
         {
             var logins = _dbContext.AccountLogIn.ToList();
             if (logins.Count() == 0)
@@ -55,7 +55,7 @@ namespace Prokast.Server.Services
         #endregion
 
         #region LogIn
-        public Response Log_In([FromBody] LoginRequest loginRequest)
+        public async Task<Response> Log_In([FromBody] LoginRequest loginRequest)
         {
 
             var account = _dbContext.AccountLogIn.FirstOrDefault(x => x.Login == loginRequest.Login);

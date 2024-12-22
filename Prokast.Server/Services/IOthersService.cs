@@ -4,6 +4,6 @@ namespace Prokast.Server.Services
 {
     public interface IOthersService
     {
-        Response GetRegions();
+        Task<Response> GetRegions();
     }
 }

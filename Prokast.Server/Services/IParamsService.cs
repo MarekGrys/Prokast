@@ -6,11 +6,11 @@ namespace Prokast.Server.Services
 {
     public interface IParamsService
     {
-        Response CreateCustomParam([FromBody] CustomParamsDto customParamsDto, int clientID);
-        Response GetAllParams(int clientID);
-        Response GetParamsByID(int clientID, int ID);
-        Response GetParamsByName(int clientID, string name);
-        Response EditParams(int clientID, int ID, CustomParamsDto data);
-        Response DeleteParams(int clientID, int ID);
+        Task<Response> CreateCustomParam([FromBody] CustomParamsDto customParamsDto, int clientID);
+        Task<Response> GetAllParams(int clientID);
+        Task<Response> GetParamsByID(int clientID, int ID);
+        Task<Response> GetParamsByName(int clientID, string name);
+        Task<Response> EditParams(int clientID, int ID, CustomParamsDto data);
+        Task<Response> DeleteParams(int clientID, int ID);
     }
 }

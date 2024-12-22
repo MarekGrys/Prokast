@@ -21,7 +21,7 @@ namespace Prokast.Server.Services
         }
 
         #region CreateCustonParam
-        public Response CreateCustomParam([FromBody] CustomParamsDto customParamsDto, int clientID ) 
+        public async Task<Response> CreateCustomParam([FromBody] CustomParamsDto customParamsDto, int clientID ) 
         {
             
             var param = _mapper.Map<CustomParamsDto>(customParamsDto);
@@ -40,8 +40,8 @@ namespace Prokast.Server.Services
             };
             
 
-            _dbContext.CustomParams.Add(customParam);
-            _dbContext.SaveChanges();
+            await _dbContext.CustomParams.AddAsync(customParam);
+            await _dbContext.SaveChangesAsync();
 
             var response = new Response() { ID = random.Next(1,100000), ClientID = clientID};
             return response;
@@ -49,7 +49,7 @@ namespace Prokast.Server.Services
         #endregion
 
         #region GetAllParams
-        public Response GetAllParams(int clientID)
+        public async Task<Response> GetAllParams(int clientID)
         {
             var paramList = _dbContext.CustomParams.Where(x => x.ClientID == clientID).ToList();
             var response = new ParamsGetResponse() { ID = random.Next(1,100000), ClientID = clientID, Model = paramList };
@@ -63,7 +63,7 @@ namespace Prokast.Server.Services
         #endregion
 
         #region GetParamsByID
-        public Response GetParamsByID(int clientID, int ID)
+        public async Task<Response> GetParamsByID(int clientID, int ID)
         {
             var param = _dbContext.CustomParams.Where(x => x.ClientID == clientID && x.ID == ID).ToList();
             var response = new ParamsGetResponse() { ID = random.Next(1, 100000), ClientID = clientID, Model = param };
@@ -78,7 +78,7 @@ namespace Prokast.Server.Services
         #endregion
 
         #region GetParamsByName
-        public Response GetParamsByName(int clientID, string name) 
+        public async Task<Response> GetParamsByName(int clientID, string name) 
         {
             var param = _dbContext.CustomParams.Where(x => x.ClientID == clientID && x.Name.Contains(name)).ToList();
 
@@ -94,7 +94,7 @@ namespace Prokast.Server.Services
         #endregion
 
         #region EditParams
-        public Response EditParams(int clientID, int ID, CustomParamsDto data)
+        public async Task<Response> EditParams(int clientID, int ID, CustomParamsDto data)
         {
             var findParam = _dbContext.CustomParams.FirstOrDefault(x => x.ClientID == clientID && x.ID == ID);
             
@@ -108,7 +108,7 @@ namespace Prokast.Server.Services
             findParam.Name = data.Name;
             findParam.Type = data.Type;
             findParam.Value = data.Value;
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
 
             var response = new ParamsEditResponse() { ID = random.Next(1, 100000), ClientID = clientID, customParams = findParam };
             
@@ -117,7 +117,7 @@ namespace Prokast.Server.Services
         #endregion
 
         #region DeleteParams
-        public Response DeleteParams(int clientID, int ID)
+        public async Task<Response> DeleteParams(int clientID, int ID)
         {
             var findParam = _dbContext.CustomParams.FirstOrDefault(x => x.ClientID == clientID && x.ID == ID);
 
@@ -129,7 +129,7 @@ namespace Prokast.Server.Services
             }
 
             _dbContext.Remove(findParam);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
 
             var response = new DeleteResponse() { ID = random.Next(1, 100000), ClientID = clientID, deleteMsg = "Parametr został usumięty" };
 

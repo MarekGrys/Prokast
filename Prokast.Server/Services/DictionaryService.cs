@@ -21,7 +21,7 @@ namespace Prokast.Server.Services
         }
 
         #region GetAllParams
-        public Response GetAllParams()
+        public async Task<Response> GetAllParams()
         {
             var paramList = _dbContext.DictionaryParams.ToList();
             var response = new DictionaryGetResponse() { ID = random.Next(1, 100000), Model = paramList };
@@ -35,7 +35,7 @@ namespace Prokast.Server.Services
         #endregion
 
         #region GetParamsByID
-        public Response GetParamsByID( int ID)
+        public async Task<Response> GetParamsByID( int ID)
         {
             var param = _dbContext.DictionaryParams.Where(x => x.ID == ID).ToList();
             var response = new DictionaryGetResponse() { ID = random.Next(1, 100000),  Model = param};
@@ -50,7 +50,7 @@ namespace Prokast.Server.Services
         #endregion
 
         #region GetParamsByName
-        public Response GetParamsByName( string name)
+        public async Task<Response> GetParamsByName( string name)
         {
             var param = _dbContext.DictionaryParams.Where(x => x.Name == name).ToList();
 
@@ -66,7 +66,7 @@ namespace Prokast.Server.Services
         #endregion
 
         #region ReturningValuesByName
-        public Response GetParamsByRegion (int region)
+        public async Task<Response> GetParamsByRegion (int region)
         {
             var param = _dbContext.DictionaryParams.Where(x => x.IdRegion == region).ToList();
 
@@ -89,7 +89,7 @@ namespace Prokast.Server.Services
             return response;
         }
 
-        public Response GetValuesByName (string name)
+        public async Task<Response> GetValuesByName (string name)
         {
             var param = _dbContext.DictionaryParams.Where(x => x.Name == name).ToList();
 
