@@ -134,5 +134,22 @@ namespace Prokast.Server.Services
             var response = new AccountCreateResponse() {ID =  random.Next(1,100000), ClientID = clientID, Model = account};
             return response;
         }
+
+        public Response EditAccount(AccountEditDto accountEdit, int clientID)
+        {
+            
+            var oldAccount = _dbContext.AccountLogIn.FirstOrDefault(x => x.ID == clientID && x.Login == accountEdit.Login);
+            if (oldAccount == null)
+            {
+                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Błędnie podane dane" };
+                return responseNull;
+            }
+            oldAccount.WarehouseID = accountEdit.WarehouseID;
+            oldAccount.Role = accountEdit.Role;
+            _dbContext.SaveChanges();
+
+            var response = new AccountEditResponse() { ID = random.Next(1,100000), ClientID = clientID, Model = accountEdit };
+            return response;
+        }
     }
 }

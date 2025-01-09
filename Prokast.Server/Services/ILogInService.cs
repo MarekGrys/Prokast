@@ -9,5 +9,6 @@ namespace Prokast.Server.Services
         Response GetLogIns(int clientID);
         Response Log_In([FromBody] LoginRequest loginRequest);
         Response CreateAccount(AccountCreateDto accountCreate, int clientID);
+        Response EditAccount(AccountEditDto accountEdit, int clientID);
     }
 }

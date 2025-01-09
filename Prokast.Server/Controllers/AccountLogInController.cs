@@ -4,6 +4,7 @@ using Prokast.Server.Models;
 using Prokast.Server.Services;
 using Microsoft.AspNetCore.Mvc;
 using Prokast.Server.Models.ResponseModels;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 //using Microsoft.EntityFrameworkCore;
 
 
@@ -66,6 +67,29 @@ namespace Prokast.Server.Controllers
             {
                 var result = _LogInService.CreateAccount(accountCreate, clientID);
                 if (result is ErrorResponse) return BadRequest(result);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut]
+        [ProducesResponseType(typeof(AccountEditResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        public ActionResult<Response> EditAccount([FromBody] AccountEditDto accountEdit, [FromQuery] int clientID)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Błędne dane");
+            }
+            try
+            {
+                var result = _LogInService.EditAccount(accountEdit, clientID);
+                if (result is ErrorResponse) return BadRequest(result);
+
+                if (result == null) return NotFound(result);
                 return Ok(result);
             }
             catch (Exception ex)
