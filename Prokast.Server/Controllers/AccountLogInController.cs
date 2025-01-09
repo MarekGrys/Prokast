@@ -56,5 +56,22 @@ namespace Prokast.Server.Controllers
             }   
         }
         #endregion
+
+        [HttpPost("create")]
+        [ProducesResponseType(typeof(Response), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        public ActionResult<Response> CreateAccount([FromBody] AccountCreateDto accountCreate,[FromQuery] int clientID)
+        {
+            try
+            {
+                var result = _LogInService.CreateAccount(accountCreate, clientID);
+                if (result is ErrorResponse) return BadRequest(result);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
