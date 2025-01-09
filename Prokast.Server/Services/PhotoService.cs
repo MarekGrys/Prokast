@@ -19,7 +19,7 @@ namespace Prokast.Server.Services
             _mapper = mapper;
         }
 
-        public async Task<Response> GetAllPhotos(int clientID)
+        public Response GetAllPhotos(int clientID)
         {
             var photoList = _dbContext.Photos.Where(x => x.ClientID == clientID).ToList();
             var response = new PhotoGetResponse() { ID = random.Next(1, 100000), ClientID = clientID, Model = photoList };
@@ -31,7 +31,7 @@ namespace Prokast.Server.Services
             return response;
         }
 
-        public async Task<Response> GetPhotosByID(int clientID, int ID)
+        public Response GetPhotosByID(int clientID, int ID)
         {
             var param = _dbContext.Photos.Where(x => x.ClientID == clientID && x.Id == ID).ToList();
             var response = new PhotoGetResponse() { ID = random.Next(1, 100000), ClientID = clientID, Model = param };
@@ -44,7 +44,7 @@ namespace Prokast.Server.Services
 
         }
 
-        public async Task<Response> EditPhotos(int clientID, int ID, PhotoEdit data)
+        public Response EditPhotos(int clientID, int ID, PhotoEdit data)
         {
             var findPhoto = _dbContext.Photos.FirstOrDefault(x => x.ClientID == clientID && x.Id == ID);
 
@@ -57,14 +57,14 @@ namespace Prokast.Server.Services
 
             findPhoto.Name = data.Name;
             
-            await _dbContext.SaveChangesAsync();
+            _dbContext.SaveChanges();
 
             var response = new PhotoEditResponse() { ID = random.Next(1, 100000), ClientID = clientID, photo = findPhoto };
 
             return response;
         }
 
-        public async Task<Response> DeletePhotos(int clientID, int ID)
+        public Response DeletePhotos(int clientID, int ID)
         {
             var findPhoto = _dbContext.Photos.FirstOrDefault(x => x.ClientID == clientID && x.Id == ID);
 
@@ -76,7 +76,7 @@ namespace Prokast.Server.Services
             }
 
             _dbContext.Remove(findPhoto);
-            await _dbContext.SaveChangesAsync();
+            _dbContext.SaveChanges();
 
             var response = new DeleteResponse() { ID = random.Next(1, 100000), ClientID = clientID, deleteMsg = "Parametr został usumięty" };
 

@@ -17,7 +17,7 @@ namespace Prokast.Server.Services
             _mapper = mapper;
         }
 
-        public async Task<Response> GetRegions()
+        public Response GetRegions()
         {
             var regions = _dbContext.Regions.ToList();
             if (regions.Count() == 0)

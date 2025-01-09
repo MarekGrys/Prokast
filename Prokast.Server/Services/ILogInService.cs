@@ -6,7 +6,7 @@ namespace Prokast.Server.Services
 {
     public interface ILogInService
     {
-        Task<Response> GetLogIns(int clientID);
-        Task<Response> Log_In([FromBody] LoginRequest loginRequest);
+        Response GetLogIns(int clientID);
+        Response Log_In([FromBody] LoginRequest loginRequest);
     }
 }

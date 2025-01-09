@@ -21,7 +21,7 @@ namespace Prokast.Server.Services
         }
 
         #region Create
-        public async Task<Response> CreatePriceList([FromBody] PriceListsCreateDto priceLists, int clientID)
+        public Response CreatePriceList([FromBody] PriceListsCreateDto priceLists, int clientID)
         {
             var input = _mapper.Map<PriceListsCreateDto>(priceLists);
             if (input == null)
@@ -34,14 +34,14 @@ namespace Prokast.Server.Services
                 Name = input.Name.ToString(),
                 ClientID = clientID
             };
-            await _dbContext.PriceLists.AddAsync(priceList);
-            await _dbContext.SaveChangesAsync();
+            _dbContext.PriceLists.Add(priceList);
+            _dbContext.SaveChanges();
 
             var response = new Response() { ID = random.Next(1, 100000), ClientID = clientID };
             return response;
         }
 
-        public async Task<Response> CreatePrice([FromBody] PricesDto prices, int priceListID, int clientID)
+        public Response CreatePrice([FromBody] PricesDto prices, int priceListID, int clientID)
         {
            
             
@@ -69,8 +69,8 @@ namespace Prokast.Server.Services
                 PriceListID = priceListID,
             };
 
-            await _dbContext.Prices.AddAsync(price);
-            await _dbContext.SaveChangesAsync();
+            _dbContext.Prices.Add(price);
+            _dbContext.SaveChanges();
 
             var response = new Response() { ID = random.Next(1, 100000), ClientID = clientID };
             return response;
@@ -78,7 +78,7 @@ namespace Prokast.Server.Services
         #endregion
 
         #region Get
-        public async Task<Response> GetAllPriceLists(int clientID)
+        public Response GetAllPriceLists(int clientID)
         {
             var priceList = _dbContext.PriceLists.Where(x => x.ClientID == clientID).ToList();
             if (priceList.Count() == 0)
@@ -104,7 +104,7 @@ namespace Prokast.Server.Services
             return response;
         }
 
-        public async Task<Response> GetPriceListsByName (int clientID, string name)
+        public Response GetPriceListsByName (int clientID, string name)
         {
             var priceList = _dbContext.PriceLists.Where(x =>x.ClientID == clientID && x.Name.Contains(name)).ToList();
             if (priceList.Count() == 0)
@@ -130,7 +130,7 @@ namespace Prokast.Server.Services
             return response;
         }
 
-        public async Task<Response> GetAllPrices(int clientID, int priceListID)
+        public Response GetAllPrices(int clientID, int priceListID)
         {
             var priceList = _dbContext.Prices.Where(x => x.PriceListID == priceListID).ToList();
             if (priceList.Count() == 0)
@@ -142,7 +142,7 @@ namespace Prokast.Server.Services
             return response;
         }
 
-        public async Task<Response> GetPricesByRegion (int clientID,int priceListID, int regionID)
+        public Response GetPricesByRegion (int clientID,int priceListID, int regionID)
         {
             var priceList = _dbContext.Prices.Where(x => x.PriceListID==priceListID && x.RegionID == regionID).ToList();
             if (priceList.Count() == 0)
@@ -154,7 +154,7 @@ namespace Prokast.Server.Services
             return response;
         }
 
-        public async Task<Response> GetPricesByName (int clientID,int priceListID, string name)
+        public Response GetPricesByName (int clientID,int priceListID, string name)
         {
             var priceList = _dbContext.Prices.Where(x => x.PriceListID == priceListID && x.Name.Contains(name)).ToList();
             if (priceList.Count() == 0)
@@ -168,7 +168,7 @@ namespace Prokast.Server.Services
         #endregion
 
         #region Edit
-        public async Task<Response> EditPrice(EditPriceDto editPriceDto,int clientID, int priceListID, int priceID)
+        public Response EditPrice(EditPriceDto editPriceDto,int clientID, int priceListID, int priceID)
         {
             var price = _dbContext.Prices.FirstOrDefault(x => x.PriceListID == priceListID && x.ID == priceID);
             if (price == null)
@@ -181,7 +181,7 @@ namespace Prokast.Server.Services
             price.Netto = editPriceDto.Netto;
             price.VAT = editPriceDto.VAT;
             
-            await _dbContext.SaveChangesAsync();
+            _dbContext.SaveChanges();
 
             var response = new PricesEditResponse() { ID = random.Next(1, 100000), ClientID = clientID, Model = editPriceDto };
             return response;
@@ -189,8 +189,7 @@ namespace Prokast.Server.Services
         }
         #endregion
 
-        #region Delete
-        public async Task<Response> DeletePrice(int clientID, int priceListID, int priceID)
+        public Response DeletePrice(int clientID, int priceListID, int priceID)
         {
             var price = _dbContext.Prices.FirstOrDefault(x => x.PriceListID == priceListID && x.ID == priceID);
             if (price == null)
@@ -200,13 +199,13 @@ namespace Prokast.Server.Services
             }
 
             _dbContext.Remove(price);
-            await _dbContext.SaveChangesAsync();
+            _dbContext.SaveChanges();
 
             var response = new DeleteResponse() { ID = random.Next(1, 100000), ClientID = clientID, deleteMsg = "Cena została usunięta" };
             return response;
         }
 
-        public async Task<Response> DeletePriceList(int clientID, int priceListID)
+        public Response DeletePriceList(int clientID, int priceListID)
         {
             var priceList = _dbContext.PriceLists.FirstOrDefault(x => x.ID == priceListID && x.ClientID == clientID);
             if (priceList == null)
@@ -223,11 +222,10 @@ namespace Prokast.Server.Services
             }
             
             _dbContext.Remove(priceList);
-            await _dbContext.SaveChangesAsync();
+            _dbContext.SaveChanges();
 
             var response = new DeleteResponse() { ID = random.Next(1, 100000), ClientID = clientID, deleteMsg = "Cennik został usunięty" };
             return response;
         }
-        #endregion
     }
 }

@@ -6,12 +6,12 @@ namespace Prokast.Server.Services
 {
     public interface IAdditionalNameService
     {
-        Task<Response> CreateAdditionalName([FromBody] AdditionalNameDto additionalNameDto, int clientID);
-        Task<Response> GetAllNames(int clientID);
-        Task<Response> GetNamesByID(int ID, int clientID);
-        Task<Response> GetNamesByIDNames(int ID, string Title, int clientID);
-        Task<Response> GetNamesByIDRegion(int ID, int Region, int clientID);
-        Task<Response> EditAdditionalName(int clientID, int ID, AdditionalNameDto data);
-        Task<Response> DeleteAdditionalName(int clientID, int ID);
+        Response CreateAdditionalName([FromBody] AdditionalNameDto additionalNameDto, int clientID);
+        Response GetAllNames(int clientID);
+        Response GetNamesByID(int ID, int clientID);
+        Response GetNamesByIDNames(int ID, string Title, int clientID);
+        Response GetNamesByIDRegion(int ID, int Region, int clientID);
+        Response EditAdditionalName(int clientID, int ID, AdditionalNameDto data);
+        Response DeleteAdditionalName(int clientID, int ID);
     }
 }
