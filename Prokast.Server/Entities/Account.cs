@@ -12,5 +12,7 @@ namespace Prokast.Server.Entities
         public string Password { get; set; }
         public int? WarehouseID { get; set; }
         public int? Role { get; set; }
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
     }
 }

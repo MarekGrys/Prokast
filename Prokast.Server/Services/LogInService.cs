@@ -93,7 +93,7 @@ namespace Prokast.Server.Services
 
         public Response CreateAccount(AccountCreateDto accountCreate, int clientID)
         {
-            const string litery = "abcdefghijklmnopqrstuvwxyz";
+            const string litery = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
             var account = _mapper.Map<AccountCreateDto>(accountCreate);
             if (account == null)
@@ -120,7 +120,9 @@ namespace Prokast.Server.Services
                 Login = login,
                 Password = getHashed(password.ToString()),
                 WarehouseID = account.WarehouseID,
-                Role = account.Role
+                Role = account.Role,
+                FirstName = account.FirstName,
+                LastName = account.LastName,
             };
 
             _dbContext.AccountLogIn.Add(newAccount);
