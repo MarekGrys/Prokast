@@ -11,5 +11,6 @@ namespace Prokast.Server.Services
         Response CreateAccount(AccountCreateDto accountCreate, int clientID);
         Response EditAccount(AccountEditDto accountEdit, int clientID);
         Response EditPassword(AccountEditPasswordDto editPasswordDto, int clientID);
+        Response DeleteAccount(int clientID, int ID);
     }
 }

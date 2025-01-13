@@ -123,6 +123,7 @@ namespace Prokast.Server.Services
                 Role = account.Role,
                 FirstName = account.FirstName,
                 LastName = account.LastName,
+                ClientID = clientID
             };
 
             _dbContext.AccountLogIn.Add(newAccount);
@@ -165,6 +166,22 @@ namespace Prokast.Server.Services
             _dbContext.SaveChanges();
 
             var response = new AccountEditPasswordResponse() { ID = random.Next(1,100000), ClientID = clientID, Model = editPasswordDto };
+            return response;
+        }
+
+        public Response DeleteAccount(int clientID, int ID)
+        {
+            var account = _dbContext.AccountLogIn.FirstOrDefault(x => x.ID == ID);
+            if (account == null)
+            {
+                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Nie ma takiego modelu!" };
+                return responseNull;
+            }
+
+            _dbContext.AccountLogIn.Remove(account);
+            _dbContext.SaveChanges();
+
+            var response = new DeleteResponse() { ID = random.Next(1,100000), ClientID = clientID, deleteMsg = "Konto zostało usunięte" };
             return response;
         }
     }
