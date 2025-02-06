@@ -16,6 +16,8 @@ namespace Prokast.Server.Entities
         public DbSet<Prices> Prices { get; set; }
         public DbSet<AdditionalName> AdditionalName { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<AdditionalDescription> AdditionalDescriptions { get; set; }
+        public DbSet<Photo> Photos { get; set; }
  
     }
 }

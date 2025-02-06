@@ -8,6 +8,7 @@ using System.Security.Cryptography;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Prokast.Server.Models.ResponseModels;
+using Prokast.Server.Services.Interfaces;
 
 
 
@@ -49,8 +50,9 @@ namespace Prokast.Server.Services
                 var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Klient nie ma parametrów" };
                 return responseNull;
             }
-            var response = new LogInGetResponse() {ID = random.Next(1,100000),ClientID = clientID, Model = logins};
+            var response = new LogInGetResponse() { ID = random.Next(1, 100000), ClientID = clientID, Model = logins };
             return response;
+
         }
         #endregion
 
@@ -86,6 +88,104 @@ namespace Prokast.Server.Services
             }
 
             var response = new LogInLoginResponse() {ID = random.Next(1,100000), ClientID = client.ID, IsSubscribed = true };
+            return response;
+        }
+        #endregion
+
+        #region create
+        public Response CreateAccount(AccountCreateDto accountCreate, int clientID)
+        {
+            const string litery = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+            if (accountCreate == null)
+            {
+                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Błędnie podane dane" };
+                return responseNull;
+            }
+
+            string login = new string(accountCreate.FirstName.Take(3).Concat(accountCreate.LastName.Take(2)).
+                Concat(random.Next(1,100000).ToString()).ToArray());
+            StringBuilder password = new StringBuilder();
+
+            foreach(char znak in login)
+            {
+                int index = random.Next(litery.Length);
+                password.Append(litery[index]);
+            }
+
+            Console.WriteLine(login);
+            Console.WriteLine(password.ToString());
+
+            var newAccount = new AccountLogIn
+            {
+                Login = login,
+                Password = getHashed(password.ToString()),
+                WarehouseID = accountCreate.WarehouseID,
+                Role = accountCreate.Role,
+                FirstName = accountCreate.FirstName,
+                LastName = accountCreate.LastName,
+                ClientID = clientID
+            };
+
+            _dbContext.AccountLogIn.Add(newAccount);
+            _dbContext.SaveChanges();
+
+            accountCreate.FirstName = login;
+            accountCreate.LastName = password.ToString();
+
+            var response = new AccountCreateResponse() {ID =  random.Next(1,100000), ClientID = clientID, Model = accountCreate};
+            return response;
+        }
+        #endregion
+
+        #region Edit
+        public Response EditAccount(AccountEditDto accountEdit, int clientID)
+        {
+            
+            var account = _dbContext.AccountLogIn.FirstOrDefault(x => x.ID == clientID && x.Login == accountEdit.Login);
+            if (account == null)
+            {
+                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Błędnie podane dane" };
+                return responseNull;
+            }
+            account.WarehouseID = accountEdit.WarehouseID;
+            account.Role = accountEdit.Role;
+            _dbContext.SaveChanges();
+
+            var response = new AccountEditResponse() { ID = random.Next(1,100000), ClientID = clientID, Model = accountEdit };
+            return response;
+        }
+
+        public Response EditPassword(AccountEditPasswordDto editPasswordDto, int clientID)
+        {
+            var account = _dbContext.AccountLogIn.FirstOrDefault(x => x.ID == clientID && x.Login == editPasswordDto.Login);
+            if (account == null)
+            {
+                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Błędnie podane dane" };
+                return responseNull;
+            }
+
+            account.Password = getHashed(editPasswordDto.Password);
+            _dbContext.SaveChanges();
+
+            var response = new AccountEditPasswordResponse() { ID = random.Next(1,100000), ClientID = clientID, Model = editPasswordDto };
+            return response;
+        }
+        #endregion
+
+        #region Delete
+        public Response DeleteAccount(int clientID, int ID)
+        {
+            var account = _dbContext.AccountLogIn.FirstOrDefault(x => x.ID == ID);
+            if (account == null)
+            {
+                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Nie ma takiego modelu!" };
+                return responseNull;
+            }
+
+            _dbContext.AccountLogIn.Remove(account);
+            _dbContext.SaveChanges();
+
+            var response = new DeleteResponse() { ID = random.Next(1,100000), ClientID = clientID, deleteMsg = "Konto zostało usunięte" };
             return response;
         }
         #endregion

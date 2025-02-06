@@ -22,6 +22,8 @@ namespace Prokast.Server.Entities
         public string? CustomParams { get; set; }
         [Required]
         public int PriceListID { get; set; }
+
+        public string Photos { get; set; }
         public DateTime AdditionDate { get; set; } = DateTime.Now;
         public DateTime ModificationDate { get; set; } = DateTime.Now;
     }

@@ -16,7 +16,11 @@ namespace Prokast.Server.Models
         [Required]
         public List<AdditionalNameDto> AdditionalNames { get; set; }
         public List<DictionaryParamsDto>? DictionaryParams { get; set; }
+
+        
         public List<CustomParamsDto>? CustomParams { get; set; }
+
+        public List<PhotoAdd> Photos { get; set; }
         [Required]
         public List <PricesDto> Prices { get; set; }
         [Required]

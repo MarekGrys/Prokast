@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Prokast.Server;
 using Prokast.Server.Entities;
 using Prokast.Server.Services;
+using Prokast.Server.Services.Interfaces;
 
 
 
@@ -34,7 +35,8 @@ builder.Services.AddScoped<IDictionaryService, DictionaryService>();
 builder.Services.AddScoped<IPricesService, PricesService>();
 builder.Services.AddScoped<IOthersService, OthersService>();
 builder.Services.AddScoped<IProductService, ProductService>();
-
+builder.Services.AddScoped<IAdditionalDescriptionService, AdditionalDescriptionService>();
+builder.Services.AddScoped<IPhotoService, PhotoService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

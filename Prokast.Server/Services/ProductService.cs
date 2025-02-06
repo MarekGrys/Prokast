@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Prokast.Server.Entities;
 using Prokast.Server.Models;
 using Prokast.Server.Models.ResponseModels;
+using Prokast.Server.Services.Interfaces;
 using System.Collections.Immutable;
 using System.Linq;
 
@@ -23,14 +24,13 @@ namespace Prokast.Server.Services
         #region Create
         public Response CreateProduct([FromBody] ProductCreateDto productCreateDto, int clientID)
         {
-            var input = _mapper.Map<ProductCreateDto>(productCreateDto);
             var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Błędnie podane dane" };
-            if (input == null)
+            if (productCreateDto == null)
             {
                 return responseNull;
             }
             List<string> AdditionalNamesTitles = new List<string>();
-            foreach (var item in input.AdditionalNames) 
+            foreach (var item in productCreateDto.AdditionalNames) 
             {
                 AdditionalNamesTitles.Add(item.Title);
             }
@@ -38,13 +38,14 @@ namespace Prokast.Server.Services
             var product = new Product
             {
                 ClientID = clientID,
-                Name = input.Name,
-                SKU = input.SKU,
-                EAN = input.EAN,
-                Description = input.Description,
+                Name = productCreateDto.Name,
+                SKU = productCreateDto.SKU,
+                EAN = productCreateDto.EAN,
+                Description = productCreateDto.Description,
                 AdditionalNames = "-1",
                 DictionaryParams = "-1",
                 CustomParams = "-1",
+                Photos = "-1",
                 PriceListID = -1
                 
             };
@@ -52,9 +53,9 @@ namespace Prokast.Server.Services
             _dbContext.Products.Add(product);
             _dbContext.SaveChanges();
 
-            var newProduct = _dbContext.Products.FirstOrDefault(x => x.ClientID == clientID && x.Name == input.Name);
+            var newProduct = _dbContext.Products.FirstOrDefault(x => x.ClientID == clientID && x.Name == productCreateDto.Name);
 
-            foreach (var item in input.AdditionalNames)
+            foreach (var item in productCreateDto.AdditionalNames)
             {
                 var name = new AdditionalName
                 {
@@ -67,7 +68,7 @@ namespace Prokast.Server.Services
                 _dbContext.SaveChanges();
             }
 
-            foreach(var item in input.CustomParams)
+            foreach(var item in productCreateDto.CustomParams)
             {
                 var param = new CustomParams
                 {
@@ -80,16 +81,32 @@ namespace Prokast.Server.Services
                 _dbContext.SaveChanges();
             }
 
+            foreach (var item in productCreateDto.Photos)
+            {
+                var param = new Photo
+                {
+                    Name = item.Name.ToString(),
+                    
+
+                    Value = item.Value.ToString(),
+                    ProductId = newProduct.ID,
+                    ClientID = clientID
+                };
+                _dbContext.Photos.Add(param);
+                _dbContext.SaveChanges();
+            }
+
+
             var priceList = new PriceLists
             {
-                Name = input.PriceList.Name,
+                Name = productCreateDto.PriceList.Name,
                 ClientID = clientID,
             };
             _dbContext.PriceLists.Add(priceList);
             _dbContext.SaveChanges();
             
-            var newPriceList = _dbContext.PriceLists.FirstOrDefault(x => x.Name == input.PriceList.Name && x.ClientID == clientID);
-            foreach(var item in input.Prices)
+            var newPriceList = _dbContext.PriceLists.FirstOrDefault(x => x.Name == productCreateDto.PriceList.Name && x.ClientID == clientID);
+            foreach(var item in productCreateDto.Prices)
             {
                 var price = new Prices
                 {
@@ -105,19 +122,27 @@ namespace Prokast.Server.Services
             }
 
             List<int> additionalNames = new List<int>();
-            foreach (var item in input.AdditionalNames)
+            foreach (var item in productCreateDto.AdditionalNames)
             {
                 additionalNames.Add(_dbContext.AdditionalName.FirstOrDefault(x => x.Title == item.Title && x.ClientID == clientID).ID);
             }
             
             List<int> dictionaryParams = new List<int>();
-            foreach (var item in input.DictionaryParams)
+            foreach (var item in productCreateDto.DictionaryParams)
             {
                 dictionaryParams.Add(_dbContext.DictionaryParams.FirstOrDefault(x => x.Name == item.Name).ID);
+
+
+            }
+
+            List<int> photos = new List<int>();
+            foreach (var item in productCreateDto.Photos)
+            {
+                photos.Add(_dbContext.Photos.FirstOrDefault(x => x.Name == item.Name && x.ClientID == clientID).Id);
             }
 
             List<int> customParams = new List<int>();
-            foreach (var item in input.CustomParams)
+            foreach (var item in productCreateDto.CustomParams)
             {
                 customParams.Add(_dbContext.CustomParams.FirstOrDefault(x => x.Name == item.Name && x.ClientID == clientID).ID);
             }
@@ -125,6 +150,7 @@ namespace Prokast.Server.Services
             newProduct.AdditionalNames = string.Join(",", additionalNames);         
             newProduct.DictionaryParams = string.Join(",", dictionaryParams);
             newProduct.CustomParams = string.Join(",", customParams);
+            newProduct.Photos = string.Join(",", photos);
             newProduct.PriceListID = newPriceList.ID;
 
             _dbContext.SaveChanges();
@@ -140,9 +166,7 @@ namespace Prokast.Server.Services
             var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Błędnie podane dane" };
             var products = _dbContext.Products.Where(x => x.ClientID == clientID);
            
-            var input = _mapper.Map<ProductGetFilter>(productGetFilter);
-           
-            if (input == null)
+            if (productGetFilter == null)
             {
                 return responseNull;
             }
@@ -153,24 +177,24 @@ namespace Prokast.Server.Services
                 return responseNull;
             }
 
-            if (input.ProductIDList != null && input.ProductIDList.Count != 0)
+            if (productGetFilter.ProductIDList != null && productGetFilter.ProductIDList.Count != 0)
             {
-                products = products.Where(x => input.ProductIDList.Contains(x.ID));
+                products = products.Where(x => productGetFilter.ProductIDList.Contains(x.ID));
             }
             
-           if(input.CreationDate != null)
+           if(productGetFilter.CreationDate != null)
             {
-                products = products.Where(x => x.AdditionDate < input.CreationDate);
+                products = products.Where(x => x.AdditionDate < productGetFilter.CreationDate);
             }
 
-            if (input.ModificationDate != null)
+            if (productGetFilter.ModificationDate != null)
             {
-                products = products.Where(x => x.ModificationDate < input.ModificationDate);
+                products = products.Where(x => x.ModificationDate < productGetFilter.ModificationDate);
             }
 
-            if (input.ProductName != null)
+            if (productGetFilter.ProductName != null)
             {
-                products = products.Where(x => x.Name.Contains(input.ProductName));
+                products = products.Where(x => x.Name.Contains(productGetFilter.ProductName));
             }
 
             var productList = products.ToList();
@@ -226,7 +250,6 @@ namespace Prokast.Server.Services
         }
         #endregion
 
-
         #region Delete
         public  DeleteResponse DeleteProduct(int clientID, int productID)
         {
@@ -250,9 +273,6 @@ namespace Prokast.Server.Services
 
             var productPrices = prices.Where(x => x.PriceListID == productPriceLists.ID).ToList();
 
-
-
-
             foreach (var item in productAdditionalNames)
             {
                 _dbContext.Remove(item);
@@ -272,8 +292,6 @@ namespace Prokast.Server.Services
         }
 
         #endregion
-
-
 
         #region Edit
         public Response EditProduct(ProductEdit productEdit, int clientID, int productID)
@@ -298,9 +316,6 @@ namespace Prokast.Server.Services
         }
 
         #endregion
-
-
-
 
     }
 }

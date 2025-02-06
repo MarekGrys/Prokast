@@ -2,6 +2,7 @@
 using Prokast.Server.Entities;
 using Prokast.Server.Models;
 using Prokast.Server.Models.ResponseModels;
+using Prokast.Server.Services.Interfaces;
 
 namespace Prokast.Server.Services
 {
@@ -16,7 +17,7 @@ namespace Prokast.Server.Services
             _dbContext = dbContext;
             _mapper = mapper;
         }
-
+        
         public Response GetRegions()
         {
             var regions = _dbContext.Regions.ToList();

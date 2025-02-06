@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Prokast.Server.Entities;
 using Prokast.Server.Models;
 using Prokast.Server.Models.ResponseModels;
+using Prokast.Server.Services.Interfaces;
 
 
 namespace Prokast.Server.Services
@@ -20,12 +21,10 @@ namespace Prokast.Server.Services
             _mapper = mapper;
         }
 
-        #region CreateCustonParam
+        #region Create
         public Response CreateCustomParam([FromBody] CustomParamsDto customParamsDto, int clientID ) 
         {
-            
-            var param = _mapper.Map<CustomParamsDto>(customParamsDto);
-            if (param == null)
+            if (customParamsDto == null)
             {
                 var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Błędnie podane dane" };
                 return responseNull;
@@ -33,9 +32,9 @@ namespace Prokast.Server.Services
 
             var customParam = new CustomParams
             {
-                Name = param.Name.ToString(),
-                Type = param.Type.ToString(),
-                Value = param.Value.ToString(),
+                Name = customParamsDto.Name.ToString(),
+                Type = customParamsDto.Type.ToString(),
+                Value = customParamsDto.Value.ToString(),
                 ClientID = clientID
             };
             
@@ -48,7 +47,7 @@ namespace Prokast.Server.Services
         }
         #endregion
 
-        #region GetAllParams
+        #region Get
         public Response GetAllParams(int clientID)
         {
             var paramList = _dbContext.CustomParams.Where(x => x.ClientID == clientID).ToList();
@@ -60,9 +59,9 @@ namespace Prokast.Server.Services
             }
             return response;
         }
-        #endregion
+        
 
-        #region GetParamsByID
+        
         public Response GetParamsByID(int clientID, int ID)
         {
             var param = _dbContext.CustomParams.Where(x => x.ClientID == clientID && x.ID == ID).ToList();
@@ -75,9 +74,9 @@ namespace Prokast.Server.Services
             return response;
 
         }
-        #endregion
+        
 
-        #region GetParamsByName
+        
         public Response GetParamsByName(int clientID, string name) 
         {
             var param = _dbContext.CustomParams.Where(x => x.ClientID == clientID && x.Name.Contains(name)).ToList();
@@ -93,7 +92,7 @@ namespace Prokast.Server.Services
         }
         #endregion
 
-        #region EditParams
+        #region Edit
         public Response EditParams(int clientID, int ID, CustomParamsDto data)
         {
             var findParam = _dbContext.CustomParams.FirstOrDefault(x => x.ClientID == clientID && x.ID == ID);
@@ -116,7 +115,7 @@ namespace Prokast.Server.Services
         }
         #endregion
 
-        #region DeleteParams
+        #region Delete
         public Response DeleteParams(int clientID, int ID)
         {
             var findParam = _dbContext.CustomParams.FirstOrDefault(x => x.ClientID == clientID && x.ID == ID);

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Prokast.Server.Entities;
 using Prokast.Server.Models;
 using Prokast.Server.Models.ResponseModels;
+using Prokast.Server.Services.Interfaces;
 
 
 namespace Prokast.Server.Services
@@ -20,7 +21,7 @@ namespace Prokast.Server.Services
             _mapper = mapper;
         }
 
-        #region GetAllParams
+        #region Get
         public Response GetAllParams()
         {
             var paramList = _dbContext.DictionaryParams.ToList();
@@ -32,9 +33,7 @@ namespace Prokast.Server.Services
             }
             return response;
         }
-        #endregion
-
-        #region GetParamsByID
+        
         public Response GetParamsByID( int ID)
         {
             var param = _dbContext.DictionaryParams.Where(x => x.ID == ID).ToList();
@@ -47,9 +46,7 @@ namespace Prokast.Server.Services
             return response;
 
         }
-        #endregion
 
-        #region GetParamsByName
         public Response GetParamsByName( string name)
         {
             var param = _dbContext.DictionaryParams.Where(x => x.Name == name).ToList();
@@ -63,9 +60,7 @@ namespace Prokast.Server.Services
             }
             return response;
         }
-        #endregion
 
-        #region ReturningValuesByName
         public Response GetParamsByRegion (int region)
         {
             var param = _dbContext.DictionaryParams.Where(x => x.IdRegion == region).ToList();
