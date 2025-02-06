@@ -10,10 +10,11 @@ using System;
 using System.Security.Cryptography;
 using System.Linq;
 using Prokast.Server.Models.ResponseModels;
+using Prokast.Server.Services.Interfaces;
 
 namespace Prokast.Server.Services
 {
-    
+
     public class ClientService: IClientService
     {
         private readonly ProkastServerDbContext _dbContext;

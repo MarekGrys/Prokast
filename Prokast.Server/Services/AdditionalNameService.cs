@@ -10,6 +10,7 @@ using System;
 using System.Security.Cryptography;
 using System.Linq;
 using Prokast.Server.Models.ResponseModels;
+using Prokast.Server.Services.Interfaces;
 namespace Prokast.Server.Services
 {
     public class AdditionalNameService : IAdditionalNameService
@@ -24,6 +25,34 @@ namespace Prokast.Server.Services
             _mapper = mapper;
         }
 
+        #region Create
+        public Response CreateAdditionalName([FromBody] AdditionalNameDto additionalNameDto, int clientID)
+        {
+
+            if (additionalNameDto == null)
+            {
+                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Błędnie podane dane" };
+                return responseNull;
+            }
+
+            var newName = new AdditionalName
+            {
+                ClientID = clientID,
+                Title = additionalNameDto.Title.ToString(),
+                Region = additionalNameDto.Region,
+                Value = additionalNameDto.Value.ToString()
+
+            };
+
+            _dbContext.AdditionalName.Add(newName);
+            _dbContext.SaveChanges();
+
+            var response = new Response() { ID = random.Next(1, 100000), ClientID = clientID };
+            return response;
+        }
+        #endregion
+
+        #region Get
         public Response GetAllNames(int clientID)
         {
             var addNameList = _dbContext.AdditionalName.Where( x => x.ClientID == clientID).ToList();
@@ -48,6 +77,7 @@ namespace Prokast.Server.Services
             return response;
 
         }
+
         public Response GetNamesByIDNames(int ID, string Title, int clientID)
         {
             var addName = _dbContext.AdditionalName.Where(x => x.ID == ID && x.Title.Contains(Title) && x.ClientID == clientID).ToList();
@@ -60,6 +90,7 @@ namespace Prokast.Server.Services
             return response;
 
         }
+
         public Response GetNamesByIDRegion(int ID, int Region, int clientID)
         {
             var addName = _dbContext.AdditionalName.Where(x => x.ID == ID && x.Region == Region && x.ClientID == clientID).ToList();
@@ -72,34 +103,9 @@ namespace Prokast.Server.Services
             return response;
 
         }
+        #endregion
 
-        public Response CreateAdditionalName([FromBody] AdditionalNameDto additionalNameDto, int clientID)
-        {
-
-            var addName = _mapper.Map<AdditionalNameDto>(additionalNameDto);
-            if (addName == null)
-            {
-                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Błędnie podane dane" };
-                return responseNull;
-            }
-
-            var newName = new AdditionalName
-            {
-                ClientID = clientID,
-                Title = addName.Title.ToString(),
-                Region = addName.Region,
-                Value = addName.Value.ToString()
-                
-            };
-
-
-            _dbContext.AdditionalName.Add(newName);
-            _dbContext.SaveChanges();
-
-            var response = new Response() { ID = random.Next(1, 100000), ClientID = clientID };
-            return response;
-        }
-
+        #region Edit
         public Response EditAdditionalName(int clientID, int ID, AdditionalNameDto data)
         {
             var findName = _dbContext.AdditionalName.FirstOrDefault(x => x.ClientID == clientID && x.ID == ID);
@@ -120,6 +126,9 @@ namespace Prokast.Server.Services
 
             return response;
         }
+        #endregion
+
+        #region Delete
         public Response DeleteAdditionalName(int clientID, int ID)
         {
             var findAdditionalName = _dbContext.AdditionalName.FirstOrDefault(x => x.ClientID == clientID && x.ID == ID);
@@ -138,6 +147,6 @@ namespace Prokast.Server.Services
 
             return response;
         }
-
+        #endregion
     }
 }

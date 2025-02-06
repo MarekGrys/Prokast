@@ -1,10 +1,10 @@
 ﻿//using AutoMapper;
 using Prokast.Server.Entities;
 using Prokast.Server.Models;
-using Prokast.Server.Services;
 using Microsoft.AspNetCore.Mvc;
 using Prokast.Server.Models.ResponseModels;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using Prokast.Server.Services.Interfaces;
 //using Microsoft.EntityFrameworkCore;
 
 

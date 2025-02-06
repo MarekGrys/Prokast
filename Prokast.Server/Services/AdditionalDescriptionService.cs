@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Prokast.Server.Entities;
 using Prokast.Server.Models;
 using Prokast.Server.Models.ResponseModels;
+using Prokast.Server.Services.Interfaces;
 
 namespace Prokast.Server.Services
 {
@@ -21,9 +22,8 @@ namespace Prokast.Server.Services
         #region Create
         public Response CreateAdditionalDescription([FromBody] AdditionalDescriptionCreateDto description, int clientID)
         {
-            var input = _mapper.Map<AdditionalDescriptionCreateDto>(description);
 
-            if (input == null)
+            if (description == null)
             {
                 var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Błędnie podane dane" };
                 return responseNull;
@@ -32,9 +32,9 @@ namespace Prokast.Server.Services
             var additionalDescription = new AdditionalDescription()
             {
                 ClientID = clientID,
-                Title = input.Title,
-                Region = input.Region,
-                Value = input.Value,
+                Title = description.Title,
+                Region = description.Region,
+                Value = description.Value,
             };
 
             _dbContext.AdditionalDescriptions.Add(additionalDescription);
@@ -45,7 +45,7 @@ namespace Prokast.Server.Services
         }
         #endregion
 
-
+        #region Get
         public Response GetAllDescriptions(int clientID)
         {
             var addDescList = _dbContext.AdditionalDescriptions.Where(x => x.ClientID == clientID).ToList();
@@ -95,7 +95,9 @@ namespace Prokast.Server.Services
             return response;
 
         }
+        #endregion
 
+        #region Edit
         public Response EditAdditionalDescription(int clientID, int ID, AdditionalDescriptionCreateDto data)
         {
             var findDescription = _dbContext.AdditionalDescriptions.FirstOrDefault(x => x.ClientID == clientID && x.ID == ID);
@@ -116,7 +118,9 @@ namespace Prokast.Server.Services
 
             return response;
         }
+        #endregion
 
+        #region delete
         public Response DeleteAdditionalDescription(int clientID, int ID)
         {
             var findAdditionalDescription = _dbContext.AdditionalDescriptions.FirstOrDefault(x => x.ClientID == clientID && x.ID == ID);
@@ -135,5 +139,6 @@ namespace Prokast.Server.Services
 
             return response;
         }
+        #endregion
     }
 }

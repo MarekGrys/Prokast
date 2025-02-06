@@ -3,6 +3,7 @@ using Azure;
 using Prokast.Server.Entities;
 using Prokast.Server.Models;
 using Prokast.Server.Models.ResponseModels;
+using Prokast.Server.Services.Interfaces;
 using System.Web.Http;
 using Response = Prokast.Server.Models.Response;
 
@@ -23,15 +24,14 @@ namespace Prokast.Server.Services
         #region Create
         public Response CreatePriceList([FromBody] PriceListsCreateDto priceLists, int clientID)
         {
-            var input = _mapper.Map<PriceListsCreateDto>(priceLists);
-            if (input == null)
+            if (priceLists == null)
             {
                 var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Błędnie podane dane" };
                 return responseNull;
             }
             var priceList = new PriceLists
             {
-                Name = input.Name.ToString(),
+                Name = priceLists.Name.ToString(),
                 ClientID = clientID
             };
             _dbContext.PriceLists.Add(priceList);
@@ -43,10 +43,8 @@ namespace Prokast.Server.Services
 
         public Response CreatePrice([FromBody] PricesDto prices, int priceListID, int clientID)
         {
-           
-            
-            var input = _mapper.Map<PricesDto>(prices);
-            if (input == null)
+            //var input = _mapper.Map<PricesDto>(prices);
+            if (prices == null)
             {
                 var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Błędnie podane dane" };
                 return responseNull;
@@ -61,11 +59,11 @@ namespace Prokast.Server.Services
 
             var price = new Prices
             {
-                Name = input.Name.ToString(),
-                RegionID = input.RegionID,
-                Netto = input.Netto,
-                VAT = input.VAT,
-                Brutto = input.Brutto,
+                Name = prices.Name.ToString(),
+                RegionID = prices.RegionID,
+                Netto = prices.Netto,
+                VAT = prices.VAT,
+                Brutto = prices.Brutto,
                 PriceListID = priceListID,
             };
 
@@ -189,6 +187,7 @@ namespace Prokast.Server.Services
         }
         #endregion
 
+        #region Delete
         public Response DeletePrice(int clientID, int priceListID, int priceID)
         {
             var price = _dbContext.Prices.FirstOrDefault(x => x.PriceListID == priceListID && x.ID == priceID);
@@ -227,5 +226,7 @@ namespace Prokast.Server.Services
             var response = new DeleteResponse() { ID = random.Next(1, 100000), ClientID = clientID, deleteMsg = "Cennik został usunięty" };
             return response;
         }
+        #endregion
+
     }
 }

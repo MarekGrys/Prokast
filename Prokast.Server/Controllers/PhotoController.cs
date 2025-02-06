@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Prokast.Server.Entities;
-using Prokast.Server.Services;
 using Prokast.Server.Models;
 using Prokast.Server.Models.ResponseModels;
+using Prokast.Server.Services.Interfaces;
 
 namespace Prokast.Server.Controllers
 {

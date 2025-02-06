@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Prokast.Server.Entities;
 using Prokast.Server.Models;
 using Prokast.Server.Models.ResponseModels;
+using Prokast.Server.Services.Interfaces;
 
 namespace Prokast.Server.Services
 {
@@ -19,6 +20,7 @@ namespace Prokast.Server.Services
             _mapper = mapper;
         }
 
+        #region Get
         public Response GetAllPhotos(int clientID)
         {
             var photoList = _dbContext.Photos.Where(x => x.ClientID == clientID).ToList();
@@ -43,7 +45,9 @@ namespace Prokast.Server.Services
             return response;
 
         }
+        #endregion
 
+        #region Edit
         public Response EditPhotos(int clientID, int ID, PhotoEdit data)
         {
             var findPhoto = _dbContext.Photos.FirstOrDefault(x => x.ClientID == clientID && x.Id == ID);
@@ -63,7 +67,9 @@ namespace Prokast.Server.Services
 
             return response;
         }
+        #endregion
 
+        #region delete
         public Response DeletePhotos(int clientID, int ID)
         {
             var findPhoto = _dbContext.Photos.FirstOrDefault(x => x.ClientID == clientID && x.Id == ID);
@@ -82,5 +88,6 @@ namespace Prokast.Server.Services
 
             return response;
         }
+        #endregion
     }
 }

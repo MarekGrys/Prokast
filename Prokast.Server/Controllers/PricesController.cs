@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Prokast.Server.Entities;
-using Prokast.Server.Services;
 using Prokast.Server.Models;
 using Prokast.Server.Models.ResponseModels;
 using System.Diagnostics;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using Prokast.Server.Services.Interfaces;
 
 
 
