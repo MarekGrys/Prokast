@@ -53,6 +53,23 @@ namespace Prokast.Server.Controllers
             }
         }
 
+        [HttpGet("{ID}")]
+        [ProducesResponseType(typeof(WarehouseGetResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        public ActionResult<Response> GetWarehouseByID([FromQuery] int clientID, [FromRoute] int ID)
+        {
+            try
+            {
+                var result = _warehouseService.GetWarehouseById(clientID, ID);
+                if (result is ErrorResponse) return BadRequest(result);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpGet("name/{name}")]
         [ProducesResponseType(typeof(WarehouseGetResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]

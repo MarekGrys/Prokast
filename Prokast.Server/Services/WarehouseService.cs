@@ -60,6 +60,17 @@ namespace Prokast.Server.Services
             return response;
         }
 
+        public Response GetWarehouseById(int clientID, int ID)
+        {
+            var warehouse = _dbContext.Warehouses.Where(x => x.ID == ID).ToList();
+            if (warehouse == null)
+            {
+                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Brak magazynów!" };
+                return responseNull;
+            }
+            var response = new WarehouseGetResponse() { ID = random.Next(1,100000), ClientID = clientID, Model = warehouse};
+            return response;
+        }
         public Response GetWarehousesByName(int clientID, string name)
         {
             var warehouseList = _dbContext.Warehouses.Where(x => x.Name.Contains(name) && x.ClientID == clientID).ToList();

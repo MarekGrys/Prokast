@@ -38,6 +38,7 @@ builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IAdditionalDescriptionService, AdditionalDescriptionService>();
 builder.Services.AddScoped<IPhotoService, PhotoService>();
 builder.Services.AddScoped<IWarehouseService, WarehouseService>();
+builder.Services.AddScoped<IStoredProductService, StoredProductService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

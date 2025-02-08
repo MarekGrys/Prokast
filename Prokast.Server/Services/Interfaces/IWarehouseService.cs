@@ -7,6 +7,7 @@ namespace Prokast.Server.Services.Interfaces
     {
         Response CreateWarehouse([FromBody] WarehouseCreateDto warehouseCreateDto, int clientID);
         Response GetAllWarehouses(int clientID);
+        Response GetWarehouseById(int clientID, int ID);
         Response GetWarehousesByName(int clientID, string name);
         Response GetWarehousesByCity(int clientID, string city);
         Response GetWarehouseByCountry(int clientID, string country);
