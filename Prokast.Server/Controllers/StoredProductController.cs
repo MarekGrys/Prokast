@@ -89,6 +89,52 @@ namespace Prokast.Server.Controllers
         }
         #endregion
 
+        [HttpPut("{ID}")]
+        [ProducesResponseType(typeof(StoredProductEditResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        public ActionResult<Response> EditStoredProductQuality([FromQuery] int clientID, [FromRoute] int ID, [FromQuery] int quantity)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Błędne dane");
+            }
+            try
+            {
+                var result = _storedProductService.EditStoredProductQuantity(clientID, ID, quantity);
+                if (result is ErrorResponse) return BadRequest(result);
+
+                if (result == null) return NotFound(result);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("minquantity/{ID}")]
+        [ProducesResponseType(typeof(StoredProductEditResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        public ActionResult<Response> EditStoredProductMinQuality([FromQuery] int clientID, [FromRoute] int ID, [FromQuery] int minQuantity)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Błędne dane");
+            }
+            try
+            {
+                var result = _storedProductService.EditStoredProductMinQuantity(clientID, ID, minQuantity);
+                if (result is ErrorResponse) return BadRequest(result);
+
+                if (result == null) return NotFound(result);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         #region Delete
         [HttpDelete("{ID}")]
         [ProducesResponseType(typeof(DeleteResponse), StatusCodes.Status200OK)]

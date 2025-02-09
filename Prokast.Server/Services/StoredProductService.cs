@@ -86,6 +86,39 @@ namespace Prokast.Server.Services
         }
         #endregion
 
+        public Response EditStoredProductQuantity(int clientID, int ID, int quantity)
+        {
+            var storedProduct = _dbContext.StoredProducts.FirstOrDefault(x => x.ID == ID);
+            if (storedProduct == null)
+            {
+                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Nie ma takiego produktu!" };
+                return responseNull;
+            }
+
+            storedProduct.Quantity += quantity;
+            storedProduct.LastUpdated = DateTime.Now;
+            _dbContext.SaveChanges();
+
+            var response = new StoredProductEditResponse() { ID = random.Next(1,100000), ClientID = clientID, Model = storedProduct };
+            return response;
+        }
+
+        public Response EditStoredProductMinQuantity(int clientID, int ID, int minQuantity)
+        {
+            var storedProduct = _dbContext.StoredProducts.FirstOrDefault(x => x.ID == ID);
+            if (storedProduct == null)
+            {
+                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Nie ma takiego produktu!" };
+                return responseNull;
+            }
+
+            storedProduct.MinQuantity = minQuantity;
+            _dbContext.SaveChanges();
+
+            var response = new StoredProductEditResponse() { ID = random.Next(1, 100000), ClientID = clientID, Model = storedProduct };
+            return response;
+        }
+
         #region Delete
         public Response DeleteStoredProduct(int clientID, int ID)
         {
