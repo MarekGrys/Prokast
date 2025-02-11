@@ -20,12 +20,14 @@ namespace Prokast.Server.Services
     {
         private readonly ProkastServerDbContext _dbContext;
         private readonly IMapper _mapper;
+        private readonly IMailingService _mailingService;
         Random random = new Random();
 
-        public LogInService(ProkastServerDbContext dbContext, IMapper mapper)
+        public LogInService(ProkastServerDbContext dbContext, IMapper mapper, IMailingService mailingService)
         {
             _dbContext = dbContext;
             _mapper = mapper;
+            _mailingService = mailingService;
         }
 
         public static string getHashed(string text)
@@ -131,6 +133,15 @@ namespace Prokast.Server.Services
 
             accountCreate.FirstName = login;
             accountCreate.LastName = password.ToString();
+
+            var message = new EmailMessage
+            {
+                To = accountCreate.Email,
+                Subject = "Dane Logowania",
+                Body = $"Login: {login}\n Hasło: {password}"
+            };
+
+            _mailingService.SendEmail(message);
 
             var response = new AccountCreateResponse() {ID =  random.Next(1,100000), ClientID = clientID, Model = accountCreate};
             return response;
