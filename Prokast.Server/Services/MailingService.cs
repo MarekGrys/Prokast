@@ -29,7 +29,7 @@ namespace Prokast.Server.Services
         {
             var message = new MimeMessage();
 
-            message.From.Add(new MailboxAddress("Nadawca", _smtpSettings.Email));
+            message.From.Add(new MailboxAddress("Prokast", _smtpSettings.Email));
             message.To.Add(MailboxAddress.Parse(emailMessage.To));
             message.Subject = emailMessage.Subject;
 
