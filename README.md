@@ -26,6 +26,3 @@ Projekt jest podzielony na trzy główne podprojekty:
 - **API do Udostępniania Zasobów**: 
   - [Marek Grys](https://github.com/MarekGrys)
   - [Hubert Ciura](https://github.com/HubertCiura)
-
-- **Testy**:
-  - [Bartłomiej Całus](https://github.com/BartlomiejCalus)
