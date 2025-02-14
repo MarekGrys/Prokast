@@ -10,7 +10,6 @@ Projekt jest podzielony na trzy główne podprojekty:
 - **Backend**: ASP.NET Core (C#), Entity Framework
 - **Frontend**: React.js, HTML5, CSS3, JavaScript
 - **Baza danych**: SQL Server
-- **Testy**: xUnit, Postman (dla testów API)
 
 ## Zespół
 
