@@ -119,6 +119,26 @@ namespace Prokast.Server.Services
             return response;
         }
 
+        public Response EditMultipleStoredProductMinQuantity(int clientID, List<EditMultipleStoredProductMinQuantityDto> listToEdit)
+        {
+            var storedProduct = _dbContext.StoredProducts.Where(x => listToEdit.Select(y => y.ID).Contains(x.ID)).ToList();
+            if (storedProduct.Count() == 0)
+            {
+                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Nie ma takiego produktu!" };
+                return responseNull;
+            }
+
+            foreach(var product in storedProduct)
+            {
+                var min = listToEdit.FirstOrDefault(x => x.ID == product.ID);
+                product.MinQuantity = min.MinQuantity;
+            }
+            _dbContext.SaveChanges();
+
+            var response = new StoredProductEditMulipleResponse() { ID = random.Next(1, 100000), ClientID = clientID, Model = storedProduct };
+            return response;
+        }
+
         #region Delete
         public Response DeleteStoredProduct(int clientID, int ID)
         {

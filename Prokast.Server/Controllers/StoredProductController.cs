@@ -135,6 +135,29 @@ namespace Prokast.Server.Controllers
             }
         }
 
+        [HttpPut("minquantity/multiple")]
+        [ProducesResponseType(typeof(StoredProductEditResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        public ActionResult<Response> EditMultipleStoredProductMinQuantity([FromQuery]int clientID,[FromBody] List<EditMultipleStoredProductMinQuantityDto> listToEdit)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Błędne dane");
+            }
+            try
+            {
+                var result = _storedProductService.EditMultipleStoredProductMinQuantity(clientID, listToEdit);
+                if (result is ErrorResponse) return BadRequest(result);
+
+                if (result == null) return NotFound(result);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         #region Delete
         [HttpDelete("{ID}")]
         [ProducesResponseType(typeof(DeleteResponse), StatusCodes.Status200OK)]
