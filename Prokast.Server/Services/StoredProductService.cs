@@ -49,6 +49,12 @@ namespace Prokast.Server.Services
         #region Get
         public Response GetAllStoredProducts(int clientID, int warehouseID)
         {
+            var warehouse = _dbContext.Warehouses.FirstOrDefault(x => x.ID == warehouseID && x.ClientID == clientID);
+            if(warehouse == null)
+            {
+                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Nie ma takiego magazynu!" };
+                return responseNull;
+            }
             var storedProductsList = _dbContext.StoredProducts.Where(x => x.WarehouseID == warehouseID).ToList();
             if (storedProductsList.Count == 0)
             {
@@ -59,8 +65,14 @@ namespace Prokast.Server.Services
             return response;
         }
         
-        public Response GetStoredProductByID(int clientID, int ID)
+        public Response GetStoredProductByID(int clientID, int warehouseID, int ID)
         {
+            var warehouse = _dbContext.Warehouses.FirstOrDefault(x => x.ID == warehouseID && x.ClientID == clientID);
+            if (warehouse == null)
+            {
+                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Nie ma takiego magazynu!" };
+                return responseNull;
+            }
             var storedProduct = _dbContext.StoredProducts.Where(x => x.ID == ID).ToList();
             if(storedProduct.Count == 0)
             {
@@ -74,6 +86,12 @@ namespace Prokast.Server.Services
 
         public Response GetStoredProductsBelowMinimum(int clientID, int warehouseID)
         {
+            var warehouse = _dbContext.Warehouses.FirstOrDefault(x => x.ID == warehouseID && x.ClientID == clientID);
+            if (warehouse == null)
+            {
+                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Nie ma takiego magazynu!" };
+                return responseNull;
+            }
             var storedProducts = _dbContext.StoredProducts.Where(x => x.Quantity < x.MinQuantity && x.WarehouseID == warehouseID).ToList();
             if (storedProducts.Count == 0)
             {

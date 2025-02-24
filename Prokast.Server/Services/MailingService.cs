@@ -13,15 +13,11 @@ namespace Prokast.Server.Services
 {
     public class MailingService: IMailingService
     {
-        private readonly ProkastServerDbContext _dbContext;
-        private readonly IMapper _mapper;
         private readonly SmtpSettings _smtpSettings;
         Random random = new Random();
 
         public MailingService(ProkastServerDbContext dbContext, IMapper mapper, IOptions<SmtpSettings> smtpOptions)
         {
-            _dbContext = dbContext;
-            _mapper = mapper;
             _smtpSettings = smtpOptions.Value;
         }
 

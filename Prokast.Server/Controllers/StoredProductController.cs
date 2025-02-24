@@ -57,11 +57,11 @@ namespace Prokast.Server.Controllers
         [HttpGet("{ID}")]
         [ProducesResponseType(typeof(StoredProductGetResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
-        public ActionResult<Response> GetStoredProductByID([FromQuery] int clientID,[FromRoute] int ID)
+        public ActionResult<Response> GetStoredProductByID([FromQuery] int clientID, [FromQuery] int warehouseID,[FromRoute] int ID)
         {
             try
             {
-                var result = _storedProductService.GetStoredProductByID(clientID, ID);
+                var result = _storedProductService.GetStoredProductByID(clientID,warehouseID, ID);
                 if (result is ErrorResponse) return BadRequest(result);
                 return Ok(result);
             }

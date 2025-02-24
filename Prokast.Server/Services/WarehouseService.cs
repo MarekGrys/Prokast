@@ -62,7 +62,7 @@ namespace Prokast.Server.Services
 
         public Response GetWarehouseById(int clientID, int ID)
         {
-            var warehouse = _dbContext.Warehouses.Where(x => x.ID == ID).ToList();
+            var warehouse = _dbContext.Warehouses.Where(x => x.ID == ID && x.ClientID == clientID).ToList();
             if (warehouse == null)
             {
                 var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Brak magazynów!" };
@@ -142,6 +142,20 @@ namespace Prokast.Server.Services
             {
                 var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Nie ma takiego magazynu!" };
                 return responseNull;
+            }
+
+            var storedProducts = _dbContext.StoredProducts.Where(x => x.WarehouseID == warehouse.ID).ToList();
+            var workers = _dbContext.AccountLogIn.Where(x => x.WarehouseID == warehouse.ID).ToList();
+            foreach ( var storedProduct in storedProducts)
+            {
+                _dbContext.StoredProducts.Remove(storedProduct);
+                _dbContext.SaveChanges();
+            }
+
+            foreach ( var worker in workers)
+            {
+                worker.WarehouseID = null;
+                _dbContext.SaveChanges();
             }
 
             _dbContext.Warehouses.Remove(warehouse);
