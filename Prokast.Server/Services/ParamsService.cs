@@ -131,7 +131,6 @@ namespace Prokast.Server.Services
             _dbContext.SaveChanges();
 
             var response = new DeleteResponse() { ID = random.Next(1, 100000), ClientID = clientID, deleteMsg = "Parametr został usumięty" };
-
             return response;
         }
         #endregion

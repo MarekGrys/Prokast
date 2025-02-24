@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Prokast.Server;
 using Prokast.Server.Entities;
+using Prokast.Server.Models;
 using Prokast.Server.Services;
 using Prokast.Server.Services.Interfaces;
 
@@ -37,6 +38,11 @@ builder.Services.AddScoped<IOthersService, OthersService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IAdditionalDescriptionService, AdditionalDescriptionService>();
 builder.Services.AddScoped<IPhotoService, PhotoService>();
+builder.Services.AddScoped<IWarehouseService, WarehouseService>();
+builder.Services.AddScoped<IStoredProductService, StoredProductService>();
+builder.Services.AddScoped<IMailingService, MailingService>();
+
+builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpSettings"));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
