@@ -8,5 +8,8 @@ namespace Prokast.Server.Services.Interfaces
         Response CreateOrder(OrderCreateDto orderCreateDto, int clientID);
         Response GetAllOrders(int clientID);
         Response GetOrder(int clientID, int orderID);
+        Response GetOrderByTrackingID(int clientID, string trackingID);
+        Response ChangeOrderStatus(int clientID, int orderID, string status);
+        Response ChangePaymentStatus(int clientID, int orderID, string paymentStatus);
     }
 }

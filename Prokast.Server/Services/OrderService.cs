@@ -30,7 +30,7 @@ namespace Prokast.Server.Services
                 return responseNull;
             }
 
-            const string znaki = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
+            const string znaki = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
             StringBuilder trackingID = new StringBuilder();
             
             for (int i = 0; i < 20; i++)
@@ -136,11 +136,108 @@ namespace Prokast.Server.Services
                 PhoneNumber = customer.PhoneNumber,
             };
             
+            var response = new OrderGetOneResponse() { ID = random.Next(1, 100000), ClientID = clientID, Model = newOrder };
+            return response;
+        }
+
+        public Response GetOrderByTrackingID(int clientID, string trackingID)
+        {
+            var order = _dbContext.Orders.FirstOrDefault(x => x.TrackingID == trackingID);
+            if (order == null)
+            {
+                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Brak zamówienia!" };
+                return responseNull;
+            }
+
+            var customer = _dbContext.Customers.FirstOrDefault(x => x.ID == order.CustomerID);
+
+            var newOrder = new OrderGetOneDto()
+            {
+                ID = order.ID,
+                ShopOrderID = order.ShopOrderID,
+                OrderDate = order.OrderDate,
+                OrderStatus = order.OrderStatus,
+                TotalPrice = order.TotalPrice,
+                TotalWeightKg = order.TotalWeightKg,
+                PaymentMethod = order.PaymentMethod,
+                PaymentStatus = order.PaymentStatus,
+                CreationDate = order.CreationDate,
+                UpdateDate = order.UpdateDate,
+                TrackingID = order.TrackingID,
+                ClientID = clientID,
+                CustomerID = order.CustomerID,
+                FirstName = customer.FirstName,
+                LastName = customer.LastName,
+                Email = customer.Email,
+                PhoneNumber = customer.PhoneNumber,
+            };
 
             var response = new OrderGetOneResponse() { ID = random.Next(1, 100000), ClientID = clientID, Model = newOrder };
             return response;
         }
         #endregion
 
+        public Response ChangeOrderStatus(int clientID, int orderID, string status)
+        {
+            var statuses = new List<string>()
+            {
+                "pending",
+                "processing", 
+                "shipped",
+                "delivered",
+                "cancelled",
+                "returned"
+            };
+
+            if (!statuses.Contains(status))
+            {
+                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Błędny status!" };
+                return responseNull;
+            }
+
+            var order = _dbContext.Orders.FirstOrDefault(x => x.ID == orderID);
+            if (order == null)
+            {
+                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Brak zamówienia!" };
+                return responseNull;
+            }
+
+            order.OrderStatus = status;
+            _dbContext.SaveChanges();
+
+            var response = new OrderEditResponse() { ID = random.Next(1, 100000), ClientID = clientID, Model = order };
+            return response;
+        }
+
+        public Response ChangePaymentStatus(int clientID, int orderID, string paymentStatus)
+        {
+            var statuses = new List<string>()
+            {
+                "pending",
+                "paid",
+                "failed",
+                "refunded"
+            };
+
+            if (!statuses.Contains(paymentStatus))
+            {
+                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Błędny status!" };
+                return responseNull;
+            }
+
+            var order = _dbContext.Orders.FirstOrDefault(x => x.ID == orderID);
+            if (order == null)
+            {
+                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Brak zamówienia!" };
+                return responseNull;
+            }
+
+            order.PaymentStatus = paymentStatus;
+            _dbContext.SaveChanges();
+
+            var response = new OrderEditResponse() { ID = random.Next(1, 100000), ClientID = clientID, Model = order };
+            return response;
+        }
+    
     }
 }

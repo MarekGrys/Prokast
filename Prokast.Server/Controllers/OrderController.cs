@@ -38,6 +38,7 @@ namespace Prokast.Server.Controllers
         }
         #endregion
 
+        #region Get
         [HttpGet]
         [ProducesResponseType(typeof(OrderGetAllResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
@@ -71,5 +72,71 @@ namespace Prokast.Server.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet("trackingID/{trackingID}")]
+        [ProducesResponseType(typeof(OrderGetAllResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        public ActionResult<Response> GetOrderByTrackingID([FromQuery] int clientID, [FromRoute] string trackingID)
+        {
+            try
+            {
+                var result = _orderService.GetOrderByTrackingID(clientID, trackingID);
+                if (result is ErrorResponse) return BadRequest(result);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        #endregion
+
+        #region Edit
+        [HttpPut("{orderID}/status")]
+        [ProducesResponseType(typeof(OrderEditResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        public ActionResult<Response> ChangeOrderStatus([FromQuery] int clientID, [FromRoute] int orderID,[FromBody] string status)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Błędne dane");
+            }
+            try
+            {
+                var result =_orderService.ChangeOrderStatus(clientID, orderID, status);
+                if (result is ErrorResponse) return BadRequest(result);
+
+                if (result == null) return NotFound(result);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("{orderID}/payment")]
+        [ProducesResponseType(typeof(OrderEditResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        public ActionResult<Response> ChangePaymentStatus([FromQuery] int clientID, [FromRoute] int orderID, [FromBody] string paymentStatus)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Błędne dane");
+            }
+            try
+            {
+                var result = _orderService.ChangePaymentStatus(clientID, orderID, paymentStatus);
+                if (result is ErrorResponse) return BadRequest(result);
+
+                if (result == null) return NotFound(result);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        #endregion
     }
 }
