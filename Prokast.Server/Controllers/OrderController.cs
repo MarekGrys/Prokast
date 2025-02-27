@@ -6,6 +6,7 @@ using Prokast.Server.Services.Interfaces;
 using Prokast.Server.Models.OrderModels;
 using Prokast.Server.Models.ResponseModels.WarehouseResponseModels;
 using Prokast.Server.Models.ResponseModels.OrderResponseModels;
+using Prokast.Server.Entities;
 
 namespace Prokast.Server.Controllers
 {
@@ -127,6 +128,52 @@ namespace Prokast.Server.Controllers
             try
             {
                 var result = _orderService.ChangePaymentStatus(clientID, orderID, paymentStatus);
+                if (result is ErrorResponse) return BadRequest(result);
+
+                if (result == null) return NotFound(result);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("edit/order/{orderID}")]
+        [ProducesResponseType(typeof(OrderEditResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        public ActionResult<Response> EditOrder([FromQuery] int clientID, [FromRoute] int orderID, [FromBody] OrderEditDto orderEditDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Błędne dane");
+            }
+            try
+            {
+                var result = _orderService.EditOrder(clientID, orderID, orderEditDto);
+                if (result is ErrorResponse) return BadRequest(result);
+
+                if (result == null) return NotFound(result);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("edit/customer/{customerID}")]
+        [ProducesResponseType(typeof(OrderEditResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        public ActionResult<Response> EditCustomer([FromQuery] int clientID, [FromRoute] int customerID, [FromBody] Customer customer)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Błędne dane");
+            }
+            try
+            {
+                var result = _orderService.EditCustomer(clientID, customerID, customer);
                 if (result is ErrorResponse) return BadRequest(result);
 
                 if (result == null) return NotFound(result);

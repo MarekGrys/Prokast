@@ -203,6 +203,7 @@ namespace Prokast.Server.Services
             }
 
             order.OrderStatus = status;
+            order.UpdateDate = DateTime.Now;
             _dbContext.SaveChanges();
 
             var response = new OrderEditResponse() { ID = random.Next(1, 100000), ClientID = clientID, Model = order };
@@ -233,9 +234,52 @@ namespace Prokast.Server.Services
             }
 
             order.PaymentStatus = paymentStatus;
+            order.UpdateDate = DateTime.Now;
             _dbContext.SaveChanges();
 
             var response = new OrderEditResponse() { ID = random.Next(1, 100000), ClientID = clientID, Model = order };
+            return response;
+        }
+
+        public Response EditOrder(int clientID, int orderID, OrderEditDto orderEditDto)
+        {
+            var order = _dbContext.Orders.FirstOrDefault(x => x.ID == orderID);
+            if (order == null)
+            {
+                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Brak zamówienia!" };
+                return responseNull;
+            }
+
+            order.ShopOrderID = orderEditDto.ShopOrderID;
+            order.TotalPrice = orderEditDto.TotalPrice;
+            order.TotalWeightKg = orderEditDto.TotalWeightKg;
+            order.PaymentMethod = orderEditDto.PaymentMethod;
+            order.ClientID = orderEditDto.ClientID;
+            order.CustomerID = orderEditDto.CustomerID;
+            order.UpdateDate = DateTime.Now;
+            _dbContext.SaveChanges();
+
+            var response = new OrderEditResponse() { ID = random.Next(1, 100000), ClientID = clientID, Model = order };
+            return response;
+        }
+
+        public Response EditCustomer(int clientID, int customerID, Customer customerDto)
+        {
+            var customer = _dbContext.Customers.FirstOrDefault(x => x.ID == customerID);
+            if (customer == null)
+            {
+                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Brak zamówienia!" };
+                return responseNull;
+            }
+
+            customer.ID = customerID;
+            customer.FirstName = customerDto.FirstName;
+            customer.LastName = customerDto.LastName;
+            customer.Email = customerDto.Email;
+            customer.PhoneNumber = customerDto.PhoneNumber;
+            _dbContext.SaveChanges();
+
+            var response = new CustomerEditResponse() { ID = random.Next(1, 100000), ClientID = clientID, Model = customer };
             return response;
         }
     
