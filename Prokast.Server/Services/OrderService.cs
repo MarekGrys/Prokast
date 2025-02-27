@@ -20,6 +20,7 @@ namespace Prokast.Server.Services
             _mapper = mapper;
         }
 
+        #region Create
         public Response CreateOrder(OrderCreateDto orderCreateDto, int clientID)
         {
             var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Błędnie podane dane" };
@@ -37,7 +38,22 @@ namespace Prokast.Server.Services
                 trackingID.Append(znaki[index]);
             }
 
-            var order = new Order
+            var customer = _dbContext.Customers.FirstOrDefault(x => x.Email == orderCreateDto.Email && x.PhoneNumber == orderCreateDto.PhoneNumber);
+            if (customer == null)
+            {
+                customer = new Customer()
+                {
+                    FirstName = orderCreateDto.FirstName,
+                    LastName = orderCreateDto.LastName,
+                    Email = orderCreateDto.Email,
+                    PhoneNumber = orderCreateDto.PhoneNumber,
+                };
+                _dbContext.Customers.Add(customer);
+                _dbContext.SaveChanges();
+            }
+            customer = _dbContext.Customers.FirstOrDefault(x => x.Email == orderCreateDto.Email && x.PhoneNumber == orderCreateDto.PhoneNumber);
+
+            var order = new Order()
             {
                 ShopOrderID = orderCreateDto.ShopOrderID,
                 OrderDate = orderCreateDto.OrderDate,
@@ -47,27 +63,19 @@ namespace Prokast.Server.Services
                 CreationDate = orderCreateDto.CreationDate,
                 UpdateDate = orderCreateDto.UpdateDate,
                 TrackingID = trackingID.ToString(),
+                ClientID = clientID,
+                CustomerID = customer.ID,
             };
 
             _dbContext.Orders.Add(order);
             _dbContext.SaveChanges();
 
-            order = _dbContext.Orders.FirstOrDefault(x => x.TrackingID == trackingID.ToString());
-
-            var customer = new Customer
-            {
-                OrderID = order.ID,
-                FirstName = orderCreateDto.FirstName,
-                LastName = orderCreateDto.LastName,
-                Email = orderCreateDto.Email,
-                PhoneNumber = orderCreateDto.PhoneNumber,
-            };
-
-            _dbContext.Customers.Add(customer);
-            _dbContext.SaveChanges();
-
             var response = new Response() { ID = random.Next(1, 100000), ClientID = clientID };
             return response;
         }
+        #endregion
+
+        
+
     }
 }

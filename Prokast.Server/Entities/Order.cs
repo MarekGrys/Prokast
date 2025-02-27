@@ -28,5 +28,9 @@ namespace Prokast.Server.Entities
         public DateTime UpdateDate { get; set; }
         [Required]
         public string TrackingID { get; set; }
+        [Required]
+        public int ClientID { get; set; }
+        [Required]
+        public int CustomerID { get; set; }
     }
 }
