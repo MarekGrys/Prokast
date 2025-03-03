@@ -30,15 +30,6 @@ namespace Prokast.Server.Services
                 return responseNull;
             }
 
-            const string znaki = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-            StringBuilder trackingID = new StringBuilder();
-            
-            for (int i = 0; i < 20; i++)
-            {
-                int index = random.Next(znaki.Length);
-                trackingID.Append(znaki[index]);
-            }
-
             var customer = _dbContext.Customers.FirstOrDefault(x => x.Email == orderCreateDto.Email && x.PhoneNumber == orderCreateDto.PhoneNumber);
             if (customer == null)
             {
@@ -52,21 +43,43 @@ namespace Prokast.Server.Services
                 _dbContext.Customers.Add(customer);
                 _dbContext.SaveChanges();
             }
+
+            if(orderCreateDto.BusinessFirstName != null && orderCreateDto.BusinessLastName != null && orderCreateDto.BusinessEmail != null && orderCreateDto.BusinessPhoneNumber != null)
+            {
+                var businessCustomer = _dbContext.Customers.FirstOrDefault(x => x.Email == orderCreateDto.BusinessEmail && x.PhoneNumber == orderCreateDto.BusinessPhoneNumber);
+                if (businessCustomer == null)
+                {
+                    businessCustomer = new Customer()
+                    {
+                        FirstName = orderCreateDto.BusinessFirstName,
+                        LastName = orderCreateDto.BusinessLastName,
+                        Email = orderCreateDto.BusinessEmail,
+                        PhoneNumber = orderCreateDto.BusinessPhoneNumber,
+                    };
+                    _dbContext.Customers.Add(businessCustomer);
+                    _dbContext.SaveChanges();
+                }
+            }
+
             customer = _dbContext.Customers.FirstOrDefault(x => x.Email == orderCreateDto.Email && x.PhoneNumber == orderCreateDto.PhoneNumber);
+            var business = _dbContext.Customers.FirstOrDefault(x => x.Email == orderCreateDto.BusinessEmail && x.PhoneNumber == orderCreateDto.BusinessPhoneNumber);
 
             var order = new Order()
             {
-                ShopOrderID = orderCreateDto.ShopOrderID,
+                OrderID = orderCreateDto.OrderID,
                 OrderDate = orderCreateDto.OrderDate,
                 TotalPrice = orderCreateDto.TotalPrice,
                 TotalWeightKg = orderCreateDto.TotalWeightKg,
                 PaymentMethod = orderCreateDto.PaymentMethod,
-                CreationDate = orderCreateDto.CreationDate,
                 UpdateDate = orderCreateDto.UpdateDate,
-                TrackingID = trackingID.ToString(),
                 ClientID = clientID,
                 CustomerID = customer.ID,
             };
+
+            if(business != null)
+            {
+                order.BusinessID = business.ID;
+            }
 
             _dbContext.Orders.Add(order);
             _dbContext.SaveChanges();
@@ -93,7 +106,7 @@ namespace Prokast.Server.Services
                 var orderMin = new OrderGetAllDto
                 {
                     ID = order.ID,
-                    ShopOrderID = order.ShopOrderID,
+                    OrderID = order.OrderID,
                     OrderStatus = order.OrderStatus,
                     PaymentStatus = order.PaymentStatus,
                 };
@@ -115,17 +128,18 @@ namespace Prokast.Server.Services
 
             var customer = _dbContext.Customers.FirstOrDefault(x => x.ID == order.CustomerID);
 
+            var businessCustomer = _dbContext.Customers.FirstOrDefault(x => x.ID == order.BusinessID);
+
             var newOrder = new OrderGetOneDto()
             {
                 ID = orderID,
-                ShopOrderID=order.ShopOrderID,
+                OrderID = order.OrderID,
                 OrderDate = order.OrderDate,
                 OrderStatus=order.OrderStatus,
                 TotalPrice = order.TotalPrice,
                 TotalWeightKg = order.TotalWeightKg,
                 PaymentMethod = order.PaymentMethod,
                 PaymentStatus=order.PaymentStatus,
-                CreationDate = order.CreationDate,
                 UpdateDate = order.UpdateDate,
                 TrackingID = order.TrackingID,
                 ClientID = clientID,
@@ -136,6 +150,14 @@ namespace Prokast.Server.Services
                 PhoneNumber = customer.PhoneNumber,
             };
             
+            if (businessCustomer!= null)
+            {
+                newOrder.BusinessFirstName = businessCustomer.FirstName;
+                newOrder.BusinessLastName = businessCustomer.LastName;
+                newOrder.BusinessEmail = businessCustomer.Email;
+                newOrder.BusinessPhoneNumber = businessCustomer.PhoneNumber;
+            }
+
             var response = new OrderGetOneResponse() { ID = random.Next(1, 100000), ClientID = clientID, Model = newOrder };
             return response;
         }
@@ -151,17 +173,18 @@ namespace Prokast.Server.Services
 
             var customer = _dbContext.Customers.FirstOrDefault(x => x.ID == order.CustomerID);
 
+            var businessCustomer = _dbContext.Customers.FirstOrDefault(x => x.ID == order.BusinessID);
+
             var newOrder = new OrderGetOneDto()
             {
                 ID = order.ID,
-                ShopOrderID = order.ShopOrderID,
+                OrderID = order.OrderID,
                 OrderDate = order.OrderDate,
                 OrderStatus = order.OrderStatus,
                 TotalPrice = order.TotalPrice,
                 TotalWeightKg = order.TotalWeightKg,
                 PaymentMethod = order.PaymentMethod,
                 PaymentStatus = order.PaymentStatus,
-                CreationDate = order.CreationDate,
                 UpdateDate = order.UpdateDate,
                 TrackingID = order.TrackingID,
                 ClientID = clientID,
@@ -171,6 +194,14 @@ namespace Prokast.Server.Services
                 Email = customer.Email,
                 PhoneNumber = customer.PhoneNumber,
             };
+
+            if (businessCustomer != null)
+            {
+                newOrder.BusinessFirstName = businessCustomer.FirstName;
+                newOrder.BusinessLastName = businessCustomer.LastName;
+                newOrder.BusinessEmail = businessCustomer.Email;
+                newOrder.BusinessPhoneNumber = businessCustomer.PhoneNumber;
+            }
 
             var response = new OrderGetOneResponse() { ID = random.Next(1, 100000), ClientID = clientID, Model = newOrder };
             return response;
@@ -202,8 +233,24 @@ namespace Prokast.Server.Services
                 return responseNull;
             }
 
+            
+            const string znaki = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+            StringBuilder trackingID = new StringBuilder();
+
+            for (int i = 0; i < 20; i++)
+            {
+                int index = random.Next(znaki.Length);
+                trackingID.Append(znaki[index]);
+            }
+
             order.OrderStatus = status;
             order.UpdateDate = DateTime.Now;
+
+            if (status == "shipped")
+            {
+                order.TrackingID = trackingID.ToString();
+            }
+
             _dbContext.SaveChanges();
 
             var response = new OrderEditResponse() { ID = random.Next(1, 100000), ClientID = clientID, Model = order };
@@ -250,7 +297,7 @@ namespace Prokast.Server.Services
                 return responseNull;
             }
 
-            order.ShopOrderID = orderEditDto.ShopOrderID;
+            order.OrderID = orderEditDto.OrderID;
             order.TotalPrice = orderEditDto.TotalPrice;
             order.TotalWeightKg = orderEditDto.TotalWeightKg;
             order.PaymentMethod = orderEditDto.PaymentMethod;

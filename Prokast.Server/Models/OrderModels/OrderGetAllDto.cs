@@ -7,7 +7,7 @@ namespace Prokast.Server.Models.OrderModels
         [Required]
         public int ID { get; set; }
         [Required]
-        public string ShopOrderID { get; set; }
+        public string OrderID { get; set; }
         [Required]
         public string OrderStatus { get; set; }
         [Required]

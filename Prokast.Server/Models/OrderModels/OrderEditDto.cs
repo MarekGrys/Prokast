@@ -5,7 +5,7 @@ namespace Prokast.Server.Models.OrderModels
     public class OrderEditDto
     {
         [Required]
-        public string ShopOrderID { get; set; }
+        public string OrderID { get; set; }
         [Required]
         public decimal TotalPrice { get; set; }
         [Required]
@@ -16,5 +16,7 @@ namespace Prokast.Server.Models.OrderModels
         public int ClientID { get; set; }
         [Required]
         public int CustomerID { get; set; }
+        [Required]
+        public int BusinessID { get; set; }
     }
 }

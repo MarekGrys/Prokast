@@ -7,7 +7,7 @@ namespace Prokast.Server.Entities
         [Key]
         public int ID { get; set; }
         [Required]
-        public string ShopOrderID { get; set; }
+        public string OrderID { get; set; }
         [Required]
         public DateTime OrderDate { get; set; }
         [Required]
@@ -23,14 +23,12 @@ namespace Prokast.Server.Entities
         [RegularExpression("^(pending|paid|failed|refunded)$", ErrorMessage = "PaymentStatus musi mieć jedną z dozwolonych wartości.")]
         public string PaymentStatus { get; set; } = "pending";
         [Required]
-        public DateTime CreationDate { get; set; }
-        [Required]
         public DateTime UpdateDate { get; set; }
-        [Required]
-        public string TrackingID { get; set; }
+        public string? TrackingID { get; set; }
         [Required]
         public int ClientID { get; set; }
         [Required]
         public int CustomerID { get; set; }
+        public int? BusinessID { get; set; }
     }
 }

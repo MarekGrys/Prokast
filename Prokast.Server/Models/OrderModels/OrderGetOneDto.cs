@@ -7,7 +7,7 @@ namespace Prokast.Server.Models.OrderModels
         [Required]
         public int ID { get; set; }
         [Required]
-        public string ShopOrderID { get; set; }
+        public string OrderID { get; set; }
         [Required]
         public DateTime OrderDate { get; set; }
         [Required]
@@ -41,5 +41,9 @@ namespace Prokast.Server.Models.OrderModels
         [Required]
         [RegularExpression(@"\d{3}-\d{3}-\d{3}$", ErrorMessage = "Phone Number must have format: 123-456-789.")]
         public string PhoneNumber { get; set; }
+        public string? BusinessFirstName { get; set; }
+        public string? BusinessLastName { get; set; }
+        public string? BusinessEmail { get; set; }
+        public string? BusinessPhoneNumber { get; set; }
     }
 }
