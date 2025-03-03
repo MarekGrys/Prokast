@@ -49,7 +49,7 @@ namespace Prokast.Server.Services
                 _dbContext.SaveChanges();
             }
 
-            if(orderCreateDto.BusinessFirstName != null && orderCreateDto.BusinessLastName != null && orderCreateDto.BusinessEmail != null && orderCreateDto.BusinessPhoneNumber != null)
+            if(orderCreateDto.IsBusiness is true)
             {
                 var businessCustomer = _dbContext.Customers.FirstOrDefault(x => x.Email == orderCreateDto.BusinessEmail && x.PhoneNumber == orderCreateDto.BusinessPhoneNumber);
                 if (businessCustomer == null)
@@ -89,6 +89,7 @@ namespace Prokast.Server.Services
             if(business != null)
             {
                 order.BusinessID = business.ID;
+                order.IsBusiness = orderCreateDto.IsBusiness;
             }
 
             _dbContext.Orders.Add(order);

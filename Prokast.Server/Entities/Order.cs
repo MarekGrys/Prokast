@@ -30,5 +30,7 @@ namespace Prokast.Server.Entities
         [Required]
         public int CustomerID { get; set; }
         public int? BusinessID { get; set; }
+        [Required]
+        public bool IsBusiness { get; set; }
     }
 }

@@ -33,6 +33,8 @@ namespace Prokast.Server.Models.OrderModels
         [Required]
         public int CustomerID { get; set; }
         [Required]
+        public bool IsBusiness { get; set; }
+        [Required]
         public string FirstName { get; set; }
         [Required]
         public string LastName { get; set; }
