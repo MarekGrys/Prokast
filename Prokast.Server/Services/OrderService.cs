@@ -39,6 +39,11 @@ namespace Prokast.Server.Services
                     LastName = orderCreateDto.LastName,
                     Email = orderCreateDto.Email,
                     PhoneNumber = orderCreateDto.PhoneNumber,
+                    Address = orderCreateDto.Address,
+                    HouseNumber = orderCreateDto.HouseNumber,
+                    City = orderCreateDto.City,
+                    PostalCode = orderCreateDto.PostalCode,
+                    Country = orderCreateDto.Country,
                 };
                 _dbContext.Customers.Add(customer);
                 _dbContext.SaveChanges();
@@ -55,6 +60,11 @@ namespace Prokast.Server.Services
                         LastName = orderCreateDto.BusinessLastName,
                         Email = orderCreateDto.BusinessEmail,
                         PhoneNumber = orderCreateDto.BusinessPhoneNumber,
+                        Address = orderCreateDto.BusinessAddress,
+                        HouseNumber = orderCreateDto.BusinessHouseNumber,
+                        City = orderCreateDto.BusinessCity,
+                        PostalCode = orderCreateDto.BusinessPostalCode,
+                        Country = orderCreateDto.BusinessCountry
                     };
                     _dbContext.Customers.Add(businessCustomer);
                     _dbContext.SaveChanges();
@@ -148,6 +158,11 @@ namespace Prokast.Server.Services
                 LastName = customer.LastName,
                 Email = customer.Email,
                 PhoneNumber = customer.PhoneNumber,
+                Address = customer.Address,
+                HouseNumber = customer.HouseNumber,
+                PostalCode = customer.PostalCode,
+                Country = customer.Country,
+                City = customer.City,
             };
             
             if (businessCustomer!= null)
@@ -156,6 +171,11 @@ namespace Prokast.Server.Services
                 newOrder.BusinessLastName = businessCustomer.LastName;
                 newOrder.BusinessEmail = businessCustomer.Email;
                 newOrder.BusinessPhoneNumber = businessCustomer.PhoneNumber;
+                newOrder.BusinessAddress = businessCustomer.Address;
+                newOrder.BusinessHouseNumber = businessCustomer.HouseNumber;
+                newOrder.BusinessPostalCode = businessCustomer.PostalCode;
+                newOrder.BusinessCity = businessCustomer.City;
+                newOrder.BusinessCountry = businessCustomer.Country;
             }
 
             var response = new OrderGetOneResponse() { ID = random.Next(1, 100000), ClientID = clientID, Model = newOrder };
@@ -193,6 +213,11 @@ namespace Prokast.Server.Services
                 LastName = customer.LastName,
                 Email = customer.Email,
                 PhoneNumber = customer.PhoneNumber,
+                Address = customer.Address,
+                HouseNumber = customer.HouseNumber,
+                PostalCode = customer.PostalCode,
+                Country = customer.Country,
+                City = customer.City,
             };
 
             if (businessCustomer != null)
@@ -201,6 +226,11 @@ namespace Prokast.Server.Services
                 newOrder.BusinessLastName = businessCustomer.LastName;
                 newOrder.BusinessEmail = businessCustomer.Email;
                 newOrder.BusinessPhoneNumber = businessCustomer.PhoneNumber;
+                newOrder.BusinessAddress = businessCustomer.Address;
+                newOrder.BusinessHouseNumber = businessCustomer.HouseNumber;
+                newOrder.BusinessPostalCode = businessCustomer.PostalCode;
+                newOrder.BusinessCity = businessCustomer.City;
+                newOrder.BusinessCountry = businessCustomer.Country;
             }
 
             var response = new OrderGetOneResponse() { ID = random.Next(1, 100000), ClientID = clientID, Model = newOrder };
@@ -303,6 +333,7 @@ namespace Prokast.Server.Services
             order.PaymentMethod = orderEditDto.PaymentMethod;
             order.ClientID = orderEditDto.ClientID;
             order.CustomerID = orderEditDto.CustomerID;
+            order.BusinessID = orderEditDto.BusinessID;
             order.UpdateDate = DateTime.Now;
             _dbContext.SaveChanges();
 
@@ -324,7 +355,23 @@ namespace Prokast.Server.Services
             customer.LastName = customerDto.LastName;
             customer.Email = customerDto.Email;
             customer.PhoneNumber = customerDto.PhoneNumber;
+            customer.Address = customerDto.Address;
+
+            if(customerDto.HouseNumber == null)
+            {
+                customer.HouseNumber = null;
+            }
+            else
+            {
+                customer.HouseNumber = customerDto.HouseNumber;
+            }
+
+            customer.PostalCode = customerDto.PostalCode;
+            customer.Country = customerDto.Country;
+            customer.City = customerDto.City;
             _dbContext.SaveChanges();
+
+
 
             var response = new CustomerEditResponse() { ID = random.Next(1, 100000), ClientID = clientID, Model = customer };
             return response;
