@@ -13,7 +13,6 @@ namespace Prokast.Server.Entities
         [Required]
         public DateTime OrderDate { get; set; }
         [Required]
-        [RegularExpression("^(pending|processing|shipped|delivered|cancelled|returned)$", ErrorMessage = "Status musi mieć jedną z dozwolonych wartości.")]
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public OrderStatus OrderStatus { get; set; } = OrderStatus.pending;
         [Required]
