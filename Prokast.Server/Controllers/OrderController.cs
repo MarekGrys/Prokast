@@ -7,6 +7,7 @@ using Prokast.Server.Models.OrderModels;
 using Prokast.Server.Models.ResponseModels.WarehouseResponseModels;
 using Prokast.Server.Models.ResponseModels.OrderResponseModels;
 using Prokast.Server.Entities;
+using Prokast.Server.Enums;
 
 namespace Prokast.Server.Controllers
 {
@@ -58,7 +59,7 @@ namespace Prokast.Server.Controllers
         }
 
         [HttpGet("{orderID}")]
-        [ProducesResponseType(typeof(OrderGetAllResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(OrderGetOneResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         public ActionResult<Response> GetOrder([FromQuery] int clientID, [FromRoute] int orderID)
         {
@@ -96,7 +97,7 @@ namespace Prokast.Server.Controllers
         [HttpPut("{orderID}/status")]
         [ProducesResponseType(typeof(OrderEditResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
-        public ActionResult<Response> ChangeOrderStatus([FromQuery] int clientID, [FromRoute] int orderID,[FromBody] string status)
+        public ActionResult<Response> ChangeOrderStatus([FromQuery] int clientID, [FromRoute] int orderID,[FromQuery] OrderStatus status)
         {
             if (!ModelState.IsValid)
             {
@@ -119,7 +120,7 @@ namespace Prokast.Server.Controllers
         [HttpPut("{orderID}/payment")]
         [ProducesResponseType(typeof(OrderEditResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
-        public ActionResult<Response> ChangePaymentStatus([FromQuery] int clientID, [FromRoute] int orderID, [FromBody] string paymentStatus)
+        public ActionResult<Response> ChangePaymentStatus([FromQuery] int clientID, [FromRoute] int orderID, [FromQuery] string paymentStatus)
         {
             if (!ModelState.IsValid)
             {

@@ -48,5 +48,7 @@ namespace Prokast.Server.Models.OrderModels
         public string? BusinessPostalCode { get; set; }
         public string? BusinessCity { get; set; }
         public string? BusinessCountry { get; set; }
+        [RegularExpression(@"^[A-Z]{2}-\d{3}-\d{6}-\d$", ErrorMessage = "NIP must have format XX-123-456789-5.")]
+        public string? NIP { get; set; }
     }
 }

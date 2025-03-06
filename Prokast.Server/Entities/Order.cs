@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Prokast.Server.Enums;
+using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Prokast.Server.Entities
 {
@@ -12,7 +14,8 @@ namespace Prokast.Server.Entities
         public DateTime OrderDate { get; set; }
         [Required]
         [RegularExpression("^(pending|processing|shipped|delivered|cancelled|returned)$", ErrorMessage = "Status musi mieć jedną z dozwolonych wartości.")]
-        public string OrderStatus { get; set; } = "pending";
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public OrderStatus OrderStatus { get; set; } = OrderStatus.pending;
         [Required]
         public decimal TotalPrice { get; set; }
         [Required]

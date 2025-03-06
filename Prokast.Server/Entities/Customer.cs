@@ -25,5 +25,7 @@ namespace Prokast.Server.Entities
         public string City { get; set; }
         [Required]
         public string Country { get; set; }
+        [RegularExpression(@"^[A-Z]{2}-\d{3}-\d{6}-\d$", ErrorMessage = "NIP must have format XX-123-456789-5.")]
+        public string? NIP { get; set; }
     }
 }

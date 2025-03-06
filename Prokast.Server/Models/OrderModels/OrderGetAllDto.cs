@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Prokast.Server.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace Prokast.Server.Models.OrderModels
 {
@@ -9,7 +10,7 @@ namespace Prokast.Server.Models.OrderModels
         [Required]
         public string OrderID { get; set; }
         [Required]
-        public string OrderStatus { get; set; }
+        public OrderStatus OrderStatus { get; set; }
         [Required]
         public string PaymentStatus { get; set; }
     }

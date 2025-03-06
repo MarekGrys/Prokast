@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Prokast.Server.Entities;
+using Prokast.Server.Enums;
 using Prokast.Server.Models;
 using Prokast.Server.Models.OrderModels;
 using Prokast.Server.Models.ResponseModels;
@@ -64,7 +65,9 @@ namespace Prokast.Server.Services
                         HouseNumber = orderCreateDto.BusinessHouseNumber,
                         City = orderCreateDto.BusinessCity,
                         PostalCode = orderCreateDto.BusinessPostalCode,
-                        Country = orderCreateDto.BusinessCountry
+                        Country = orderCreateDto.BusinessCountry,
+                        NIP = orderCreateDto.NIP
+                        
                     };
                     _dbContext.Customers.Add(businessCustomer);
                     _dbContext.SaveChanges();
@@ -177,6 +180,7 @@ namespace Prokast.Server.Services
                 newOrder.BusinessPostalCode = businessCustomer.PostalCode;
                 newOrder.BusinessCity = businessCustomer.City;
                 newOrder.BusinessCountry = businessCustomer.Country;
+                newOrder.NIP = businessCustomer.NIP;
             }
 
             var response = new OrderGetOneResponse() { ID = random.Next(1, 100000), ClientID = clientID, Model = newOrder };
@@ -232,6 +236,7 @@ namespace Prokast.Server.Services
                 newOrder.BusinessPostalCode = businessCustomer.PostalCode;
                 newOrder.BusinessCity = businessCustomer.City;
                 newOrder.BusinessCountry = businessCustomer.Country;
+                newOrder.NIP = businessCustomer.NIP;
             }
 
             var response = new OrderGetOneResponse() { ID = random.Next(1, 100000), ClientID = clientID, Model = newOrder };
@@ -239,9 +244,9 @@ namespace Prokast.Server.Services
         }
         #endregion
 
-        public Response ChangeOrderStatus(int clientID, int orderID, string status)
+        public Response ChangeOrderStatus(int clientID, int orderID, OrderStatus request)
         {
-            var statuses = new List<string>()
+            /*var statuses = new List<string>()
             {
                 "pending",
                 "processing", 
@@ -249,13 +254,19 @@ namespace Prokast.Server.Services
                 "delivered",
                 "cancelled",
                 "returned"
-            };
+            };*/
 
-            if (!statuses.Contains(status))
+            /*if (!Enum.TryParse<OrderStatus>(status, true, out var newStatus))
             {
                 var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Błędny status!" };
                 return responseNull;
-            }
+            }*/
+
+            /*if (!statuses.Contains(status))
+            {
+                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Błędny status!" };
+                return responseNull;
+            }*/
 
             var order = _dbContext.Orders.FirstOrDefault(x => x.ID == orderID);
             if (order == null)
@@ -264,7 +275,8 @@ namespace Prokast.Server.Services
                 return responseNull;
             }
 
-            
+            //var status = request.OrderStatus;
+
             const string znaki = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
             StringBuilder trackingID = new StringBuilder();
 
@@ -274,10 +286,10 @@ namespace Prokast.Server.Services
                 trackingID.Append(znaki[index]);
             }
 
-            order.OrderStatus = status;
+            order.OrderStatus = request;
             order.UpdateDate = DateTime.Now;
 
-            if (status == "shipped")
+            if (request == OrderStatus.shipped)
             {
                 order.TrackingID = trackingID.ToString();
             }
@@ -290,19 +302,25 @@ namespace Prokast.Server.Services
 
         public Response ChangePaymentStatus(int clientID, int orderID, string paymentStatus)
         {
-            var statuses = new List<string>()
+            /*var statuses = new List<string>()
             {
                 "pending",
                 "paid",
                 "failed",
                 "refunded"
-            };
+            };*/
 
-            if (!statuses.Contains(paymentStatus))
+            if (!Enum.TryParse<PaymentStatus>(paymentStatus, true, out var newStatus))
             {
                 var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Błędny status!" };
                 return responseNull;
             }
+
+            /*if (!statuses.Contains(paymentStatus))
+            {
+                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Błędny status!" };
+                return responseNull;
+            }*/
 
             var order = _dbContext.Orders.FirstOrDefault(x => x.ID == orderID);
             if (order == null)
@@ -370,6 +388,7 @@ namespace Prokast.Server.Services
             customer.PostalCode = customerDto.PostalCode;
             customer.Country = customerDto.Country;
             customer.City = customerDto.City;
+            customer.NIP = customerDto.NIP;
             _dbContext.SaveChanges();
 
 

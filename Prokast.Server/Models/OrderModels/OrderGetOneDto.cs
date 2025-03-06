@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Prokast.Server.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace Prokast.Server.Models.OrderModels
 {
@@ -12,7 +13,7 @@ namespace Prokast.Server.Models.OrderModels
         public DateTime OrderDate { get; set; }
         [Required]
         [RegularExpression("^(pending|processing|shipped|delivered|cancelled|returned)$", ErrorMessage = "Status musi mieć jedną z dozwolonych wartości.")]
-        public string OrderStatus { get; set; }
+        public OrderStatus OrderStatus { get; set; }
         [Required]
         public decimal TotalPrice { get; set; }
         [Required]
@@ -63,5 +64,7 @@ namespace Prokast.Server.Models.OrderModels
         public string? BusinessPostalCode { get; set; }
         public string? BusinessCity { get; set; }
         public string? BusinessCountry { get; set; }
+        [RegularExpression(@"^[A-Z]{2}-\d{3}-\d{6}-\d$", ErrorMessage = "NIP must have format XX-123-456789-5.")]
+        public string? NIP { get; set; }
     }
 }
