@@ -22,7 +22,7 @@ namespace Prokast.Server.Models.OrderModels
         public string PaymentMethod { get; set; }
         [Required]
         [RegularExpression("^(pending|paid|failed|refunded)$", ErrorMessage = "PaymentStatus musi mieć jedną z dozwolonych wartości.")]
-        public string PaymentStatus { get; set; }
+        public PaymentStatus PaymentStatus { get; set; }
         [Required]
         public DateTime CreationDate { get; set; }
         [Required]

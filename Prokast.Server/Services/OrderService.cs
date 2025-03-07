@@ -244,29 +244,26 @@ namespace Prokast.Server.Services
         }
         #endregion
 
+        public Response AddTrackingID(int clientID, int orderID, string trackingID)
+        {
+            var order = _dbContext.Orders.FirstOrDefault(x => x.ID == orderID);
+            if (order == null)
+            {
+                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Brak zamówienia!" };
+                return responseNull;
+            }
+            order.TrackingID = trackingID;
+            _dbContext.SaveChanges();
+            
+            var orderStatus = OrderStatus.shipped;
+            ChangeOrderStatus(clientID, orderID, orderStatus);
+
+            var response = new OrderEditResponse() { ID = random.Next(1, 100000), ClientID = clientID, Model = order };
+            return response;
+        }
+
         public Response ChangeOrderStatus(int clientID, int orderID, OrderStatus request)
         {
-            /*var statuses = new List<string>()
-            {
-                "pending",
-                "processing", 
-                "shipped",
-                "delivered",
-                "cancelled",
-                "returned"
-            };*/
-
-            /*if (!Enum.TryParse<OrderStatus>(status, true, out var newStatus))
-            {
-                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Błędny status!" };
-                return responseNull;
-            }*/
-
-            /*if (!statuses.Contains(status))
-            {
-                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Błędny status!" };
-                return responseNull;
-            }*/
 
             var order = _dbContext.Orders.FirstOrDefault(x => x.ID == orderID);
             if (order == null)
@@ -277,22 +274,22 @@ namespace Prokast.Server.Services
 
             //var status = request.OrderStatus;
 
-            const string znaki = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+           /* const string znaki = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
             StringBuilder trackingID = new StringBuilder();
 
             for (int i = 0; i < 20; i++)
             {
                 int index = random.Next(znaki.Length);
                 trackingID.Append(znaki[index]);
-            }
+            }*/
 
             order.OrderStatus = request;
             order.UpdateDate = DateTime.Now;
 
-            if (request == OrderStatus.shipped)
+            /*if (request == OrderStatus.shipped)
             {
                 order.TrackingID = trackingID.ToString();
-            }
+            }*/
 
             _dbContext.SaveChanges();
 
@@ -300,7 +297,7 @@ namespace Prokast.Server.Services
             return response;
         }
 
-        public Response ChangePaymentStatus(int clientID, int orderID, string paymentStatus)
+        public Response ChangePaymentStatus(int clientID, int orderID, PaymentStatus paymentStatus)
         {
             /*var statuses = new List<string>()
             {
@@ -310,11 +307,11 @@ namespace Prokast.Server.Services
                 "refunded"
             };*/
 
-            if (!Enum.TryParse<PaymentStatus>(paymentStatus, true, out var newStatus))
+            /*if (!Enum.TryParse<PaymentStatus>(paymentStatus, true, out var newStatus))
             {
                 var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Błędny status!" };
                 return responseNull;
-            }
+            }*/
 
             /*if (!statuses.Contains(paymentStatus))
             {

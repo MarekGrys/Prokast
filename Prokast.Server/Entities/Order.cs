@@ -22,8 +22,7 @@ namespace Prokast.Server.Entities
         [Required]
         public string PaymentMethod { get; set; }
         [Required]
-        [RegularExpression("^(pending|paid|failed|refunded)$", ErrorMessage = "PaymentStatus musi mieć jedną z dozwolonych wartości.")]
-        public string PaymentStatus { get; set; } = "pending";
+        public PaymentStatus PaymentStatus { get; set; } = PaymentStatus.pending;
         [Required]
         public DateTime UpdateDate { get; set; }
         public string? TrackingID { get; set; }

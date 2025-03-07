@@ -94,6 +94,30 @@ namespace Prokast.Server.Controllers
         #endregion
 
         #region Edit
+        [HttpPut("trackingID{orderID}")]
+        [ProducesResponseType(typeof(OrderEditResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        public ActionResult<Response> AddTrackingID([FromQuery] int clientID, [FromRoute] int orderID, [FromQuery] string trackingID)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Błędne dane");
+            }
+            try
+            {
+                var result = _orderService.AddTrackingID(clientID, orderID, trackingID);
+                if (result is ErrorResponse) return BadRequest(result);
+
+                if (result == null) return NotFound(result);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
         [HttpPut("{orderID}/status")]
         [ProducesResponseType(typeof(OrderEditResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
@@ -120,7 +144,7 @@ namespace Prokast.Server.Controllers
         [HttpPut("{orderID}/payment")]
         [ProducesResponseType(typeof(OrderEditResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
-        public ActionResult<Response> ChangePaymentStatus([FromQuery] int clientID, [FromRoute] int orderID, [FromQuery] string paymentStatus)
+        public ActionResult<Response> ChangePaymentStatus([FromQuery] int clientID, [FromRoute] int orderID, [FromQuery] PaymentStatus paymentStatus)
         {
             if (!ModelState.IsValid)
             {

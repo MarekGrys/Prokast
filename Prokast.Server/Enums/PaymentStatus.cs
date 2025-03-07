@@ -1,5 +1,8 @@
-﻿namespace Prokast.Server.Enums
+﻿using System.Text.Json.Serialization;
+
+namespace Prokast.Server.Enums
 {
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum PaymentStatus
     {
         pending,

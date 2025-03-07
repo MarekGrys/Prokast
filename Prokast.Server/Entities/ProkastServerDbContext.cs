@@ -29,6 +29,9 @@ namespace Prokast.Server.Entities
             modelBuilder.Entity<Order>()
                 .Property(o => o.OrderStatus)
                 .HasConversion<string>();
+            modelBuilder.Entity<Order>()
+                .Property(o => o.PaymentStatus)
+                .HasConversion<string>();
         }
     }
 }

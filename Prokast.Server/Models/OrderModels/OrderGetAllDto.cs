@@ -12,6 +12,6 @@ namespace Prokast.Server.Models.OrderModels
         [Required]
         public OrderStatus OrderStatus { get; set; }
         [Required]
-        public string PaymentStatus { get; set; }
+        public PaymentStatus PaymentStatus { get; set; }
     }
 }

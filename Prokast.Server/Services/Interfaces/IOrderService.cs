@@ -11,8 +11,9 @@ namespace Prokast.Server.Services.Interfaces
         Response GetAllOrders(int clientID);
         Response GetOrder(int clientID, int orderID);
         Response GetOrderByTrackingID(int clientID, string trackingID);
+        Response AddTrackingID(int clientID, int orderID, string trackingID);
         Response ChangeOrderStatus(int clientID, int orderID, OrderStatus status);
-        Response ChangePaymentStatus(int clientID, int orderID, string paymentStatus);
+        Response ChangePaymentStatus(int clientID, int orderID, PaymentStatus paymentStatus);
         Response EditOrder(int clientID, int orderID, OrderEditDto orderEditDto);
         Response EditCustomer(int clientID, int customerID, Customer customerDto);
     }
