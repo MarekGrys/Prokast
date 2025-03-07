@@ -182,6 +182,7 @@ namespace Prokast.Server.Services
             price.Name = editPriceDto.Name;
             price.Netto = editPriceDto.Netto;
             price.VAT = editPriceDto.VAT;
+            price.Brutto = editPriceDto.Brutto;
             
             _dbContext.SaveChanges();
 
