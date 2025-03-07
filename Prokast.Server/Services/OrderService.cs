@@ -272,25 +272,8 @@ namespace Prokast.Server.Services
                 return responseNull;
             }
 
-            //var status = request.OrderStatus;
-
-           /* const string znaki = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-            StringBuilder trackingID = new StringBuilder();
-
-            for (int i = 0; i < 20; i++)
-            {
-                int index = random.Next(znaki.Length);
-                trackingID.Append(znaki[index]);
-            }*/
-
             order.OrderStatus = request;
             order.UpdateDate = DateTime.Now;
-
-            /*if (request == OrderStatus.shipped)
-            {
-                order.TrackingID = trackingID.ToString();
-            }*/
-
             _dbContext.SaveChanges();
 
             var response = new OrderEditResponse() { ID = random.Next(1, 100000), ClientID = clientID, Model = order };
@@ -299,26 +282,6 @@ namespace Prokast.Server.Services
 
         public Response ChangePaymentStatus(int clientID, int orderID, PaymentStatus paymentStatus)
         {
-            /*var statuses = new List<string>()
-            {
-                "pending",
-                "paid",
-                "failed",
-                "refunded"
-            };*/
-
-            /*if (!Enum.TryParse<PaymentStatus>(paymentStatus, true, out var newStatus))
-            {
-                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Błędny status!" };
-                return responseNull;
-            }*/
-
-            /*if (!statuses.Contains(paymentStatus))
-            {
-                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Błędny status!" };
-                return responseNull;
-            }*/
-
             var order = _dbContext.Orders.FirstOrDefault(x => x.ID == orderID);
             if (order == null)
             {
