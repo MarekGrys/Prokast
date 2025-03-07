@@ -9,6 +9,8 @@ namespace Prokast.Server.Models.PriceModels
         [Required]
         public decimal Netto { get; set; }
         [Required]
+        public decimal Brutto { get; set; }
+        [Required]
         public decimal VAT { get; set; }
     }
 }

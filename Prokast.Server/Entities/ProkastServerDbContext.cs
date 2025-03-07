@@ -20,6 +20,18 @@ namespace Prokast.Server.Entities
         public DbSet<Photo> Photos { get; set; }
         public DbSet<Warehouse> Warehouses { get; set; }
         public DbSet<StoredProduct> StoredProducts { get; set; }
- 
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<Customer> Customers { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            //base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Order>()
+                .Property(o => o.OrderStatus)
+                .HasConversion<string>();
+            modelBuilder.Entity<Order>()
+                .Property(o => o.PaymentStatus)
+                .HasConversion<string>();
+        }
     }
 }
