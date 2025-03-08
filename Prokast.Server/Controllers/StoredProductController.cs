@@ -6,6 +6,7 @@ using Prokast.Server.Services.Interfaces;
 using Prokast.Server.Models.StoredProductModels;
 using Prokast.Server.Models.ResponseModels.StoredProductResponseModels;
 using Prokast.Server.Entities;
+using Prokast.Server.Models.ClientModels;
 
 
 namespace Prokast.Server.Controllers
@@ -90,8 +91,10 @@ namespace Prokast.Server.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
-        public ActionResult<Response> GetStoredProductBySKU([FromQuery] int clientID, [FromQuery] int warehouseID, [FromQuery] string SKU)
+        [HttpGet("SKU/{SKU}")]
+        [ProducesResponseType(typeof(StoredProductGetResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        public ActionResult<Response> GetStoredProductBySKU([FromQuery] int clientID, [FromQuery] int warehouseID, [FromRoute] string SKU)
         {
             try
             {
@@ -104,8 +107,26 @@ namespace Prokast.Server.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet("Minimal")]
+        [ProducesResponseType(typeof(StoredProductGetMinimalResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        public ActionResult<Response> GetStoredProductsMinimalData([FromQuery] int clientID, [FromQuery] int warehouseID)
+        {
+            try
+            {
+                var result = _storedProductService.GetStoredProductsMinimalData(clientID, warehouseID);
+                if (result is ErrorResponse) return BadRequest(result);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         #endregion
 
+        #region Edit
         [HttpPut("{ID}")]
         [ProducesResponseType(typeof(StoredProductEditResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
@@ -174,6 +195,7 @@ namespace Prokast.Server.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        #endregion
 
         #region Delete
         [HttpDelete("{ID}")]

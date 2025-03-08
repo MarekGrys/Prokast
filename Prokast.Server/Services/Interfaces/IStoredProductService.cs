@@ -11,6 +11,7 @@ namespace Prokast.Server.Services.Interfaces
         Response GetStoredProductByID(int clientID,int warehouseID, int ID);
         Response GetStoredProductsBelowMinimum(int clientID, int warehouseID);
         Response GetStoredProductsBySKU(int clientID, int warehouseID, string SKU);
+        Response GetStoredProductsMinimalData(int clientID, int warehouseID);
         Response EditStoredProductQuantity(int clientID, int ID, int quantity);
         Response EditStoredProductMinQuantity(int clientID, int ID, int minQuantity);
         Response EditMultipleStoredProductMinQuantity(int clientID, List<EditMultipleStoredProductMinQuantityDto> listToEdit);

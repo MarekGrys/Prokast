@@ -173,6 +173,13 @@ namespace Prokast.Server.Services
 
         public Response GetStoredProductsBySKU(int clientID,int warehouseID, string SKU)
         {
+            var warehouse = _dbContext.Warehouses.FirstOrDefault(x => x.ID == warehouseID);
+            if (warehouse == null)
+            {
+                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Nie ma takiego magazynu!" };
+                return responseNull;
+            }
+            
             var product = _dbContext.Products.FirstOrDefault(x => x.ClientID == clientID && x.SKU == SKU);
             if (product == null)
             {
@@ -202,6 +209,43 @@ namespace Prokast.Server.Services
             storedProductList.Add(storedProductToList);
             var response = new StoredProductGetResponse() { ID = random.Next(1, 100000), ClientID = clientID, Model = storedProductList };
             return response;
+        }
+
+        public Response GetStoredProductsMinimalData(int clientID, int warehouseID)
+        {
+            var warehouse = _dbContext.Warehouses.FirstOrDefault(x => x.ID == warehouseID);
+            if (warehouse == null)
+            {
+                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Nie ma takiego magazynu!" };
+                return responseNull;
+            }
+
+            var storedProducts = _dbContext.StoredProducts.Where(x => x.WarehouseID == warehouseID).ToList();
+            
+            var storedProductsList = new List<StoredProductGetMinimal>();
+
+            foreach (var storedProduct in storedProducts)
+            {
+                var product = _dbContext.Products.FirstOrDefault(x => x.ID == storedProduct.ID);
+                if (product == null)
+                {
+                    var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Nie ma takiego produktu!" };
+                    return responseNull;
+                }
+                var storedProductToList = new StoredProductGetMinimal()
+                {
+                    ID = storedProduct.ID,
+                    Name = product.Name,
+                    Quantity = storedProduct.Quantity,
+                    LastUpdated = storedProduct.LastUpdated
+                };
+                storedProductsList.Add(storedProductToList);
+            }
+
+            var response = new StoredProductGetMinimalResponse() { ID = random.Next(1,100000), ClientID = clientID, Model = storedProductsList };
+            return response;
+
+
         }
         #endregion
 
