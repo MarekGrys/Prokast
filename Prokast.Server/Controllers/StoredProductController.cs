@@ -5,6 +5,7 @@ using Prokast.Server.Services;
 using Prokast.Server.Services.Interfaces;
 using Prokast.Server.Models.StoredProductModels;
 using Prokast.Server.Models.ResponseModels.StoredProductResponseModels;
+using Prokast.Server.Entities;
 
 
 namespace Prokast.Server.Controllers
@@ -81,6 +82,20 @@ namespace Prokast.Server.Controllers
             try
             {
                 var result = _storedProductService.GetStoredProductsBelowMinimum(clientID, warehouseID);
+                if (result is ErrorResponse) return BadRequest(result);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        public ActionResult<Response> GetStoredProductBySKU([FromQuery] int clientID, [FromQuery] int warehouseID, [FromQuery] string SKU)
+        {
+            try
+            {
+                var result = _storedProductService.GetStoredProductsBySKU(clientID, warehouseID, SKU);
                 if (result is ErrorResponse) return BadRequest(result);
                 return Ok(result);
             }

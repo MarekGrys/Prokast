@@ -170,8 +170,42 @@ namespace Prokast.Server.Services
             var response = new StoredProductGetResponse() { ID = random.Next(1, 100000), ClientID = clientID, Model = storedProductsList};
             return response;
         }
+
+        public Response GetStoredProductsBySKU(int clientID,int warehouseID, string SKU)
+        {
+            var product = _dbContext.Products.FirstOrDefault(x => x.ClientID == clientID && x.SKU == SKU);
+            if (product == null)
+            {
+                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Nie ma takiego produktu!" };
+                return responseNull;
+            }
+
+            var storedProduct = _dbContext.StoredProducts.FirstOrDefault(x => x.ProductID == product.ID);
+            if (storedProduct == null)
+            {
+                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Produktu nie ma na magazynie!" };
+                return responseNull;
+            }
+
+            var storedProductList = new List<StoredProductGetDto>();
+
+            var storedProductToList = new StoredProductGetDto()
+            {
+                ID = storedProduct.ID,
+                WarehouseID = storedProduct.WarehouseID,
+                ProductID = storedProduct.ProductID,
+                Quantity = storedProduct.Quantity,
+                MinQuantity = storedProduct.MinQuantity,
+                LastUpdated = storedProduct.LastUpdated,
+                ProductName = product.Name
+            };
+            storedProductList.Add(storedProductToList);
+            var response = new StoredProductGetResponse() { ID = random.Next(1, 100000), ClientID = clientID, Model = storedProductList };
+            return response;
+        }
         #endregion
 
+        #region Edit
         public Response EditStoredProductQuantity(int clientID, int ID, int quantity)
         {
             var storedProduct = _dbContext.StoredProducts.FirstOrDefault(x => x.ID == ID);
@@ -224,6 +258,7 @@ namespace Prokast.Server.Services
             var response = new StoredProductEditMulipleResponse() { ID = random.Next(1, 100000), ClientID = clientID, Model = storedProduct };
             return response;
         }
+        #endregion
 
         #region Delete
         public Response DeleteStoredProduct(int clientID, int ID)
