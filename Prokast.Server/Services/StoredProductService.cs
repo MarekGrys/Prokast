@@ -240,6 +240,7 @@ namespace Prokast.Server.Services
                 var storedProductToList = new StoredProductGetMinimal()
                 {
                     ID = storedProduct.ID,
+                    SKU = product.SKU,
                     Name = product.Name,
                     Quantity = storedProduct.Quantity,
                     LastUpdated = storedProduct.LastUpdated
