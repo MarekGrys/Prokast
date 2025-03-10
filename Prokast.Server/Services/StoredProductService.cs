@@ -221,12 +221,17 @@ namespace Prokast.Server.Services
             }
 
             var storedProducts = _dbContext.StoredProducts.Where(x => x.WarehouseID == warehouseID).ToList();
+            if (storedProducts.Count == 0)
+            {
+                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Brak produktów!" };
+                return responseNull;
+            }
             
             var storedProductsList = new List<StoredProductGetMinimal>();
 
             foreach (var storedProduct in storedProducts)
             {
-                var product = _dbContext.Products.FirstOrDefault(x => x.ID == storedProduct.ID);
+                var product = _dbContext.Products.FirstOrDefault(x => x.ID == storedProduct.ProductID);
                 if (product == null)
                 {
                     var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Nie ma takiego produktu!" };
