@@ -8,6 +8,9 @@ using MimeKit;
 using Prokast.Server.Models;
 using System.Web.Http;
 using Prokast.Server.Models.ResponseModels;
+using Org.BouncyCastle.Asn1.Cms;
+using AutoMapper.Execution;
+//using System.Net.Mail;
 
 namespace Prokast.Server.Services
 {
@@ -21,18 +24,47 @@ namespace Prokast.Server.Services
             _smtpSettings = smtpOptions.Value;
         }
 
-        public Response SendEmail([FromBody] EmailMessage emailMessage)
+        public void SendEmail([FromBody] EmailMessage emailMessage)
         {
             var message = new MimeMessage();
 
             message.From.Add(new MailboxAddress("Prokast", _smtpSettings.Email));
-            message.To.Add(MailboxAddress.Parse(emailMessage.To));
+            
+            foreach(var recipient in emailMessage.To)
+            {
+                message.To.Add(MailboxAddress.Parse(recipient));
+            }
+
             message.Subject = emailMessage.Subject;
 
-            message.Body = new TextPart("plain")
+            //test wysyłania załączników
+            /*string txt = "R_kolokwium.txt";
+            var fileContent = System.Text.Encoding.UTF8.GetBytes("Ala ma kota 123.");
+            emailMessage.Attachments.Add((txt, fileContent));*/
+
+
+            var bodybuilder = new BodyBuilder()
             {
-                Text = emailMessage.Body
+                TextBody = emailMessage.Body
             };
+
+            if (emailMessage.Attachments != null)
+            {
+                foreach (var attachment in emailMessage.Attachments)
+                {
+                    if (attachment.Item1 != null && attachment.Item2 != null)
+                    {
+                        var mimeType = MimeKit.MimeTypes.GetMimeType(attachment.Item1);
+                        var typeparts = mimeType.Split('/');
+                        var contentType = new ContentType(typeparts[0], typeparts[1]);
+
+                        bodybuilder.Attachments.Add(attachment.Item1, attachment.Item2, contentType);
+                    }
+
+                }
+            }
+
+            message.Body = bodybuilder.ToMessageBody();
 
             using (var client = new SmtpClient())
             {
@@ -46,9 +78,6 @@ namespace Prokast.Server.Services
 
                 client.Disconnect(true);
             }
-
-            var response = new EmailResponse() {ID = random.Next(1,100000), ClientID = -1, Model = emailMessage };
-            return response;
         }
     }
 }

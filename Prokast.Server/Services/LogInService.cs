@@ -136,9 +136,15 @@ namespace Prokast.Server.Services
             accountCreate.FirstName = login;
             accountCreate.LastName = password.ToString();
 
+            string mail = accountCreate.Email;
+            var list = new List<string>()
+            {
+                mail
+            };
+            
             var message = new EmailMessage
             {
-                To = accountCreate.Email,
+                To = list,
                 Subject = "Dane Logowania",
                 Body = $"Login: {login}\n Hasło: {password}"
             };

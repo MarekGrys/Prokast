@@ -22,8 +22,8 @@ namespace Prokast.Server.Controllers
                 return BadRequest(ModelState);
             }
 
-            var result = _mailingService.SendEmail(emailMessage);
-            return Ok(result);
+            _mailingService.SendEmail(emailMessage);
+            return Ok();
         }
     }
 }
