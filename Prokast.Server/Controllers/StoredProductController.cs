@@ -201,7 +201,7 @@ namespace Prokast.Server.Controllers
         [HttpDelete("{ID}")]
         [ProducesResponseType(typeof(DeleteResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
-        public ActionResult<Response> DeleteWarehouse([FromQuery] int clientID, [FromRoute] int ID)
+        public ActionResult<Response> DeleteStoredProduct([FromQuery] int clientID, [FromRoute] int ID)
         {
 
             try
