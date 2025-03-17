@@ -72,7 +72,7 @@ namespace Prokast.Server.Controllers
             }
         }
 
-        [HttpGet("Mame/{name}")]
+        [HttpGet("Name/{name}")]
         [ProducesResponseType(typeof(WarehouseGetResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         public ActionResult<Response> GetWarehousesByName([FromQuery] int clientID, [FromRoute] string name)

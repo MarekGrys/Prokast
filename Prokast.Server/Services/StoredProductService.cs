@@ -173,7 +173,7 @@ namespace Prokast.Server.Services
 
         public Response GetStoredProductsBySKU(int clientID,int warehouseID, string SKU)
         {
-            var warehouse = _dbContext.Warehouses.FirstOrDefault(x => x.ID == warehouseID);
+            var warehouse = _dbContext.Warehouses.FirstOrDefault(x => x.ID == warehouseID && x.ClientID == clientID);
             if (warehouse == null)
             {
                 var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Nie ma takiego magazynu!" };
@@ -187,7 +187,7 @@ namespace Prokast.Server.Services
                 return responseNull;
             }
 
-            var storedProduct = _dbContext.StoredProducts.FirstOrDefault(x => x.ProductID == product.ID);
+            var storedProduct = _dbContext.StoredProducts.FirstOrDefault(x => x.ProductID == product.ID && x.WarehouseID == warehouseID);
             if (storedProduct == null)
             {
                 var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Produktu nie ma na magazynie!" };
@@ -213,7 +213,7 @@ namespace Prokast.Server.Services
 
         public Response GetStoredProductsMinimalData(int clientID, int warehouseID)
         {
-            var warehouse = _dbContext.Warehouses.FirstOrDefault(x => x.ID == warehouseID);
+            var warehouse = _dbContext.Warehouses.FirstOrDefault(x => x.ID == warehouseID && x.ClientID == clientID);
             if (warehouse == null)
             {
                 var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Nie ma takiego magazynu!" };
@@ -229,10 +229,18 @@ namespace Prokast.Server.Services
             
             var storedProductsList = new List<StoredProductGetMinimal>();
 
-            foreach (var storedProduct in storedProducts)
+            var productList = _dbContext.Products.Where(x => storedProducts.Select(y => y.ProductID).Contains(x.ID)).ToList();
+
+            foreach (var product in productList)
             {
-                var product = _dbContext.Products.FirstOrDefault(x => x.ID == storedProduct.ProductID);
                 if (product == null)
+                {
+                    var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Nie ma takiego produktu!" };
+                    return responseNull;
+                }
+
+                var storedProduct = storedProducts.FirstOrDefault(x => x.ProductID == product.ID);
+                if (storedProduct == null)
                 {
                     var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Nie ma takiego produktu!" };
                     return responseNull;
