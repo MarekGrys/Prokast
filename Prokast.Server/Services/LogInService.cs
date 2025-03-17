@@ -133,25 +133,22 @@ namespace Prokast.Server.Services
             _dbContext.AccountLogIn.Add(newAccount);
             _dbContext.SaveChanges();
 
-            accountCreate.FirstName = login;
-            accountCreate.LastName = password.ToString();
-
-            string mail = accountCreate.Email;
-            var list = new List<string>()
+            var creds = new AccountCredentials()
             {
-                mail
+                Login = login,
+                Password = getHashed(password.ToString()),
             };
-            
+
             var message = new EmailMessage
             {
-                To = list,
+                To = [accountCreate.Email],
                 Subject = "Dane Logowania",
                 Body = $"Login: {login}\n Hasło: {password}"
             };
 
             _mailingService.SendEmail(message);
 
-            var response = new AccountCreateResponse() {ID =  random.Next(1,100000), ClientID = clientID, Model = accountCreate};
+            var response = new AccountCredentialsResponse() {ID =  random.Next(1,100000), ClientID = clientID, Model = creds};
             return response;
         }
         #endregion
