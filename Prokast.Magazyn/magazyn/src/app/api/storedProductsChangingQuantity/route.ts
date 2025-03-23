@@ -27,6 +27,8 @@ export async function PUT(
 
     // Tworzenie URL API
     const apiUrl = `https://prokast-axgwbmd6cnezbmet.polandcentral-01.azurewebsites.net/api/storedproducts/${id}?clientID=${clientID}&quantity=${quantity}`;
+    //const apiUrl = `https://localhost:7207/api/storedproducts/${id}?clientID=${clientID}&quantity=${quantity}`;
+
 
     // Wysłanie żądania do API
     const response = await fetch(apiUrl, {

@@ -6,7 +6,7 @@ export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
     const clientID = searchParams.get("clientID");
     const warehouseID = searchParams.get("warehouseID");
-
+    
     if (!clientID || !warehouseID) {
       return NextResponse.json(
         { error: "clientID and warehouseID are required" },
@@ -15,6 +15,7 @@ export async function GET(req: Request) {
     }
 
     const apiUrl = `https://prokast-axgwbmd6cnezbmet.polandcentral-01.azurewebsites.net/api/storedproducts`;
+    //const apiUrl = `https://localhost:7207/api/storedproducts`;
 
     const response = await axios.get(apiUrl, {
       params: { clientID, warehouseID },

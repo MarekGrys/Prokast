@@ -18,8 +18,10 @@ export default function StoredProductsPage() {
   const [data, setData] = useState<StoredProduct[] | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const [editingId, setEditingId] = useState<number | null>(null);
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [selectedProduct, setSelectedProduct] = useState<number | null>(null);
   const [newQuantity, setNewQuantity] = useState<number>(0);
+  const [isFetched, setIsFetched] = useState<boolean>(false);
 
   const fetchStoredProducts = async () => {
     if (!clientID || !warehouseID) {
@@ -35,6 +37,7 @@ export default function StoredProductsPage() {
         params: { clientID, warehouseID },
       });
       setData(response.data.model);
+      setIsFetched(true);
     } catch (err: any) {
       setError(err.response?.data?.error || "Something went wrong");
     } finally {
@@ -42,26 +45,23 @@ export default function StoredProductsPage() {
     }
   };
 
-  const updateQuantity = async (id: number) => {
-    try {
-      const formData = new FormData();
-      formData.append("quantity", newQuantity.toString());
+  const handleDelivery = async () => {
+    if (selectedProduct === null || newQuantity <= 0) return;
 
-      await axios.put(`/api/storedProductsChangingQuantity/${id}`, {
+    try {
+      await axios.put(`/api/storedProductsChangingQuantity/${selectedProduct}`, {
         clientID,
-        quantity: newQuantity, // Wysyłamy nową wartość, a nie zmianę!
+        quantity: newQuantity,
       }, {
         headers: { "Content-Type": "application/json" },
       });
       
       fetchStoredProducts();
-      setEditingId(null);
+      setShowModal(false);
     } catch (err: any) {
       setError(err.response?.data?.error || "Failed to update quantity");
     }
-    
   };
-  
 
   return (
     <div className="p-4">
@@ -92,53 +92,61 @@ export default function StoredProductsPage() {
         <table className="border-collapse border w-full">
           <thead>
             <tr>
-              <th className="border p-2">ID</th>
-              <th className="border p-2">Warehouse ID</th>
               <th className="border p-2">Product ID</th>
               <th className="border p-2">Quantity</th>
               <th className="border p-2">Min Quantity</th>
               <th className="border p-2">Last Updated</th>
-              <th className="border p-2">Actions</th>
             </tr>
           </thead>
           <tbody>
             {data.map((item) => (
               <tr key={item.id}>
-                <td className="border p-2">{item.id}</td>
-                <td className="border p-2">{item.warehouseID}</td>
                 <td className="border p-2">{item.productID}</td>
-                <td className="border p-2">
-                  {editingId === item.id ? (
-                    <input
-                      type="number"
-                      value={newQuantity}
-                      onChange={(e) => setNewQuantity(Number(e.target.value))}
-                      className="border p-1"
-                    />
-                  ) : (
-                    item.quantity
-                  )}
-                </td>
+                <td className="border p-2">{item.quantity}</td>
                 <td className="border p-2">{item.minQuantity}</td>
                 <td className="border p-2">{new Date(item.lastUpdated).toLocaleDateString()}</td>
-                <td className="border p-2">
-                  {editingId === item.id ? (
-                    <button onClick={() => updateQuantity(item.id)} className="bg-green-500 text-white p-1 mr-2">
-                      Save
-                    </button>
-                  ) : (
-                    <button onClick={() => { setEditingId(item.id); setNewQuantity(item.quantity); }} className="bg-yellow-500 text-white p-1">
-                      Edit
-                    </button>
-                  )}
-                </td>
               </tr>
             ))}
           </tbody>
         </table>
       )}
+
+      {isFetched && (
+        <div className="text-center mt-4">
+          <button onClick={() => setShowModal(true)} className="bg-green-500 text-white p-2">
+            Dostawa
+          </button>
+        </div>
+      )}
+
+      {showModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
+          <div className="bg-white p-4 rounded shadow-lg w-96">
+            <h2 className="text-lg font-bold mb-2">Dodaj dostawę</h2>
+            <select
+              className="border p-2 w-full mb-2"
+              onChange={(e) => setSelectedProduct(Number(e.target.value))}
+            >
+              <option value="">Wybierz produkt</option>
+              {data?.map((item) => (
+                <option key={item.id} value={item.id}>{`Produkt ${item.productID}`}</option>
+              ))}
+            </select>
+            <p>Podaj ilość</p>
+            <input
+              type="number"
+              placeholder="Nowa ilość"
+              value={newQuantity}
+              onChange={(e) => setNewQuantity(Number(e.target.value))}
+              className="border p-2 w-full mb-2"
+            />
+            <div className="flex justify-between">
+              <button onClick={() => setShowModal(false)} className="bg-red-500 text-white p-2">Anuluj</button>
+              <button onClick={handleDelivery} className="bg-blue-500 text-white p-2">Zapisz</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
-    
   );
-  
 }
