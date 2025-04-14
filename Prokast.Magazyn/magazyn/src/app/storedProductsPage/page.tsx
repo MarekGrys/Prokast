@@ -55,7 +55,7 @@ export default function StoredProductsPage() {
       }, {
         headers: { "Content-Type": "application/json" },
       });
-      
+
       fetchStoredProducts();
       setShowModal(false);
     } catch (err: any) {
@@ -64,85 +64,117 @@ export default function StoredProductsPage() {
   };
 
   return (
-    <div className="p-4">
-      <h1 className="text-xl font-bold">Stored Products</h1>
-      <div className="my-4">
+    <div className="p-6 min-h-screen" style={{ backgroundColor: '#F0F6FD', color: 'var(--foreground)' }}>
+      <h1 className="text-2xl font-bold mb-4">Stored Products</h1>
+
+      <div className="my-4 flex flex-wrap gap-2">
         <input
           type="text"
           placeholder="Client ID"
           value={clientID}
           onChange={(e) => setClientID(e.target.value)}
-          className="border p-2 mr-2"
+          className="border p-2 rounded w-48"
         />
         <input
           type="text"
           placeholder="Warehouse ID"
           value={warehouseID}
           onChange={(e) => setWarehouseID(e.target.value)}
-          className="border p-2 mr-2"
+          className="border p-2 rounded w-48"
         />
-        <button onClick={fetchStoredProducts} className="bg-blue-500 text-white p-2">
+        <button
+          onClick={fetchStoredProducts}
+          className="bg-[#015183] hover:bg-[#013d63] text-white p-2 rounded"
+        >
           Fetch Data
         </button>
-      </div>
 
-      {loading && <p>Loading...</p>}
-      {error && <p className="text-red-500">Error: {error}</p>}
-      {data && (
-        <table className="border-collapse border w-full">
-          <thead>
-            <tr>
-              <th className="border p-2">Product ID</th>
-              <th className="border p-2">Quantity</th>
-              <th className="border p-2">Min Quantity</th>
-              <th className="border p-2">Last Updated</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((item) => (
-              <tr key={item.id}>
-                <td className="border p-2">{item.productID}</td>
-                <td className="border p-2">{item.quantity}</td>
-                <td className="border p-2">{item.minQuantity}</td>
-                <td className="border p-2">{new Date(item.lastUpdated).toLocaleDateString()}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
-
-      {isFetched && (
-        <div className="text-center mt-4">
-          <button onClick={() => setShowModal(true)} className="bg-green-500 text-white p-2">
+        {isFetched && (
+        <div className="text-center ">
+          <button
+            onClick={() => setShowModal(true)}
+            className="bg-green-600 hover:bg-green-700 text-white p-2 rounded"
+          >
             Dostawa
           </button>
         </div>
       )}
+      
+      </div>
+
+      {loading && <p>Loading...</p>}
+      {error && <p className="text-red-600">Error: {error}</p>}
+
+      
+
+      {data && (
+        <div className="overflow-x-auto">
+          <table className="border-collapse border w-full shadow-md rounded bg-white">
+            <thead className="bg-[#a0c7d5] text-[#015183]">
+              <tr>
+                <th className="border p-2">Product ID</th>
+                <th className="border p-2">Quantity</th>
+                <th className="border p-2">Min Quantity</th>
+                <th className="border p-2">Last Updated</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.map((item) => (
+                <tr key={item.id} className="text-center">
+                  <td className="border p-2">{item.productID}</td>
+                  <td className="border p-2">{item.quantity}</td>
+                  <td className="border p-2">{item.minQuantity}</td>
+                  <td className="border p-2">
+                    {new Date(item.lastUpdated).toLocaleDateString()}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      
 
       {showModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-          <div className="bg-white p-4 rounded shadow-lg w-96">
-            <h2 className="text-lg font-bold mb-2">Dodaj dostawę</h2>
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-60">
+          <div className="bg-[#a0c7d5] text-[#015183] p-6 rounded-lg shadow-xl w-96">
+            <h2 className="text-xl font-semibold mb-3">Dodaj dostawę</h2>
+
             <select
-              className="border p-2 w-full mb-2"
+              className="border p-2 w-full mb-3 rounded"
               onChange={(e) => setSelectedProduct(Number(e.target.value))}
             >
               <option value="">Wybierz produkt</option>
               {data?.map((item) => (
-                <option key={item.id} value={item.id}>{`Produkt ${item.productID}`}</option>
+                <option key={item.id} value={item.id}>
+                  {`Produkt ${item.productID}`}
+                </option>
               ))}
             </select>
-            <p>Podaj ilość</p>
+
+            <label className="block mb-1">Podaj ilość</label>
             <input
               type="number"
               placeholder="Nowa ilość"
               value={newQuantity}
               onChange={(e) => setNewQuantity(Number(e.target.value))}
-              className="border p-2 w-full mb-2"
+              className="border p-2 w-full mb-4 rounded"
             />
+
             <div className="flex justify-between">
-              <button onClick={() => setShowModal(false)} className="bg-red-500 text-white p-2">Anuluj</button>
-              <button onClick={handleDelivery} className="bg-blue-500 text-white p-2">Zapisz</button>
+              <button
+                onClick={() => setShowModal(false)}
+                className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
+              >
+                Anuluj
+              </button>
+              <button
+                onClick={handleDelivery}
+                className="bg-[#015183] hover:bg-[#013d63] text-white px-4 py-2 rounded"
+              >
+                Zapisz
+              </button>
             </div>
           </div>
         </div>
