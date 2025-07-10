@@ -2,8 +2,8 @@
 
 namespace Prokast.Server.Models.ResponseModels.OrderResponseModels
 {
-    public class CustomerEditResponse: Response
+    public class BuyerEditResponse: Response
     {
-        public Customer Model { get; set; }
+        public Buyer Model { get; set; }
     }
 }

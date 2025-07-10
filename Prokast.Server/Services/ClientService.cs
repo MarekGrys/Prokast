@@ -50,15 +50,15 @@ namespace Prokast.Server.Services
                 var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), errorMsg = "Błędne dane rejestracji" };
                 return responseNull;
             }
-            var account = new AccountLogIn
+            var account = new Account
             {
                 Login = registration.Login,
                 Password = getHashed(registration.Password)
             };
            
-            _dbContext.AccountLogIn.Add(account);
+            _dbContext.Accounts.Add(account);
             _dbContext.SaveChanges(); 
-                var test = _dbContext.AccountLogIn.FirstOrDefault(x => x.Login == account.Login);
+                var test = _dbContext.Accounts.FirstOrDefault(x => x.Login == account.Login);
 
             var client = new Client
             {

@@ -64,7 +64,7 @@ namespace Prokast.Server.Services
 
         public Response GetParamsByRegion (int region)
         {
-            var param = _dbContext.DictionaryParams.Where(x => x.IdRegion == region).ToList();
+            var param = _dbContext.DictionaryParams.Where(x => x.RegionID == region).ToList();
 
             List<string> paramList = new List<string>();
             foreach ( var x in param)

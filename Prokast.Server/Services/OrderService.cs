@@ -31,10 +31,10 @@ namespace Prokast.Server.Services
                 return responseNull;
             }
 
-            var customer = _dbContext.Customers.FirstOrDefault(x => x.Email == orderCreateDto.Email && x.PhoneNumber == orderCreateDto.PhoneNumber);
-            if (customer == null)
+            var buyer = _dbContext.Buyers.FirstOrDefault(x => x.Email == orderCreateDto.Email && x.PhoneNumber == orderCreateDto.PhoneNumber);
+            if (buyer == null)
             {
-                customer = new Customer()
+                buyer = new Buyer()
                 {
                     FirstName = orderCreateDto.FirstName,
                     LastName = orderCreateDto.LastName,
@@ -46,16 +46,16 @@ namespace Prokast.Server.Services
                     PostalCode = orderCreateDto.PostalCode,
                     Country = orderCreateDto.Country,
                 };
-                _dbContext.Customers.Add(customer);
+                _dbContext.Buyers.Add(buyer);
                 _dbContext.SaveChanges();
             }
 
             if(orderCreateDto.IsBusiness is true)
             {
-                var businessCustomer = _dbContext.Customers.FirstOrDefault(x => x.Email == orderCreateDto.BusinessEmail && x.PhoneNumber == orderCreateDto.BusinessPhoneNumber);
-                if (businessCustomer == null)
+                var businessBuyer = _dbContext.Buyers.FirstOrDefault(x => x.Email == orderCreateDto.BusinessEmail && x.PhoneNumber == orderCreateDto.BusinessPhoneNumber);
+                if (businessBuyer == null)
                 {
-                    businessCustomer = new Customer()
+                    businessBuyer = new Buyer()
                     {
                         FirstName = orderCreateDto.BusinessFirstName,
                         LastName = orderCreateDto.BusinessLastName,
@@ -69,13 +69,13 @@ namespace Prokast.Server.Services
                         NIP = orderCreateDto.NIP
                         
                     };
-                    _dbContext.Customers.Add(businessCustomer);
+                    _dbContext.Buyers.Add(businessBuyer);
                     _dbContext.SaveChanges();
                 }
             }
 
-            customer = _dbContext.Customers.FirstOrDefault(x => x.Email == orderCreateDto.Email && x.PhoneNumber == orderCreateDto.PhoneNumber);
-            var business = _dbContext.Customers.FirstOrDefault(x => x.Email == orderCreateDto.BusinessEmail && x.PhoneNumber == orderCreateDto.BusinessPhoneNumber);
+            buyer = _dbContext.Buyers.FirstOrDefault(x => x.Email == orderCreateDto.Email && x.PhoneNumber == orderCreateDto.PhoneNumber);
+            var business = _dbContext.Buyers.FirstOrDefault(x => x.Email == orderCreateDto.BusinessEmail && x.PhoneNumber == orderCreateDto.BusinessPhoneNumber);
 
             var order = new Order()
             {
@@ -86,7 +86,7 @@ namespace Prokast.Server.Services
                 PaymentMethod = orderCreateDto.PaymentMethod,
                 UpdateDate = orderCreateDto.UpdateDate,
                 ClientID = clientID,
-                CustomerID = customer.ID,
+                BuyerID = buyer.ID,
             };
 
             if(business != null)
@@ -140,9 +140,9 @@ namespace Prokast.Server.Services
                 return responseNull;
             }
 
-            var customer = _dbContext.Customers.FirstOrDefault(x => x.ID == order.CustomerID);
+            var buyer = _dbContext.Buyers.FirstOrDefault(x => x.ID == order.BuyerID);
 
-            var businessCustomer = _dbContext.Customers.FirstOrDefault(x => x.ID == order.BusinessID);
+            var businessBuyer = _dbContext.Buyers.FirstOrDefault(x => x.ID == order.BusinessID);
 
             var newOrder = new OrderGetOneDto()
             {
@@ -157,30 +157,30 @@ namespace Prokast.Server.Services
                 UpdateDate = order.UpdateDate,
                 TrackingID = order.TrackingID,
                 ClientID = clientID,
-                CustomerID = order.CustomerID,
-                FirstName = customer.FirstName,
-                LastName = customer.LastName,
-                Email = customer.Email,
-                PhoneNumber = customer.PhoneNumber,
-                Address = customer.Address,
-                HouseNumber = customer.HouseNumber,
-                PostalCode = customer.PostalCode,
-                Country = customer.Country,
-                City = customer.City,
+                BuyerID = order.BuyerID,
+                FirstName = buyer.FirstName,
+                LastName = buyer.LastName,
+                Email = buyer.Email,
+                PhoneNumber = buyer.PhoneNumber,
+                Address = buyer.Address,
+                HouseNumber = buyer.HouseNumber,
+                PostalCode = buyer.PostalCode,
+                Country = buyer.Country,
+                City = buyer.City,
             };
             
-            if (businessCustomer!= null)
+            if (businessBuyer!= null)
             {
-                newOrder.BusinessFirstName = businessCustomer.FirstName;
-                newOrder.BusinessLastName = businessCustomer.LastName;
-                newOrder.BusinessEmail = businessCustomer.Email;
-                newOrder.BusinessPhoneNumber = businessCustomer.PhoneNumber;
-                newOrder.BusinessAddress = businessCustomer.Address;
-                newOrder.BusinessHouseNumber = businessCustomer.HouseNumber;
-                newOrder.BusinessPostalCode = businessCustomer.PostalCode;
-                newOrder.BusinessCity = businessCustomer.City;
-                newOrder.BusinessCountry = businessCustomer.Country;
-                newOrder.NIP = businessCustomer.NIP;
+                newOrder.BusinessFirstName = businessBuyer.FirstName;
+                newOrder.BusinessLastName = businessBuyer.LastName;
+                newOrder.BusinessEmail = businessBuyer.Email;
+                newOrder.BusinessPhoneNumber = businessBuyer.PhoneNumber;
+                newOrder.BusinessAddress = businessBuyer.Address;
+                newOrder.BusinessHouseNumber = businessBuyer.HouseNumber;
+                newOrder.BusinessPostalCode = businessBuyer.PostalCode;
+                newOrder.BusinessCity = businessBuyer.City;
+                newOrder.BusinessCountry = businessBuyer.Country;
+                newOrder.NIP = businessBuyer.NIP;
             }
 
             var response = new OrderGetOneResponse() { ID = random.Next(1, 100000), ClientID = clientID, Model = newOrder };
@@ -196,9 +196,9 @@ namespace Prokast.Server.Services
                 return responseNull;
             }
 
-            var customer = _dbContext.Customers.FirstOrDefault(x => x.ID == order.CustomerID);
+            var buyer = _dbContext.Buyers.FirstOrDefault(x => x.ID == order.BuyerID);
 
-            var businessCustomer = _dbContext.Customers.FirstOrDefault(x => x.ID == order.BusinessID);
+            var businessBuyer = _dbContext.Buyers.FirstOrDefault(x => x.ID == order.BusinessID);
 
             var newOrder = new OrderGetOneDto()
             {
@@ -213,30 +213,30 @@ namespace Prokast.Server.Services
                 UpdateDate = order.UpdateDate,
                 TrackingID = order.TrackingID,
                 ClientID = clientID,
-                CustomerID = order.CustomerID,
-                FirstName = customer.FirstName,
-                LastName = customer.LastName,
-                Email = customer.Email,
-                PhoneNumber = customer.PhoneNumber,
-                Address = customer.Address,
-                HouseNumber = customer.HouseNumber,
-                PostalCode = customer.PostalCode,
-                Country = customer.Country,
-                City = customer.City,
+                BuyerID = order.BuyerID,
+                FirstName = buyer.FirstName,
+                LastName = buyer.LastName,
+                Email = buyer.Email,
+                PhoneNumber = buyer.PhoneNumber,
+                Address = buyer.Address,
+                HouseNumber = buyer.HouseNumber,
+                PostalCode = buyer.PostalCode,
+                Country = buyer.Country,
+                City = buyer.City,
             };
 
-            if (businessCustomer != null)
+            if (businessBuyer != null)
             {
-                newOrder.BusinessFirstName = businessCustomer.FirstName;
-                newOrder.BusinessLastName = businessCustomer.LastName;
-                newOrder.BusinessEmail = businessCustomer.Email;
-                newOrder.BusinessPhoneNumber = businessCustomer.PhoneNumber;
-                newOrder.BusinessAddress = businessCustomer.Address;
-                newOrder.BusinessHouseNumber = businessCustomer.HouseNumber;
-                newOrder.BusinessPostalCode = businessCustomer.PostalCode;
-                newOrder.BusinessCity = businessCustomer.City;
-                newOrder.BusinessCountry = businessCustomer.Country;
-                newOrder.NIP = businessCustomer.NIP;
+                newOrder.BusinessFirstName = businessBuyer.FirstName;
+                newOrder.BusinessLastName = businessBuyer.LastName;
+                newOrder.BusinessEmail = businessBuyer.Email;
+                newOrder.BusinessPhoneNumber = businessBuyer.PhoneNumber;
+                newOrder.BusinessAddress = businessBuyer.Address;
+                newOrder.BusinessHouseNumber = businessBuyer.HouseNumber;
+                newOrder.BusinessPostalCode = businessBuyer.PostalCode;
+                newOrder.BusinessCity = businessBuyer.City;
+                newOrder.BusinessCountry = businessBuyer.Country;
+                newOrder.NIP = businessBuyer.NIP;
             }
 
             var response = new OrderGetOneResponse() { ID = random.Next(1, 100000), ClientID = clientID, Model = newOrder };
@@ -311,7 +311,7 @@ namespace Prokast.Server.Services
             order.TotalWeightKg = orderEditDto.TotalWeightKg;
             order.PaymentMethod = orderEditDto.PaymentMethod;
             order.ClientID = orderEditDto.ClientID;
-            order.CustomerID = orderEditDto.CustomerID;
+            order.BuyerID = orderEditDto.BuyerID;
             order.BusinessID = orderEditDto.BusinessID;
             order.UpdateDate = DateTime.Now;
             _dbContext.SaveChanges();
@@ -320,40 +320,40 @@ namespace Prokast.Server.Services
             return response;
         }
 
-        public Response EditCustomer(int clientID, int customerID, Customer customerDto)
+        public Response EditBuyer(int clientID, int buyerID, Buyer buyerDto)
         {
-            var customer = _dbContext.Customers.FirstOrDefault(x => x.ID == customerID);
-            if (customer == null)
+            var buyer = _dbContext.Buyers.FirstOrDefault(x => x.ID == buyerID);
+            if (buyer == null)
             {
                 var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Brak zamówienia!" };
                 return responseNull;
             }
 
-            customer.ID = customerID;
-            customer.FirstName = customerDto.FirstName;
-            customer.LastName = customerDto.LastName;
-            customer.Email = customerDto.Email;
-            customer.PhoneNumber = customerDto.PhoneNumber;
-            customer.Address = customerDto.Address;
+            buyer.ID = buyerID;
+            buyer.FirstName = buyerDto.FirstName;
+            buyer.LastName = buyerDto.LastName;
+            buyer.Email = buyerDto.Email;
+            buyer.PhoneNumber = buyerDto.PhoneNumber;
+            buyer.Address = buyerDto.Address;
 
-            if(customerDto.HouseNumber == null)
+            if(buyerDto.HouseNumber == null)
             {
-                customer.HouseNumber = null;
+                buyer.HouseNumber = null;
             }
             else
             {
-                customer.HouseNumber = customerDto.HouseNumber;
+                buyer.HouseNumber = buyerDto.HouseNumber;
             }
 
-            customer.PostalCode = customerDto.PostalCode;
-            customer.Country = customerDto.Country;
-            customer.City = customerDto.City;
-            customer.NIP = customerDto.NIP;
+            buyer.PostalCode = buyerDto.PostalCode;
+            buyer.Country = buyerDto.Country;
+            buyer.City = buyerDto.City;
+            buyer.NIP = buyerDto.NIP;
             _dbContext.SaveChanges();
 
 
 
-            var response = new CustomerEditResponse() { ID = random.Next(1, 100000), ClientID = clientID, Model = customer };
+            var response = new BuyerEditResponse() { ID = random.Next(1, 100000), ClientID = clientID, Model = buyer };
             return response;
         }
     

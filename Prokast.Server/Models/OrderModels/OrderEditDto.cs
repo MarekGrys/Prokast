@@ -15,7 +15,7 @@ namespace Prokast.Server.Models.OrderModels
         [Required]
         public int ClientID { get; set; }
         [Required]
-        public int CustomerID { get; set; }
+        public int BuyerID { get; set; }
         [Required]
         public int BusinessID { get; set; }
     }

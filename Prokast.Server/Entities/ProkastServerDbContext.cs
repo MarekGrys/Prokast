@@ -7,7 +7,7 @@ namespace Prokast.Server.Entities
     {
         public ProkastServerDbContext(DbContextOptions<ProkastServerDbContext> options) : base(options) { }
         
-        public DbSet<AccountLogIn> AccountLogIn { get; set; }
+        public DbSet<Account> Accounts { get; set; }
         public DbSet<Client> Clients { get; set; }
         public DbSet<CustomParams> CustomParams { get; set; }
         public DbSet<DictionaryParams> DictionaryParams { get; set; }
@@ -21,7 +21,7 @@ namespace Prokast.Server.Entities
         public DbSet<Warehouse> Warehouses { get; set; }
         public DbSet<StoredProduct> StoredProducts { get; set; }
         public DbSet<Order> Orders { get; set; }
-        public DbSet<Customer> Customers { get; set; }
+        public DbSet<Buyer> Buyers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

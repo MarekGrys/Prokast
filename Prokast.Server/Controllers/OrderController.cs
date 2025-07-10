@@ -187,10 +187,10 @@ namespace Prokast.Server.Controllers
             }
         }
 
-        [HttpPut("edit/customer/{customerID}")]
+        [HttpPut("edit/buyer/{buyerID}")]
         [ProducesResponseType(typeof(OrderEditResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
-        public ActionResult<Response> EditCustomer([FromQuery] int clientID, [FromRoute] int customerID, [FromBody] Customer customer)
+        public ActionResult<Response> EditBuyer([FromQuery] int clientID, [FromRoute] int buyerID, [FromBody] Buyer buyer)
         {
             if (!ModelState.IsValid)
             {
@@ -198,7 +198,7 @@ namespace Prokast.Server.Controllers
             }
             try
             {
-                var result = _orderService.EditCustomer(clientID, customerID, customer);
+                var result = _orderService.EditBuyer(clientID, buyerID, buyer);
                 if (result is ErrorResponse) return BadRequest(result);
 
                 if (result == null) return NotFound(result);

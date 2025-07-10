@@ -2,7 +2,7 @@
 
 namespace Prokast.Server.Entities
 {
-    public class AccountLogIn
+    public class Account
     {
         [Key]
         public int ID { get; set; }

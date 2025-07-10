@@ -9,7 +9,7 @@ namespace Prokast.Server.Models
         public MappingProfile()
         {
             CreateMap<Registration, Clients>();
-            CreateMap<Registration, AccountLogIn>();
+            CreateMap<Registration, Account>();
             
         }
     }
