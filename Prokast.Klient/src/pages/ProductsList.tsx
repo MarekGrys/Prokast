@@ -8,6 +8,7 @@ const ProductList: React.FC = () => {
   const [condition, setCondition] = useState('');
   const [availability, setAvailability] = useState('');
   const [sortOrder, setSortOrder] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
 
   const products = [
     {
@@ -36,6 +37,18 @@ const ProductList: React.FC = () => {
     },
   ];
 
+  const filteredProducts = products.filter((product) =>
+    product.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const handleEdit = (title: string) => {
+    alert(`Edytuj produkt: ${title}`);
+  };
+
+  const handleDelete = (title: string) => {
+    alert(`Usuń produkt: ${title}`);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-100 via-white to-blue-200 p-4">
       <Navbar />
@@ -44,11 +57,10 @@ const ProductList: React.FC = () => {
         <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">Lista produktów</h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          
+          {/* Sidebar z filtrami */}
           <div className="lg:col-span-1 bg-white/80 backdrop-blur-md shadow-lg rounded-2xl p-6">
             <h2 className="text-xl font-bold text-gray-800 mb-4">Filtry</h2>
 
-            
             <label className="block mb-2 font-medium text-gray-700" htmlFor="category">Kategoria:</label>
             <select
               id="category"
@@ -62,7 +74,6 @@ const ProductList: React.FC = () => {
               <option value="dom">Dom i ogród</option>
             </select>
 
-            
             <label className="block mb-2 font-medium text-gray-700">Cena (zł):</label>
             <div className="flex gap-2 mb-4">
               <input
@@ -81,7 +92,6 @@ const ProductList: React.FC = () => {
               />
             </div>
 
-            
             <label className="block mb-2 font-medium text-gray-700" htmlFor="condition">Stan produktu:</label>
             <select
               id="condition"
@@ -94,7 +104,6 @@ const ProductList: React.FC = () => {
               <option value="uzywany">Używany</option>
             </select>
 
-          
             <label className="block mb-2 font-medium text-gray-700" htmlFor="availability">Dostępność:</label>
             <select
               id="availability"
@@ -106,7 +115,6 @@ const ProductList: React.FC = () => {
               <option value="dostepny">W magazynie</option>
               <option value="brak">Brak w magazynie</option>
             </select>
-
 
             <label className="block mb-2 font-medium text-gray-700" htmlFor="sort">Sortuj według:</label>
             <select
@@ -122,9 +130,17 @@ const ProductList: React.FC = () => {
             </select>
           </div>
 
-          
+          {/* Lista produktów z wyszukiwarką */}
           <div className="lg:col-span-2 flex flex-col gap-6">
-            {products.map((product, index) => (
+            <input
+              type="text"
+              placeholder="Szukaj po nazwie produktu..."
+              className="w-full p-3 border rounded-xl"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+
+            {filteredProducts.map((product, index) => (
               <div
                 key={index}
                 className="bg-white/80 backdrop-blur-md shadow-lg rounded-2xl p-4 flex flex-col sm:flex-row gap-4 items-start"
@@ -142,9 +158,29 @@ const ProductList: React.FC = () => {
                     <p>{product.location}</p>
                     <p>{product.date}</p>
                   </div>
+
+                  {/* Przyciski Edytuj / Usuń */}
+                  <div className="mt-4 flex gap-3">
+                    <button
+                      onClick={() => handleEdit(product.title)}
+                      className="px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition"
+                    >
+                      Edytuj
+                    </button>
+                    <button
+                      onClick={() => handleDelete(product.title)}
+                      className="px-4 py-2 bg-red-500 text-white rounded-xl hover:bg-red-600 transition"
+                    >
+                      Usuń
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
+
+            {filteredProducts.length === 0 && (
+              <p className="text-gray-600 text-center">Brak wyników pasujących do wyszukiwania.</p>
+            )}
           </div>
         </div>
       </div>
