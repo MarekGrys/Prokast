@@ -7,6 +7,7 @@ import DictionaryParams from './pages/DictionaryParams';
 import EditParams from './pages/EditParams';
 import CreateEmployee from './pages/CreateEmployee';
 import PriceList from './pages/PriceList';
+import ProductsList from './pages/ProductsList';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/EditParams" element={<EditParams />} />
         <Route path="/CreateEmployee" element={<CreateEmployee />} />
         <Route path="/PriceList" element={<PriceList />} />
+        <Route path="/ProductsList" element={<ProductsList />} />
       </Routes>
     </Router>
   );
