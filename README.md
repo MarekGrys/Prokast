@@ -13,7 +13,7 @@ Projekt jest podzielony na trzy główne podprojekty:
 
 ## Zespół
 
-- **Zarządzanie projektem**:
+- **Opieka projektu**:
   - [Bartłomiej Całus](https://github.com/BartlomiejCalus)
 
 - **Aplikacja Klienta**: 
