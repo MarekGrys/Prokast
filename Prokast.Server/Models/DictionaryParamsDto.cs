@@ -5,7 +5,7 @@ namespace Prokast.Server.Models
     public class DictionaryParamsDto
     {
         [Required]
-        public int IdRegion { get; set; }
+        public int RegionID { get; set; }
         [Required]
         public string Name { get; set; }
         [Required]

@@ -15,6 +15,6 @@ namespace Prokast.Server.Services.Interfaces
         Response ChangeOrderStatus(int clientID, int orderID, OrderStatus status);
         Response ChangePaymentStatus(int clientID, int orderID, PaymentStatus paymentStatus);
         Response EditOrder(int clientID, int orderID, OrderEditDto orderEditDto);
-        Response EditCustomer(int clientID, int customerID, Customer customerDto);
+        Response EditBuyer(int clientID, int buyerID, Buyer buyerDto);
     }
 }

@@ -48,7 +48,7 @@ namespace Prokast.Server.Services
         #region GetAll
         public Response GetLogIns(int clientID)
         {
-            var logins = _dbContext.AccountLogIn.ToList();
+            var logins = _dbContext.Accounts.ToList();
             if (logins.Count() == 0)
             {
                 var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Klient nie ma parametrów" };
@@ -64,7 +64,7 @@ namespace Prokast.Server.Services
         public Response Log_In([FromBody] LoginRequest loginRequest)
         {
 
-            var account = _dbContext.AccountLogIn.FirstOrDefault(x => x.Login == loginRequest.Login);
+            var account = _dbContext.Accounts.FirstOrDefault(x => x.Login == loginRequest.Login);
             if (account == null)
             {
                 var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = -1, errorMsg = "Nie ma takiego konta" };
@@ -119,7 +119,7 @@ namespace Prokast.Server.Services
             Console.WriteLine(login);
             Console.WriteLine(password.ToString());
 
-            var newAccount = new AccountLogIn
+            var newAccount = new Account
             {
                 Login = login,
                 Password = getHashed(password.ToString()),
@@ -130,7 +130,7 @@ namespace Prokast.Server.Services
                 ClientID = clientID
             };
 
-            _dbContext.AccountLogIn.Add(newAccount);
+            _dbContext.Accounts.Add(newAccount);
             _dbContext.SaveChanges();
 
             var creds = new AccountCredentials()
@@ -157,7 +157,7 @@ namespace Prokast.Server.Services
         public Response EditAccount(AccountEditDto accountEdit, int clientID)
         {
             
-            var account = _dbContext.AccountLogIn.FirstOrDefault(x => x.ID == clientID && x.Login == accountEdit.Login);
+            var account = _dbContext.Accounts.FirstOrDefault(x => x.ID == clientID && x.Login == accountEdit.Login);
             if (account == null)
             {
                 var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Błędnie podane dane" };
@@ -173,7 +173,7 @@ namespace Prokast.Server.Services
 
         public Response EditPassword(AccountEditPasswordDto editPasswordDto, int clientID)
         {
-            var account = _dbContext.AccountLogIn.FirstOrDefault(x => x.ID == clientID && x.Login == editPasswordDto.Login);
+            var account = _dbContext.Accounts.FirstOrDefault(x => x.ID == clientID && x.Login == editPasswordDto.Login);
             if (account == null)
             {
                 var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Błędnie podane dane" };
@@ -191,14 +191,14 @@ namespace Prokast.Server.Services
         #region Delete
         public Response DeleteAccount(int clientID, int ID)
         {
-            var account = _dbContext.AccountLogIn.FirstOrDefault(x => x.ID == ID);
+            var account = _dbContext.Accounts.FirstOrDefault(x => x.ID == ID);
             if (account == null)
             {
                 var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Nie ma takiego modelu!" };
                 return responseNull;
             }
 
-            _dbContext.AccountLogIn.Remove(account);
+            _dbContext.Accounts.Remove(account);
             _dbContext.SaveChanges();
 
             var response = new DeleteResponse() { ID = random.Next(1,100000), ClientID = clientID, deleteMsg = "Konto zostało usunięte" };

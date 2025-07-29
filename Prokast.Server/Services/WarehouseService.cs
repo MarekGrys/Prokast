@@ -172,7 +172,7 @@ namespace Prokast.Server.Services
             }
 
             var storedProducts = _dbContext.StoredProducts.Where(x => x.WarehouseID == warehouse.ID).ToList();
-            var workers = _dbContext.AccountLogIn.Where(x => x.WarehouseID == warehouse.ID).ToList();
+            var workers = _dbContext.Accounts.Where(x => x.WarehouseID == warehouse.ID).ToList();
             foreach ( var storedProduct in storedProducts)
             {
                 _dbContext.StoredProducts.Remove(storedProduct);

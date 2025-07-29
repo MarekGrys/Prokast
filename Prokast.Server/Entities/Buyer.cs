@@ -2,7 +2,7 @@
 
 namespace Prokast.Server.Entities
 {
-    public class Customer
+    public class Buyer
     {
         [Key]
         public int ID { get; set; }
