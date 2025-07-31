@@ -4,7 +4,8 @@ namespace Prokast.Server.Entities
 {
     public class Client
     {
-        public required int ID { get; set; }
+        [Key]
+        public int ID { get; set; }
         public required string FirstName { get; set; }
         public required string LastName { get; set; }
         public required string BusinessName { get; set; }
@@ -19,9 +20,9 @@ namespace Prokast.Server.Entities
         public required string Country { get; set; }
         public DateTime? Subscription { get; set; }
 
-        public virtual required List<Order> Orders { get; set; }
-        public virtual required List<Product> Products { get; set; }
-        public virtual required List<Account> Accounts { get; set; }
-        public virtual required List<Warehouse> Warehouses { get; set; }
+        public virtual List<Order>? Orders { get; set; }
+        public virtual List<Product>? Products { get; set; }
+        public virtual List<Account>? Accounts { get; set; }
+        public virtual List<Warehouse>? Warehouses { get; set; }
     }
 }

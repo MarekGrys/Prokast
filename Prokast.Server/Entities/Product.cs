@@ -12,13 +12,13 @@ namespace Prokast.Server.Entities
         public required DateTime AdditionDate { get; set; } = DateTime.Now;
         public required DateTime ModificationDate { get; set; } = DateTime.Now; 
 
-        public virtual required List<AdditionalDescription> AdditionalDescriptions { get; set; }
-        public virtual required List<AdditionalName> AdditionalNames { get; set; }
-        public required List<CustomParams> CustomParams { get; set; }
-        public required List<DictionaryParams> DictionaryParams { get; set; }
-        public required List<Photo> Photos { get; set; }
+        public virtual List<AdditionalDescription> AdditionalDescriptions { get; set; }
+        public virtual List<AdditionalName> AdditionalNames { get; set; }
+        public virtual List<CustomParams> CustomParams { get; set; }
+        public virtual List<DictionaryParams> DictionaryParams { get; set; }
+        public virtual List<Photo> Photos { get; set; }
 
-        public required int PriceListId { get; set; }
+        public required int PriceListID { get; set; }
         public virtual PriceLists PriceLists { get; set; }
 
         public required int ClientID { get; set; }

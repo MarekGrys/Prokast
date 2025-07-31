@@ -4,7 +4,8 @@ namespace Prokast.Server.Entities
 {
     public class Buyer
     {
-        public required int ID { get; set; }
+        [Key]
+        public int ID { get; set; }
         public required string FirstName { get; set; }
         public required string LastName { get; set; }
         public required string Email { get; set; }
@@ -19,6 +20,6 @@ namespace Prokast.Server.Entities
         [RegularExpression(@"^[A-Z]{2}-\d{3}-\d{6}-\d$", ErrorMessage = "NIP must have format XX-123-456789-5.")]
         public string? NIP { get; set; }
 
-        public virtual required List<Order> Orders { get; set; }
+        public virtual List<Order> Orders { get; set; }
     }
 }

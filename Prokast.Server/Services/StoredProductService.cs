@@ -22,7 +22,7 @@ namespace Prokast.Server.Services
         }
 
         #region Create
-        public Response CreateStoredProduct([FromBody] StoredProductCreateMultipleDto storedProducts,int warehouseID, int clientID)
+        public Response CreateStoredProduct(StoredProductCreateMultipleDto storedProducts,int warehouseID, int clientID, int productID)
         {
             var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Błędnie podane dane" };
             if (storedProducts == null)
@@ -34,10 +34,10 @@ namespace Prokast.Server.Services
             {
                 var storedProduct = new StoredProduct
                 {
-                    WarehouseID = warehouseID,
-                    ProductID = product.ProductID,
                     Quantity = product.Quantity,
-                    MinQuantity = product.MinQuantity
+                    MinQuantity = product.MinQuantity,
+                    ProductID = productID,
+                    WarehouseID = warehouseID
                 };
                 _dbContext.StoredProducts.Add(storedProduct);
                 _dbContext.SaveChanges();

@@ -4,10 +4,11 @@ namespace Prokast.Server.Entities
 {
     public class StoredProduct
     {
-        public required int ID { get; set; }
+        [Key]
+        public int ID { get; set; }
         public required int Quantity { get; set; }
         public required int MinQuantity { get; set; }
-        public required DateTime LastUpdated { get; set; } = DateTime.Now;
+        public DateTime LastUpdated { get; set; } = DateTime.Now;
 
         public required int WarehouseID { get; set; }
         public virtual Warehouse Warehouse { get; set; }

@@ -28,11 +28,11 @@ namespace Prokast.Server.Controllers
         [HttpPost]
         [ProducesResponseType(typeof(Response), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
-        public ActionResult<Response> CreatePriceList([FromBody] PriceListsCreateDto priceLists, [FromQuery] int clientID)
+        public ActionResult<Response> CreatePriceList([FromBody] PriceListsCreateDto priceLists, [FromQuery] int clientID, [FromQuery] int productID)
         {
             try
             {
-                var result = _priceService.CreatePriceList(priceLists, clientID);
+                var result = _priceService.CreatePriceList(priceLists, clientID, productID);
                 if (result is ErrorResponse) return BadRequest(result);
                 return Created();
             }

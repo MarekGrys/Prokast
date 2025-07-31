@@ -26,16 +26,17 @@ namespace Prokast.Server.Services
         public Response GetAllParams()
         {
             var paramList = _dbContext.DictionaryParams.ToList();
-            var response = new DictionaryGetResponse() { ID = random.Next(1, 100000), Model = paramList };
             if (paramList.Count() == 0)
             {
                 var responseNull = new ErrorResponse() { ID = random.Next(1, 100000),  errorMsg = "Brak parametrów" };
                 return responseNull;
             }
+
+            var response = new DictionaryGetResponse() { ID = random.Next(1, 100000), Model = paramList };
             return response;
         }
         
-        public Response GetParamsByID( int ID)
+        public Response GetParamsByID(int ID)
         {
             var param = _dbContext.DictionaryParams.Where(x => x.ID == ID).ToList();
             var response = new DictionaryGetResponse() { ID = random.Next(1, 100000),  Model = param};
@@ -48,7 +49,7 @@ namespace Prokast.Server.Services
 
         }
 
-        public Response GetParamsByName( string name)
+        public Response GetParamsByName(string name)
         {
             var param = _dbContext.DictionaryParams.Where(x => x.Name == name).ToList();
 
@@ -62,9 +63,9 @@ namespace Prokast.Server.Services
             return response;
         }
 
-        public Response GetParamsByRegion (int region)
+        public Response GetParamsByRegion (int regionID)
         {
-            var param = _dbContext.DictionaryParams.Where(x => x.RegionID == region).ToList();
+            var param = _dbContext.DictionaryParams.Where(x => x.RegionID == regionID).ToList();
 
             List<string> paramList = new List<string>();
             foreach ( var x in param)

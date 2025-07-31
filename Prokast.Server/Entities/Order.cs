@@ -6,7 +6,8 @@ namespace Prokast.Server.Entities
 {
     public class Order
     {
-        public required int ID { get; set; }
+        [Key]
+        public int ID { get; set; }
         public required string OrderID { get; set; }
         public required DateTime OrderDate { get; set; }
         [JsonConverter(typeof(JsonStringEnumConverter))]
@@ -16,16 +17,16 @@ namespace Prokast.Server.Entities
         public required string PaymentMethod { get; set; }
         public required PaymentStatus PaymentStatus { get; set; } = PaymentStatus.pending;
         public required DateTime UpdateDate { get; set; }
-        public required string? TrackingID { get; set; }
-        public required int BusinessID { get; set; }
+        public string? TrackingID { get; set; }
+        public int? BusinessID { get; set; }
         public required bool IsBusiness { get; set; }
 
         public required int ClientID { get; set; }
         public virtual Client Client { get; set; }
 
-        public required int BuyerId { get; set; }
+        public required int BuyerID { get; set; }
         public virtual Buyer Buyer { get; set; }
 
-        public virtual required List<Product> Products { get; set; }
+        public virtual List<Product> Products { get; set; }
     }
 }

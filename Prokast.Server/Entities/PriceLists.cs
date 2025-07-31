@@ -4,12 +4,13 @@ namespace Prokast.Server.Entities
 {
     public class PriceLists
     {
-        public required int ID { get; set; }
+        [Key]
+        public int ID { get; set; }
         public required string Name { get; set; }
 
         public int ProductID { get; set; }
         public virtual Product Product { get; set; }
 
-        public virtual required List<Prices> Prices { get; set; } 
+        public virtual List<Prices> Prices { get; set; } 
     }
 }
