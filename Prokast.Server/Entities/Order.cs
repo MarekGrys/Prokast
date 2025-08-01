@@ -6,7 +6,6 @@ namespace Prokast.Server.Entities
 {
     public class Order
     {
-        [Key]
         public int ID { get; set; }
         public required string OrderID { get; set; }
         public required DateTime OrderDate { get; set; }
@@ -18,8 +17,8 @@ namespace Prokast.Server.Entities
         public required PaymentStatus PaymentStatus { get; set; } = PaymentStatus.pending;
         public required DateTime UpdateDate { get; set; }
         public string? TrackingID { get; set; }
-        public int? BusinessID { get; set; }
         public required bool IsBusiness { get; set; }
+        public int? BusinessID { get; set; }
 
         public required int ClientID { get; set; }
         public virtual Client Client { get; set; }

@@ -5,7 +5,6 @@ namespace Prokast.Server.Entities
 {
     public class Account
     {
-        [Key]
         public int ID { get; set; }
         public required string Login { get; set; }
         public required string Password { get; set; }

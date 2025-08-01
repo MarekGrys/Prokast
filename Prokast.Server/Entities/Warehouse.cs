@@ -19,5 +19,7 @@ namespace Prokast.Server.Entities
         public virtual Client Client { get; set; }
 
         public virtual List<StoredProduct> StoredProducts { get; set; }
+
+        public virtual List<Account> Accounts { get; set; }
     }
 }

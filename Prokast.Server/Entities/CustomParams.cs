@@ -4,7 +4,6 @@ namespace Prokast.Server.Entities
 {
     public class CustomParams
     {
-        [Key]
         public int ID { get; set; }
         public required string Name { get; set; }
         public required string Type { get; set; }

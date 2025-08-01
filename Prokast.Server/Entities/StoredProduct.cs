@@ -4,7 +4,6 @@ namespace Prokast.Server.Entities
 {
     public class StoredProduct
     {
-        [Key]
         public int ID { get; set; }
         public required int Quantity { get; set; }
         public required int MinQuantity { get; set; }

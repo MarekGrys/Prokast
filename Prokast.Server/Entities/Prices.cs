@@ -4,7 +4,6 @@ namespace Prokast.Server.Entities
 {
     public class Prices
     {
-        [Key]
         public int ID { get; set; }
         public required string Name { get; set; }
         public required decimal Netto { get; set; }

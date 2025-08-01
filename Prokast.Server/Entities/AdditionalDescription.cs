@@ -6,7 +6,6 @@ namespace Prokast.Server.Entities
 {
     public class AdditionalDescription
     {
-        [Key]
         public int ID { get; set; }
         public required string Title { get; set; }
         public required string Value { get; set; }
