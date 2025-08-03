@@ -28,17 +28,39 @@ namespace Prokast.Server.Services
         }
 
 
-        public Response CreatePhoto([FromBody] PhotoDto photo, int clientID) { 
-            if(photo == null)
+        public Response CreatePhoto([FromBody] PhotoDto photo, int clientID) {
+            var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Błędnie podane dane" };
+
+
+            if (photo == null)
             {
-                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Błędnie podane dane" };
                 return responseNull;
             }
-            byte[] ValueByte = Encoding.UTF8.GetBytes(photo.Value);
+
+            if (!photo.ContentType.Contains("png") && !photo.ContentType.Contains("jpg"))
+            {
+                responseNull.errorMsg = "Nieobsługiwany typ pliku!";
+
+                return responseNull;
+            }
+
+            if (photo.ContentType.Contains("png")) { photo.Name = photo.Name + ".png"; }
+            else if (photo.ContentType.Contains("jpg")) { photo.Name = photo.Name + ".jpg"; }
+
+            var photoList = _dbContext.Photos.Where(x => x.ClientID == clientID && x.Name== photo.Name).ToList();            
+            if (photoList.Count != 0)
+            {
+                responseNull.errorMsg = "Zdjęcie o takiej nazwie już istnieje!";
+                return responseNull;
+            }
+            
+
+
             var photoBLOB = new BLOBPhotoModel
             {
                 Name = photo.Name,
-                Value = ValueByte,
+                Value = photo.Value,
+                ContentType = photo.ContentType,
             };
             var link = _blobPhotoStorageService.UploadPhotoAsync(photoBLOB);
             _blobPhotoStorageService.DownloadPhotoAsync(photo.Name);
@@ -76,12 +98,15 @@ namespace Prokast.Server.Services
         public Response GetPhotosByID(int clientID, int ID)
         {
             var param = _dbContext.Photos.Where(x => x.ClientID == clientID && x.ID == ID).ToList();
-            var response = new PhotoGetResponse() { ID = random.Next(1, 100000), ClientID = clientID, Model = param };
-            if (param.Count() == 0)
+
+            if (param == null)
             {
                 var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Nie ma takiego zdjęcia" };
                 return responseNull;
             }
+
+            var response = new PhotoGetResponse() { ID = random.Next(1, 100000), ClientID = clientID, Model = param };
+            
             return response;
 
         }

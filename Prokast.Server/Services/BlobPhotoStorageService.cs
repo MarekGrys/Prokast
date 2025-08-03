@@ -5,6 +5,8 @@ using Prokast.Server.Services.Interfaces;
 using Prokast.Server.Models;
 using Microsoft.Extensions.Options;
 using Microsoft.VisualBasic;
+using System.Text;
+using Azure.Core;
 
 namespace Prokast.Server.Services
 {
@@ -33,15 +35,27 @@ namespace Prokast.Server.Services
             var container = _blobServiceClient.GetBlobContainerClient("images");
              container.CreateIfNotExists();
 
-            var blobClient = container.GetBlobClient(photo.Name);
             
+
+
+            var blobClient = container.GetBlobClient(photo.Name);
+
+            //var ValueToCompare =photo.Value.ToString();
+            //if (ValueToCompare.StartsWith("iVBORw")) { var xd = "image/png"; }
+            
+
             var upload = new BlobUploadOptions
             {
+
                 HttpHeaders = new BlobHttpHeaders 
                 {
-                    ContentType = photo.Name.Contains(".jpg") ? "image/jpeg" : "image/png"
+                    // png == iVBORw  jpg == /9j/4
+                    ContentType = photo.ContentType.Contains("png") ? "image/png" : "image/jpeg"
+                    //if (photo.ContentType.Contains("png")) { BlobHttpHeaders.ContentType = "image/png"; }
+                   // ContentType = photo.Name.Contains(".jpg") ? "image/jpeg" : "image/png"
                 }
             };
+            
 
             using var stream = new MemoryStream(photo.Value);
             stream.Position = 0;
@@ -57,21 +71,21 @@ namespace Prokast.Server.Services
         /// <param name="containerName"></param>
         /// <returns></returns>
         /// <exception cref="FileNotFoundException"></exception>
-        public async Task<byte[]> DownloadPhotoAsync(string photoName) 
+        public  byte[] DownloadPhotoAsync(string photoName) 
         {
             var _blobServiceClient = new BlobServiceClient(_blobStorageSettings.StorageConnection);
 
             var container = _blobServiceClient.GetBlobContainerClient("images");
             var blobClient = container.GetBlobClient(photoName);
 
-            if(!await blobClient.ExistsAsync())
+            if(!blobClient.Exists())
             {
                 throw new FileNotFoundException($"Plik '{photoName}' nie istnieje!");
             }
 
-            var downloadInfo = await blobClient.DownloadAsync();
-            await using var stream = new MemoryStream();
-            await downloadInfo.Value.Content.CopyToAsync(stream);
+            var downloadInfo =  blobClient.Download();
+             using var stream = new MemoryStream();
+             downloadInfo.Value.Content.CopyTo(stream);
 
             return stream.ToArray();
         }
