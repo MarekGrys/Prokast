@@ -10,5 +10,8 @@ namespace Prokast.Server.Models
 
         [Required]
         public byte[] Value { get; set; }
+
+        [Required]
+        public string ContentType { get; set; }
     }
 }
