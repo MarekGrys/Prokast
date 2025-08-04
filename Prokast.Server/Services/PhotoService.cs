@@ -44,8 +44,8 @@ namespace Prokast.Server.Services
                 return responseNull;
             }
 
-            if (photo.ContentType.Contains("png")) { photo.Name = photo.Name + ".png"; }
-            else if (photo.ContentType.Contains("jpg")) { photo.Name = photo.Name + ".jpg"; }
+            if (photo.ContentType.Contains("png")) { photo.Name = photo.Name + $"_CID{clientID}_PID{photo.ProductId}.png"; }
+            else if (photo.ContentType.Contains("jpg")) { photo.Name = photo.Name + $"_CID{clientID}_PID{photo.ProductId}.jpg"; }
 
             var photoList = _dbContext.Photos.Where(x => x.ClientID == clientID && x.Name== photo.Name).ToList();            
             if (photoList.Count != 0)
