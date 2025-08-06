@@ -60,6 +60,46 @@ const AddProducts: React.FC = () => {
   const [newCustomParam, setNewCustomParam] = useState({ name: '', type: '', value: '' });
   const [showCustomParamModal, setShowCustomParamModal] = useState(false);
 
+  const [availablePrices, setAvailablePrices] = useState([
+  {
+    name: 'Cena podstawowa',
+    regionID: 1,
+    netto: 100,
+    vat: 23,
+    brutto: 123,
+    priceListID: 1
+  },
+  {
+    name: 'Cena promocyjna',
+    regionID: 2,
+    netto: 80,
+    vat: 23,
+    brutto: 98.4,
+    priceListID: 2
+  }
+]);
+
+const [newPrice, setNewPrice] = useState({
+  name: '',
+  regionID: 0,
+  netto: 0,
+  vat: 0,
+  brutto: 0,
+  priceListID: 0
+});
+
+const [showPriceModal, setShowPriceModal] = useState(false);
+
+const [availablePriceLists, setAvailablePriceLists] = useState([
+  { name: 'Standardowa' },
+  { name: 'Promocyjna' }
+]);
+
+const [newPriceList, setNewPriceList] = useState({ name: '' });
+const [showPriceListModal, setShowPriceListModal] = useState(false);
+
+
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -139,6 +179,36 @@ const handlePhotoSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
   }
 };
 
+const handlePriceSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const selectedValue = e.target.value;
+  if (selectedValue === '__add_new__') {
+    setShowPriceModal(true);
+  } else {
+    const selected = availablePrices.find(p => p.name === selectedValue);
+    if (selected) {
+      setForm(prev => ({
+        ...prev,
+        prices: [selected]
+      }));
+    }
+  }
+};
+
+const handlePriceListSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const selectedValue = e.target.value;
+  if (selectedValue === '__add_new__') {
+    setShowPriceListModal(true);
+  } else {
+    const selected = availablePriceLists.find(p => p.name === selectedValue);
+    if (selected) {
+      setForm(prev => ({
+        ...prev,
+        priceList: selected
+      }));
+    }
+  }
+};
+
 
   const handleAddAdditionalName = () => {
     setAvailableAdditionalNames(prev => [...prev, newAdditionalName]);
@@ -167,6 +237,27 @@ const handlePhotoSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setNewPhoto({ name: '', value: '' });
     setShowPhotoModal(false);
   };
+
+  const handleAddPrice = () => {
+  setAvailablePrices(prev => [...prev, newPrice]);
+  setForm(prev => ({ ...prev, prices: [newPrice] }));
+  setNewPrice({
+    name: '',
+    regionID: 0,
+    netto: 0,
+    vat: 0,
+    brutto: 0,
+    priceListID: 0
+  });
+  setShowPriceModal(false);
+  };
+
+  const handleAddPriceList = () => {
+  setAvailablePriceLists(prev => [...prev, newPriceList]);
+  setForm(prev => ({ ...prev, priceList: newPriceList }));
+  setNewPriceList({ name: '' });
+  setShowPriceListModal(false);
+ };
 
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -246,26 +337,36 @@ const handlePhotoSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
         </select>
 
 
-        <h3 className="font-semibold mt-4">Ceny</h3>
-        {form.prices.map((item, i) => (
-          <div key={i} className="grid grid-cols-6 gap-2">
-            <input placeholder="Nazwa" value={item.name} onChange={(e) => handleNestedChange(i, 'name', e.target.value, 'prices')} className="p-2 border rounded-xl" />
-            <input type="number" placeholder="Region ID" value={item.regionID} onChange={(e) => handleNestedChange(i, 'regionID', Number(e.target.value), 'prices')} className="p-2 border rounded-xl" />
-            <input type="number" placeholder="Netto" value={item.netto} onChange={(e) => handleNestedChange(i, 'netto', Number(e.target.value), 'prices')} className="p-2 border rounded-xl" />
-            <input type="number" placeholder="VAT" value={item.vat} onChange={(e) => handleNestedChange(i, 'vat', Number(e.target.value), 'prices')} className="p-2 border rounded-xl" />
-            <input type="number" placeholder="Brutto" value={item.brutto} onChange={(e) => handleNestedChange(i, 'brutto', Number(e.target.value), 'prices')} className="p-2 border rounded-xl" />
-            <input type="number" placeholder="PriceList ID" value={item.priceListID} onChange={(e) => handleNestedChange(i, 'priceListID', Number(e.target.value), 'prices')} className="p-2 border rounded-xl" />
-          </div>
-        ))}
+        <h3 className="font-semibold mt-4">Cena</h3>
+        <select
+          value={form.prices[0]?.name || ''}
+          onChange={handlePriceSelect}
+          className="w-full p-2 border rounded-xl"
+        >
+          <option value="">-- Wybierz cenę --</option>
+          {availablePrices.map((item, i) => (
+            <option key={i} value={item.name}>
+              {item.name} – Netto: {item.netto} zł, VAT: {item.vat}%, Brutto: {item.brutto} zł (Region {item.regionID})
+            </option>
+          ))}
+          <option value="__add_new__" className="text-blue-500 font-semibold">+ Dodaj nową cenę</option>
+        </select>
+
 
         <h3 className="font-semibold mt-4">Lista cenowa</h3>
-        <input
-          name="priceList"
-          placeholder="Nazwa listy cenowej"
-          value={form.priceList.name}
-          onChange={handlePriceListChange}
+        <select
+          value={form.priceList.name || ''}
+          onChange={handlePriceListSelect}
           className="w-full p-2 border rounded-xl"
-        />
+        >
+          <option value="">-- Wybierz listę cenową --</option>
+          {availablePriceLists.map((item, i) => (
+            <option key={i} value={item.name}>
+              {item.name}
+            </option>
+          ))}
+          <option value="__add_new__" className="text-blue-500 font-semibold">+ Dodaj nową listę</option>
+        </select>
 
         <button
           type="submit"
@@ -409,6 +510,83 @@ const handlePhotoSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
             </div>
           </div>
         )}
+
+        {/* MODAL: DODAJ CENĘ */}
+        {showPriceModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+            <div className="bg-white p-6 rounded-xl w-full max-w-md space-y-4 shadow-xl">
+              <h3 className="text-lg font-semibold">Dodaj nową cenę</h3>
+              <input
+                type="text"
+                placeholder="Nazwa"
+                value={newPrice.name}
+                onChange={(e) => setNewPrice(prev => ({ ...prev, name: e.target.value }))}
+                className="w-full p-2 border rounded-xl"
+              />
+              <input
+                type="number"
+                placeholder="Region ID"
+                value={newPrice.regionID}
+                onChange={(e) => setNewPrice(prev => ({ ...prev, regionID: Number(e.target.value) }))}
+                className="w-full p-2 border rounded-xl"
+              />
+              <input
+                type="number"
+                placeholder="Netto"
+                value={newPrice.netto}
+                onChange={(e) => setNewPrice(prev => ({ ...prev, netto: Number(e.target.value) }))}
+                className="w-full p-2 border rounded-xl"
+              />
+              <input
+                type="number"
+                placeholder="VAT (%)"
+                value={newPrice.vat}
+                onChange={(e) => setNewPrice(prev => ({ ...prev, vat: Number(e.target.value) }))}
+                className="w-full p-2 border rounded-xl"
+              />
+              <input
+                type="number"
+                placeholder="Brutto"
+                value={newPrice.brutto}
+                onChange={(e) => setNewPrice(prev => ({ ...prev, brutto: Number(e.target.value) }))}
+                className="w-full p-2 border rounded-xl"
+              />
+              <input
+                type="number"
+                placeholder="PriceList ID"
+                value={newPrice.priceListID}
+                onChange={(e) => setNewPrice(prev => ({ ...prev, priceListID: Number(e.target.value) }))}
+                className="w-full p-2 border rounded-xl"
+              />
+              <div className="flex justify-end gap-2">
+                <button type="button" onClick={() => setShowPriceModal(false)} className="px-4 py-2 bg-gray-300 rounded-xl">Anuluj</button>
+                <button type="button" onClick={handleAddPrice} className="px-4 py-2 bg-blue-500 text-white rounded-xl">Dodaj</button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* MODAL: DODAJ LISTĘ CENOWĄ */}
+        {showPriceListModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+            <div className="bg-white p-6 rounded-xl w-full max-w-md space-y-4 shadow-xl">
+              <h3 className="text-lg font-semibold">Dodaj listę cenową</h3>
+              <input
+                type="text"
+                placeholder="Nazwa listy cenowej"
+                value={newPriceList.name}
+                onChange={(e) => setNewPriceList({ name: e.target.value })}
+                className="w-full p-2 border rounded-xl"
+              />
+              <div className="flex justify-end gap-2">
+                <button type="button" onClick={() => setShowPriceListModal(false)} className="px-4 py-2 bg-gray-300 rounded-xl">Anuluj</button>
+                <button type="button" onClick={handleAddPriceList} className="px-4 py-2 bg-blue-500 text-white rounded-xl">Dodaj</button>
+              </div>
+            </div>
+          </div>
+        )}
+
+
 
 
       </form>
