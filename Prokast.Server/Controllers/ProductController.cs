@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿/*using Microsoft.AspNetCore.Mvc;
 using Prokast.Server.Entities;
 using Prokast.Server.Models;
 using Prokast.Server.Models.ProductModels;
@@ -102,3 +102,4 @@ namespace Prokast.Server.Controllers
 
     }
 }
+*/

@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿/*using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Prokast.Server.Entities;
 using Prokast.Server.Models;
@@ -13,7 +13,7 @@ using System.Linq;
 
 namespace Prokast.Server.Services
 {
-    public class ProductService: IProductService
+    public class ProductService : IProductService
     {
         private readonly ProkastServerDbContext _dbContext;
         private readonly IMapper _mapper;
@@ -34,7 +34,7 @@ namespace Prokast.Server.Services
                 return responseNull;
             }
             List<string> AdditionalNamesTitles = new List<string>();
-            foreach (var item in productCreateDto.AdditionalNames) 
+            foreach (var item in productCreateDto.AdditionalNames)
             {
                 AdditionalNamesTitles.Add(item.Title);
             }
@@ -51,7 +51,7 @@ namespace Prokast.Server.Services
                 CustomParams = "-1",
                 Photos = "-1",
                 PriceListID = -1
-                
+
             };
 
             _dbContext.Products.Add(product);
@@ -72,7 +72,7 @@ namespace Prokast.Server.Services
                 _dbContext.SaveChanges();
             }
 
-            foreach(var item in productCreateDto.CustomParams)
+            foreach (var item in productCreateDto.CustomParams)
             {
                 var param = new CustomParams
                 {
@@ -80,7 +80,7 @@ namespace Prokast.Server.Services
                     Type = item.Type.ToString(),
                     Value = item.Value.ToString(),
                     ClientID = clientID
-                };               
+                };
                 _dbContext.CustomParams.Add(param);
                 _dbContext.SaveChanges();
             }
@@ -90,7 +90,7 @@ namespace Prokast.Server.Services
                 var param = new Photo
                 {
                     Name = item.Name.ToString(),
-                    
+
 
                     Value = item.Value.ToString(),
                     ProductId = newProduct.ID,
@@ -108,9 +108,9 @@ namespace Prokast.Server.Services
             };
             _dbContext.PriceLists.Add(priceList);
             _dbContext.SaveChanges();
-            
+
             var newPriceList = _dbContext.PriceLists.FirstOrDefault(x => x.Name == productCreateDto.PriceList.Name && x.ClientID == clientID);
-            foreach(var item in productCreateDto.Prices)
+            foreach (var item in productCreateDto.Prices)
             {
                 var price = new Prices
                 {
@@ -130,7 +130,7 @@ namespace Prokast.Server.Services
             {
                 additionalNames.Add(_dbContext.AdditionalName.FirstOrDefault(x => x.Title == item.Title && x.ClientID == clientID).ID);
             }
-            
+
             List<int> dictionaryParams = new List<int>();
             foreach (var item in productCreateDto.DictionaryParams)
             {
@@ -151,7 +151,7 @@ namespace Prokast.Server.Services
                 customParams.Add(_dbContext.CustomParams.FirstOrDefault(x => x.Name == item.Name && x.ClientID == clientID).ID);
             }
 
-            newProduct.AdditionalNames = string.Join(",", additionalNames);         
+            newProduct.AdditionalNames = string.Join(",", additionalNames);
             newProduct.DictionaryParams = string.Join(",", dictionaryParams);
             newProduct.CustomParams = string.Join(",", customParams);
             newProduct.Photos = string.Join(",", photos);
@@ -169,7 +169,7 @@ namespace Prokast.Server.Services
         {
             var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Błędnie podane dane" };
             var products = _dbContext.Products.Where(x => x.ClientID == clientID);
-           
+
             if (productGetFilter == null)
             {
                 return responseNull;
@@ -185,8 +185,8 @@ namespace Prokast.Server.Services
             {
                 products = products.Where(x => productGetFilter.ProductIDList.Contains(x.ID));
             }
-            
-           if(productGetFilter.CreationDate != null)
+
+            if (productGetFilter.CreationDate != null)
             {
                 products = products.Where(x => x.AdditionDate < productGetFilter.CreationDate);
             }
@@ -225,7 +225,7 @@ namespace Prokast.Server.Services
 
                 var productPrices = prices.Where(x => x.PriceListID == productPriceLists.ID).ToList();
 
-                returnList.Add(new ProductGet() 
+                returnList.Add(new ProductGet()
                 {
                     ID = product.ID,
                     ClientID = clientID,
@@ -236,11 +236,11 @@ namespace Prokast.Server.Services
                     AdditionalNames = productAdditionalNames,
                     DictionaryParams = productDictionaryParams,
                     CustomParams = productCustomParams,
-                    PriceList = new PriceListAll() 
+                    PriceList = new PriceListAll()
                     {
                         ID = productPriceLists.ID,
-                        Name= productPriceLists.Name,
-                        ClientID= clientID,
+                        Name = productPriceLists.Name,
+                        ClientID = clientID,
                         Prices = productPrices
                     },
                     AdditionDate = product.AdditionDate,
@@ -255,7 +255,7 @@ namespace Prokast.Server.Services
         #endregion
 
         #region Delete
-        public  DeleteResponse DeleteProduct(int clientID, int productID)
+        public DeleteResponse DeleteProduct(int clientID, int productID)
         {
             var products = _dbContext.Products.FirstOrDefault(x => x.ClientID == clientID && x.ID == productID);
             if (products == null)
@@ -267,9 +267,9 @@ namespace Prokast.Server.Services
             var prices = _dbContext.Prices.ToList();
 
             var _priceList = _dbContext.PriceLists.ToList();
-            
+
             var additionalNames = _dbContext.AdditionalName.ToList();
-        
+
             var productAdditionalNames = additionalNames.Where(x => products.AdditionalNames.Split(",").ToList().
                 Contains(x.ID.ToString())).ToList();
 
@@ -285,7 +285,7 @@ namespace Prokast.Server.Services
             {
                 _dbContext.Remove(item);
 
-            }                
+            }
             _dbContext.Remove(productPriceLists);
             _dbContext.Remove(products);
             _dbContext.SaveChanges();
@@ -323,3 +323,4 @@ namespace Prokast.Server.Services
 
     }
 }
+*/

@@ -35,7 +35,7 @@ builder.Services.AddScoped<IParamsService, ParamsService>();
 builder.Services.AddScoped<IDictionaryService, DictionaryService>();
 builder.Services.AddScoped<IPricesService, PricesService>();
 builder.Services.AddScoped<IOthersService, OthersService>();
-builder.Services.AddScoped<IProductService, ProductService>();
+//builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IAdditionalDescriptionService, AdditionalDescriptionService>();
 builder.Services.AddScoped<IPhotoService, PhotoService>();
 builder.Services.AddScoped<IWarehouseService, WarehouseService>();

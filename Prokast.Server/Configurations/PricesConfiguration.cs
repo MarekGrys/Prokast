@@ -14,7 +14,7 @@ namespace Prokast.Server.Configurations
             builder.Property(x => x.VAT).IsRequired().HasPrecision(10,2);
             builder.Property(x => x.Brutto).IsRequired().HasPrecision(10, 2);
             builder.HasOne(x => x.Regions).WithMany().HasForeignKey(y => y.RegionID);
-            builder.HasOne(x => x.PriceLists).WithMany(y => y.Prices).HasForeignKey(z => z.PriceListID).OnDelete(DeleteBehavior.Cascade);
+            //builder.HasOne(x => x.PriceLists).WithMany(y => y.Prices).HasForeignKey(z => z.PriceListID).OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

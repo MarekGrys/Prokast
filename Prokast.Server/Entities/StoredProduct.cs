@@ -9,10 +9,9 @@ namespace Prokast.Server.Entities
         public required int MinQuantity { get; set; }
         public DateTime LastUpdated { get; set; } = DateTime.Now;
 
-        public required int WarehouseID { get; set; }
+        public int WarehouseID { get; set; }
         public virtual Warehouse Warehouse { get; set; }
 
-        public required int ProductID { get; set; }
         public virtual Product Product { get; set; }
     }
 }

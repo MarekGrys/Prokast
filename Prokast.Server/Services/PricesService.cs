@@ -54,7 +54,7 @@ namespace Prokast.Server.Services
                 return responseNull;
             }
 
-            var priceList = _dbContext.Products.FirstOrDefault(x => x.ID == productID).PriceListID;
+            var priceList = _dbContext.Products.FirstOrDefault(x => x.ID == productID).PriceLists.ID;
             if (priceList == null)
             {
                 var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Nie ma takiej listy" };

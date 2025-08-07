@@ -19,7 +19,7 @@ namespace Prokast.Server.Configurations
             builder.Property(x => x.City).IsRequired().HasMaxLength(30);
             builder.Property(x => x.Country).IsRequired().HasMaxLength(30);
             builder.Property(x => x.NIP).IsRequired().HasMaxLength(15);
-            builder.HasMany(x => x.Orders).WithOne(y => y.Buyer).HasForeignKey(x => x.BuyerID).OnDelete(DeleteBehavior.Cascade);
+            builder.HasMany(x => x.Orders).WithOne(y => y.Buyer).HasForeignKey(x => x.BuyerID).OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

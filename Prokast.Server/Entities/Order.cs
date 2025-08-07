@@ -26,6 +26,6 @@ namespace Prokast.Server.Entities
         public required int BuyerID { get; set; }
         public virtual Buyer Buyer { get; set; }
 
-        public virtual List<Product> Products { get; set; }
+        public virtual List<OrderProduct>? OrderProducts  { get; set; } = [];
     }
 }

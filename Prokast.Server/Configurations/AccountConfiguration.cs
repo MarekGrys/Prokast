@@ -14,8 +14,8 @@ namespace Prokast.Server.Configurations
             builder.Property(x => x.Role).HasMaxLength(5);
             builder.Property(x => x.FirstName).HasMaxLength(50);
             builder.Property(x => x.LastName).HasMaxLength(50);
-            builder.HasOne(x => x.Client).WithMany(x => x.Accounts).HasForeignKey(x => x.ClientID).OnDelete(DeleteBehavior.Cascade);
-            builder.HasOne(x => x.Warehouse).WithMany(y => y.Accounts).HasForeignKey(z => z.WarehouseID);
+            //builder.HasOne(x => x.Client).WithMany(y => y.Accounts).HasForeignKey(z => z.ClientID).OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(x => x.Warehouse).WithMany(y => y.Accounts).HasForeignKey(z => z.WarehouseID).OnDelete(DeleteBehavior.NoAction);
         }
     }
 }
