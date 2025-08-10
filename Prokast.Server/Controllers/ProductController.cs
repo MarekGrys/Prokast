@@ -18,6 +18,25 @@ namespace Prokast.Server.Controllers
             _productService = productService;
         }
 
+        #region Create
+        [HttpPost]
+        [ProducesResponseType(typeof(Response), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        public ActionResult<Response> CreateProduct([FromBody] ProductCreateDto productCreateDto, [FromQuery] int clientID, [FromQuery] int regionID)
+        {
+            try
+            {
+                var result = _productService.CreateProduct(productCreateDto, clientID, regionID);
+                if (result is ErrorResponse) return BadRequest(result);
+                return Created();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        #endregion
+
         [HttpPut("products/{productID}")]
         [ProducesResponseType(typeof(ProductEditResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
