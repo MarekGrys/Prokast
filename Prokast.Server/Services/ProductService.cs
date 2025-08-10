@@ -1,4 +1,4 @@
-﻿/*using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Prokast.Server.Entities;
 using Prokast.Server.Models;
@@ -18,15 +18,30 @@ namespace Prokast.Server.Services
         private readonly ProkastServerDbContext _dbContext;
         private readonly IMapper _mapper;
         Random random = new Random();
+        private readonly IAdditionalDescriptionService _additionalDescriptionService;
+        private readonly IAdditionalNameService _additionalNameService;
+        private readonly IParamsService _paramsService;
+        private readonly IPhotoService _photoService;
+        private readonly IPricesService _priceService;
 
-        public ProductService(ProkastServerDbContext dbContext, IMapper mapper)
+        public ProductService(ProkastServerDbContext dbContext, IMapper mapper, 
+            IAdditionalDescriptionService additionalDescriptionService, 
+            IAdditionalNameService additionalNameService,
+            IParamsService paramsService,
+            IPhotoService photoService,
+            IPricesService pricesService)
         {
             _dbContext = dbContext;
             _mapper = mapper;
+            _additionalDescriptionService = additionalDescriptionService;
+            _additionalNameService = additionalNameService;
+            _paramsService = paramsService;
+            _photoService = photoService;
+            _priceService = pricesService;
         }
 
         #region Create
-        public Response CreateProduct([FromBody] ProductCreateDto productCreateDto, int clientID)
+        /*public Response CreateProduct([FromBody] ProductCreateDto productCreateDto, int clientID)
         {
             var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Błędnie podane dane" };
             if (productCreateDto == null)
@@ -161,11 +176,117 @@ namespace Prokast.Server.Services
 
             var response = new Response() { ID = random.Next(1, 100000), ClientID = clientID };
             return response;
+        }*/
+
+        public Response CreateProduct(ProductCreateDto productCreateDto, int clientID, int regionID)
+        {
+            var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Błędnie podane dane" };
+            if (productCreateDto == null)
+            {
+                return responseNull;
+            }
+
+            var product = new Product
+            {
+                ClientID = clientID,
+                Name = productCreateDto.Name,
+                SKU = productCreateDto.SKU,
+                EAN = productCreateDto.EAN,
+                Description = productCreateDto.Description,
+            };
+
+            _dbContext.Products.Add(product);
+            _dbContext.SaveChanges();
+
+            var newProduct = _dbContext.Products.FirstOrDefault(x => x.Name == productCreateDto.Name && x.SKU == productCreateDto.SKU && x.EAN == productCreateDto.EAN);   
+
+            foreach(var additionalDescription in productCreateDto.AdditionalDescriptions)
+            {
+                _additionalDescriptionService.CreateAdditionalDescription(additionalDescription, clientID, regionID, newProduct.ID);
+            }
+
+            foreach(var additionalName in productCreateDto.AdditionalNames)
+            {
+                _additionalNameService.CreateAdditionalName(additionalName, clientID, regionID, newProduct.ID);
+            }
+
+            foreach(var customParam in productCreateDto.CustomParams)
+            {
+                _paramsService.CreateCustomParam(customParam, clientID, regionID, newProduct.ID);
+            }
+
+            foreach(var dictionaryParam in productCreateDto.DictionaryParams)
+            {
+                var productparam = new ProductDictionaryParam
+                {
+                    DictionaryParamID = dictionaryParam.ID,
+                    ProductID = newProduct.ID
+                };
+                _dbContext.ProductDictionaryParams.Add(productparam);
+                _dbContext.SaveChanges();
+            }
+
+            /*foreach(var photo in productCreateDto.Photos)
+            {
+                _photoService.
+            }*/
+
+        _priceService.CreatePriceList(productCreateDto.PriceList, clientID, newProduct.ID);
+            foreach(var price in productCreateDto.Prices)
+            {
+                _priceService.CreatePrice(price, clientID, newProduct.ID);
+            }
+
+            var response = new Response() { ID = random.Next(1, 100000), ClientID = clientID };
+            return response;
         }
+
+
+
+
         #endregion
 
         #region Get
-        public Response GetProducts([FromBody] ProductGetFilter productGetFilter, int clientID)
+        public Response GetProducts(ProductGetFilter filter, int clientID)
+        {
+            var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Błędnie podane dane" };
+            var products = _dbContext.Products.Where(x => x.ClientID == clientID).ToList();
+            if (!products.Any())
+            {
+                responseNull.errorMsg = "Klient nie ma produktów";
+                return responseNull;
+            }
+            
+            if (filter == null)
+            {
+                return responseNull;
+            }
+
+            if (filter.ProductIDList != null && filter.ProductIDList.Count != 0)
+            {
+                products = products.Where(x => filter.ProductIDList.Contains(x.ID)).ToList();
+            }
+
+            if (filter.CreationDate != null)
+            {
+                products = products.Where(x => x.AdditionDate < filter.CreationDate).ToList();
+            }
+
+            if (filter.ModificationDate != null)
+            {
+                products = products.Where(x => x.ModificationDate < filter.ModificationDate).ToList();
+            }
+
+            if (filter.ProductName != null)
+            {
+                products = products.Where(x => x.Name.Contains(filter.ProductName)).ToList();
+            }
+
+            var response = new ProductsGetResponse() { ID = random.Next(0, 100000), ClientID = clientID, Model = products };
+            return response;
+
+        }
+        /*public Response GetProducts([FromBody] ProductGetFilter productGetFilter, int clientID)
         {
             var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Błędnie podane dane" };
             var products = _dbContext.Products.Where(x => x.ClientID == clientID);
@@ -251,11 +372,11 @@ namespace Prokast.Server.Services
             var response = new ProductsGetResponse() { ID = random.Next(0, 100000), ClientID = clientID, Model = returnList };
             return response;
 
-        }
+        }*/
         #endregion
 
         #region Delete
-        public DeleteResponse DeleteProduct(int clientID, int productID)
+        /*public DeleteResponse DeleteProduct(int clientID, int productID)
         {
             var products = _dbContext.Products.FirstOrDefault(x => x.ClientID == clientID && x.ID == productID);
             if (products == null)
@@ -293,7 +414,7 @@ namespace Prokast.Server.Services
             var response = new DeleteResponse() { ID = random.Next(1, 100000), ClientID = clientID, deleteMsg = "Produkt został usunięty" };
             return response;
 
-        }
+        }*/
 
         #endregion
 
@@ -323,4 +444,3 @@ namespace Prokast.Server.Services
 
     }
 }
-*/

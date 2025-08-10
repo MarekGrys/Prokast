@@ -286,9 +286,6 @@ namespace Prokast.Server.Migrations
                     b.Property<int>("OptionID")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ProductID")
-                        .HasColumnType("int");
-
                     b.Property<int>("RegionID")
                         .HasColumnType("int");
 
@@ -304,8 +301,6 @@ namespace Prokast.Server.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ID");
-
-                    b.HasIndex("ProductID");
 
                     b.HasIndex("RegionsID");
 
@@ -533,6 +528,29 @@ namespace Prokast.Server.Migrations
                     b.ToTable("Products");
                 });
 
+            modelBuilder.Entity("Prokast.Server.Entities.ProductDictionaryParam", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<int>("DictionaryParamID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductID")
+                        .HasColumnType("int");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("DictionaryParamID");
+
+                    b.HasIndex("ProductID");
+
+                    b.ToTable("ProductDictionaryParams");
+                });
+
             modelBuilder.Entity("Prokast.Server.Entities.Regions", b =>
                 {
                     b.Property<int>("ID")
@@ -693,10 +711,6 @@ namespace Prokast.Server.Migrations
 
             modelBuilder.Entity("Prokast.Server.Entities.DictionaryParams", b =>
                 {
-                    b.HasOne("Prokast.Server.Entities.Product", null)
-                        .WithMany("DictionaryParams")
-                        .HasForeignKey("ProductID");
-
                     b.HasOne("Prokast.Server.Entities.Regions", "Regions")
                         .WithMany()
                         .HasForeignKey("RegionsID")
@@ -802,6 +816,25 @@ namespace Prokast.Server.Migrations
                     b.Navigation("StoredProduct");
                 });
 
+            modelBuilder.Entity("Prokast.Server.Entities.ProductDictionaryParam", b =>
+                {
+                    b.HasOne("Prokast.Server.Entities.DictionaryParams", "DictionaryParam")
+                        .WithMany("ProductDictionaryParams")
+                        .HasForeignKey("DictionaryParamID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Prokast.Server.Entities.Product", "Product")
+                        .WithMany("ProductDictionaryParams")
+                        .HasForeignKey("ProductID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DictionaryParam");
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("Prokast.Server.Entities.StoredProduct", b =>
                 {
                     b.HasOne("Prokast.Server.Entities.Warehouse", "Warehouse")
@@ -840,6 +873,11 @@ namespace Prokast.Server.Migrations
                     b.Navigation("Warehouses");
                 });
 
+            modelBuilder.Entity("Prokast.Server.Entities.DictionaryParams", b =>
+                {
+                    b.Navigation("ProductDictionaryParams");
+                });
+
             modelBuilder.Entity("Prokast.Server.Entities.Order", b =>
                 {
                     b.Navigation("OrderProducts");
@@ -858,14 +896,14 @@ namespace Prokast.Server.Migrations
 
                     b.Navigation("CustomParams");
 
-                    b.Navigation("DictionaryParams");
-
                     b.Navigation("OrderProducts");
 
                     b.Navigation("Photos");
 
                     b.Navigation("PriceLists")
                         .IsRequired();
+
+                    b.Navigation("ProductDictionaryParams");
                 });
 
             modelBuilder.Entity("Prokast.Server.Entities.StoredProduct", b =>

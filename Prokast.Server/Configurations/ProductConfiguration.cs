@@ -18,11 +18,21 @@ namespace Prokast.Server.Configurations
             builder.HasMany(x => x.AdditionalDescriptions).WithOne(y => y.Product).HasForeignKey(z => z.ProductID).OnDelete(DeleteBehavior.Cascade);
             builder.HasMany(x => x.AdditionalNames).WithOne(y => y.Product).HasForeignKey(z => z.ProductID).OnDelete(DeleteBehavior.Cascade);
             builder.HasMany(x => x.CustomParams).WithOne(y => y.Product).HasForeignKey(z => z.ProductID).OnDelete(DeleteBehavior.Cascade);
-            builder.HasMany(x => x.DictionaryParams).WithOne();
+/*            builder.HasMany(p => p.DictionaryParams)
+                           .WithMany(dp => dp.Products)
+                           .UsingEntity<Dictionary<string, object>>(
+                                "ProductDictionaryParam", // nazwa tabeli łączącej
+                                right => right.HasOne<DictionaryParams>()
+                                              .WithMany()
+                                              .HasForeignKey("DictionaryParamID")
+                                              .OnDelete(DeleteBehavior.Cascade),
+                                left => left.HasOne<Product>()
+                                            .WithMany()
+                                            .HasForeignKey("ProductID")
+                                            .OnDelete(DeleteBehavior.Cascade)
+                );*/ 
             builder.HasMany(x => x.Photos).WithOne(y => y.Product).HasForeignKey(z => z.ProductID).OnDelete(DeleteBehavior.Cascade);
-            //builder.HasOne(x => x.Client).WithMany(y => y.Products).HasForeignKey(z => z.ClientID).OnDelete(DeleteBehavior.Cascade);
             builder.HasOne(x => x.StoredProduct).WithOne(y => y.Product).HasForeignKey<Product>(z => z.StoredProductID).OnDelete(DeleteBehavior.Cascade);
-            //builder.HasMany(x => x.Orders).WithMany(y => y.Products).UsingEntity(x => x.ToTable("OrderProduct"));
         }
     }
 }
