@@ -11,7 +11,7 @@ const AddProducts: React.FC = () => {
       { title: '', region: 0, value: '' }
     ],
     dictionaryParams: [
-      { regionID: 0, name: '', type: '', value: '' }
+      { regionID: 0 , name: '', type: '', value: '' }
     ],
     customParams: [
       { name: '', type: '', value: '' }
@@ -82,7 +82,7 @@ const AddProducts: React.FC = () => {
 
 const [newPrice, setNewPrice] = useState({
   name: '',
-  regionID: 0,
+  regionID: 0 ,
   netto: 0,
   vat: 0,
   brutto: 0,
@@ -393,6 +393,7 @@ const handlePriceListSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
               />
               <input
                 type="number"
+                //do zmiany wybrać z listy regionów obecnie dostepnych a potem dopiero wstawic id tego regionu
                 placeholder="Region"
                 value={newAdditionalName.region}
                 onChange={(e) => setNewAdditionalName(prev => ({ ...prev, region: Number(e.target.value) }))}
@@ -442,6 +443,7 @@ const handlePriceListSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
               <input
                 type="number"
                 placeholder="Region ID"
+                //do zmiany wybrać z listy regionów obecnie dostepnych a potem dopiero wstawic id tego regionu
                 value={newDictionaryParam.regionID}
                 onChange={(e) => setNewDictionaryParam(prev => ({ ...prev, regionID: Number(e.target.value) }))}
                 className="w-full p-2 border rounded-xl"
@@ -500,6 +502,8 @@ const handlePriceListSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
                 onChange={(e) => setNewPhoto(prev => ({ ...prev, name: e.target.value }))}
                 className="w-full p-2 border rounded-xl"
               />
+
+              {/* Dodać wyszukiwarke plikow lokalnych  */}
               <input
                 type="text"
                 placeholder="Ścieżka URL"
@@ -528,34 +532,53 @@ const handlePriceListSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
                 className="w-full p-2 border rounded-xl"
               />
               <input
-                type="number"
+                type="text"
+                //do zmiany wybrać z listy regionów obecnie dostepnych a potem dopiero wstawic id tego regionu
                 placeholder="Region ID"
+                inputMode="numeric"
                 value={newPrice.regionID}
                 onChange={(e) => setNewPrice(prev => ({ ...prev, regionID: Number(e.target.value) }))}
-                className="w-full p-2 border rounded-xl"
+                className="w-full p-2 border rounded-xl "
               />
-              <input
-                type="number"
-                placeholder="Netto"
-                value={newPrice.netto}
-                onChange={(e) => setNewPrice(prev => ({ ...prev, netto: Number(e.target.value) }))}
-                className="w-full p-2 border rounded-xl"
-              />
-              <input
-                type="number"
-                placeholder="VAT (%)"
-                value={newPrice.vat}
-                onChange={(e) => setNewPrice(prev => ({ ...prev, vat: Number(e.target.value) }))}
-                className="w-full p-2 border rounded-xl"
-              />
+              <div className="flex items-center w-full max-w-md">
               <input
                 type="number"
                 placeholder="Brutto"
                 value={newPrice.brutto}
                 onChange={(e) => setNewPrice(prev => ({ ...prev, brutto: Number(e.target.value) }))}
                 className="w-full p-2 border rounded-xl"
+                
+                
               />
+              
+              <p className="p-2 font-semibold bg-gray-100 border rounded-r-xl whitespace-nowrap">zł Brutto</p>
+              </div>
+
+              <div className="flex items-center w-full max-w-md">
+                <input
+                  type="number"
+                  placeholder="VAT (%)"
+                  value={newPrice.vat}
+                  onChange={(e) => setNewPrice(prev => ({ ...prev, vat: Number(e.target.value) }))}
+                  className="w-full p-2 border rounded-l-xl"
+                />
+                <p className="p-2 pl-5 font-semibold bg-gray-100 border rounded-r-xl whitespace-nowrap ">% VAT</p>
+              </div>
+              <div className="flex items-center w-full max-w-md">
+                <input
+                  type="number"
+                  placeholder="Netto"
+                  value={newPrice.netto}
+                  onChange={(e) =>
+                    setNewPrice((prev) => ({ ...prev, netto: Number(e.target.value) }))
+                  }
+                  className="w-full p-2 border rounded-l-xl"
+                />
+                <p className="p-2 font-semibold bg-gray-100 border rounded-r-xl whitespace-nowrap">zł Netto</p>
+              </div>
+              
               <input
+                //Zrobic podobnie jak w przypadku z regionami
                 type="number"
                 placeholder="PriceList ID"
                 value={newPrice.priceListID}
