@@ -22,6 +22,8 @@ namespace Prokast.Server.Entities
         public DbSet<StoredProduct> StoredProducts { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<Buyer> Buyers { get; set; }
+        public DbSet<OrderProduct> OrderProducts { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

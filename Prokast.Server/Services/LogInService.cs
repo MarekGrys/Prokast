@@ -71,7 +71,7 @@ namespace Prokast.Server.Services
                 return responseNull;
             }
 
-            var client = _dbContext.Clients.FirstOrDefault(x => x.AccountID == account.ID);
+            var client = _dbContext.Clients.FirstOrDefault(x => x.Accounts.Any(y => y.ID == account.ID));
             if (client == null)
             {
                 var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = -1, errorMsg = "Błędny login" };

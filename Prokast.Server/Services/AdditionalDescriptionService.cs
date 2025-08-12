@@ -21,7 +21,7 @@ namespace Prokast.Server.Services
         }
 
         #region Create
-        public Response CreateAdditionalDescription([FromBody] AdditionalDescriptionCreateDto description, int clientID)
+        public Response CreateAdditionalDescription([FromBody] AdditionalDescriptionCreateDto description, int clientID, int regionID, int productID)
         {
 
             if (description == null)
@@ -32,10 +32,10 @@ namespace Prokast.Server.Services
 
             var additionalDescription = new AdditionalDescription()
             {
-                ClientID = clientID,
                 Title = description.Title,
-                Region = description.Region,
                 Value = description.Value,
+                RegionID = regionID,
+                ProductID = productID
             };
 
             _dbContext.AdditionalDescriptions.Add(additionalDescription);
@@ -49,7 +49,7 @@ namespace Prokast.Server.Services
         #region Get
         public Response GetAllDescriptions(int clientID)
         {
-            var addDescList = _dbContext.AdditionalDescriptions.Where(x => x.ClientID == clientID).ToList();
+            var addDescList = _dbContext.AdditionalDescriptions.Where(x => x.Product.ClientID == clientID).ToList();
             var response = new AdditionalDescriptionGetResponse() { ID = random.Next(1, 100000), Model = addDescList };
             if (addDescList.Count() == 0)
             {
@@ -61,7 +61,7 @@ namespace Prokast.Server.Services
 
         public Response GetDescriptionsByID(int ID, int clientID)
         {
-            var addDesc = _dbContext.AdditionalDescriptions.Where(x => x.ID == ID && x.ClientID == clientID).ToList();
+            var addDesc = _dbContext.AdditionalDescriptions.Where(x => x.ID == ID && x.Product.ClientID == clientID).ToList();
             var response = new AdditionalDescriptionGetResponse() { ID = random.Next(1, 100000), Model = addDesc };
             if (addDesc.Count() == 0)
             {
@@ -79,7 +79,7 @@ namespace Prokast.Server.Services
         /// <returns></returns>
         public Response GetDescriptionsByNames(string Title, int clientID)
         {
-            var addDesc = _dbContext.AdditionalDescriptions.Where(x => x.Title.Contains(Title) && x.ClientID == clientID).ToList();
+            var addDesc = _dbContext.AdditionalDescriptions.Where(x => x.Title.Contains(Title) && x.Product.ClientID == clientID).ToList();
             var response = new AdditionalDescriptionGetResponse() { ID = random.Next(1, 100000), Model = addDesc };
             if (addDesc.Count() == 0)
             {
@@ -92,7 +92,7 @@ namespace Prokast.Server.Services
 
         public Response GetDescriptionByRegion(int Region, int clientID)
         {
-            var addDesc = _dbContext.AdditionalDescriptions.Where(x => x.Region == Region && x.ClientID == clientID).ToList();
+            var addDesc = _dbContext.AdditionalDescriptions.Where(x => x.RegionID == Region && x.Product.ClientID == clientID).ToList();
             var response = new AdditionalDescriptionGetResponse() { ID = random.Next(1, 100000), Model = addDesc };
             if (addDesc.Count() == 0)
             {
@@ -115,7 +115,7 @@ namespace Prokast.Server.Services
         #region Edit
         public Response EditAdditionalDescription(int clientID, int ID, AdditionalDescriptionCreateDto data)
         {
-            var findDescription = _dbContext.AdditionalDescriptions.FirstOrDefault(x => x.ClientID == clientID && x.ID == ID);
+            var findDescription = _dbContext.AdditionalDescriptions.FirstOrDefault(x => x.Product.ClientID == clientID && x.ID == ID);
 
 
             if (findDescription == null)
@@ -125,7 +125,7 @@ namespace Prokast.Server.Services
             }
 
             findDescription.Title = data.Title;
-            findDescription.Region = data.Region;
+            //findDescription.Region = data.Region;
             findDescription.Value = data.Value;
             _dbContext.SaveChanges();
 
@@ -138,7 +138,7 @@ namespace Prokast.Server.Services
         #region delete
         public Response DeleteAdditionalDescription(int clientID, int ID)
         {
-            var findAdditionalDescription = _dbContext.AdditionalDescriptions.FirstOrDefault(x => x.ClientID == clientID && x.ID == ID);
+            var findAdditionalDescription = _dbContext.AdditionalDescriptions.FirstOrDefault(x => x.Product.ClientID == clientID && x.ID == ID);
 
 
             if (findAdditionalDescription == null)

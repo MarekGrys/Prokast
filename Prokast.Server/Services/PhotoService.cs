@@ -85,13 +85,14 @@ namespace Prokast.Server.Services
         #region Get
         public Response GetAllPhotos(int clientID)
         {
-            var photoList = _dbContext.Photos.Where(x => x.ClientID == clientID).ToList();
-            var response = new PhotoGetResponse() { ID = random.Next(1, 100000), ClientID = clientID, Model = photoList };
+            var photoList = _dbContext.Photos.Where(x => x.Product.ClientID == clientID).ToList();
             if (photoList.Count() == 0)
             {
                 var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Klient nie ma zdjęć" };
                 return responseNull;
             }
+
+            var response = new PhotoGetResponse() { ID = random.Next(1, 100000), ClientID = clientID, Model = photoList };
             return response;
         }
 
@@ -139,8 +140,7 @@ namespace Prokast.Server.Services
         #region Edit
         public Response EditPhotos(int clientID, int ID, PhotoEdit data)
         {
-            var findPhoto = _dbContext.Photos.FirstOrDefault(x => x.ClientID == clientID && x.ID == ID);
-
+            var findPhoto = _dbContext.Photos.FirstOrDefault(x => x.Product.ClientID == clientID && x.Id == ID);
 
             if (findPhoto == null)
             {
@@ -148,14 +148,10 @@ namespace Prokast.Server.Services
                 return responseNull;
             }
 
-            findPhoto.Name = data.Name;
-            
+            findPhoto.Name = data.Name; 
             _dbContext.SaveChanges();
 
             var response = new PhotoEditResponse() { ID = random.Next(1, 100000), ClientID = clientID, photo = findPhoto };
-
-            
-
             return response;
         }
         #endregion
@@ -163,7 +159,7 @@ namespace Prokast.Server.Services
         #region delete
         public Response DeletePhotos(int clientID, int ID)
         {
-            var findPhoto = _dbContext.Photos.FirstOrDefault(x => x.ClientID == clientID && x.ID == ID);
+            var findPhoto = _dbContext.Photos.FirstOrDefault(x => x.Product.ClientID == clientID && x.Id == ID);
 
 
             if (findPhoto == null)

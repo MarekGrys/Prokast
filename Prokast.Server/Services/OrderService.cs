@@ -87,18 +87,21 @@ namespace Prokast.Server.Services
             {
                 OrderID = orderCreateDto.OrderID,
                 OrderDate = orderCreateDto.OrderDate,
+                OrderStatus = OrderStatus.pending,
                 TotalPrice = orderCreateDto.TotalPrice,
                 TotalWeightKg = orderCreateDto.TotalWeightKg,
                 PaymentMethod = orderCreateDto.PaymentMethod,
+                PaymentStatus = PaymentStatus.pending,
                 UpdateDate = orderCreateDto.UpdateDate,
                 ClientID = clientID,
-                BuyerID = buyer.ID,
+                IsBusiness = false,
+                BuyerID = buyer.ID
             };
 
             if(business != null)
             {
                 order.BusinessID = business.ID;
-                order.IsBusiness = orderCreateDto.IsBusiness;
+                order.IsBusiness = true;
             }
 
             _dbContext.Orders.Add(order);
