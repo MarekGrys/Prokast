@@ -217,12 +217,8 @@ namespace Prokast.Server.Services
 
             foreach(var dictionaryParam in productCreateDto.DictionaryParams)
             {
-                var productparam = new ProductDictionaryParam
-                {
-                    DictionaryParamID = dictionaryParam.ID,
-                    ProductID = newProduct.ID
-                };
-                _dbContext.ProductDictionaryParams.Add(productparam);
+                var param = _dbContext.DictionaryParams.FirstOrDefault(x => x.ID == dictionaryParam.ID);
+                newProduct.DictionaryParams.Add(param);
                 _dbContext.SaveChanges();
             }
 
@@ -232,7 +228,7 @@ namespace Prokast.Server.Services
             }*/
 
         _priceService.CreatePriceList(productCreateDto.PriceList, clientID, newProduct.ID);
-            foreach(var price in productCreateDto.Prices)
+            foreach(var price in productCreateDto.PriceList.Prices)
             {
                 _priceService.CreatePrice(price, clientID, newProduct.ID);
             }

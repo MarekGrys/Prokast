@@ -23,7 +23,6 @@ namespace Prokast.Server.Entities
         public DbSet<Order> Orders { get; set; }
         public DbSet<Buyer> Buyers { get; set; }
         public DbSet<OrderProduct> OrderProducts { get; set; }
-        public DbSet<ProductDictionaryParam> ProductDictionaryParams { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

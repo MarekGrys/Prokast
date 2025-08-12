@@ -15,7 +15,7 @@ namespace Prokast.Server.Entities
         public virtual List<AdditionalDescription> AdditionalDescriptions { get; set; }
         public virtual List<AdditionalName> AdditionalNames { get; set; }
         public virtual List<CustomParams> CustomParams { get; set; }
-        public List<ProductDictionaryParam> ProductDictionaryParams { get; set; } = [];
+        public virtual List<DictionaryParams> DictionaryParams { get; set; }
         public virtual List<Photo> Photos { get; set; }
 
         public virtual PriceLists PriceLists { get; set; }

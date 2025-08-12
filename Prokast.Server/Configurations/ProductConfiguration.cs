@@ -18,6 +18,7 @@ namespace Prokast.Server.Configurations
             builder.HasMany(x => x.AdditionalDescriptions).WithOne(y => y.Product).HasForeignKey(z => z.ProductID).OnDelete(DeleteBehavior.Cascade);
             builder.HasMany(x => x.AdditionalNames).WithOne(y => y.Product).HasForeignKey(z => z.ProductID).OnDelete(DeleteBehavior.Cascade);
             builder.HasMany(x => x.CustomParams).WithOne(y => y.Product).HasForeignKey(z => z.ProductID).OnDelete(DeleteBehavior.Cascade);
+            builder.HasMany(x => x.DictionaryParams).WithMany();
 /*            builder.HasMany(p => p.DictionaryParams)
                            .WithMany(dp => dp.Products)
                            .UsingEntity<Dictionary<string, object>>(

@@ -12,8 +12,5 @@ namespace Prokast.Server.Entities
 
         public required int RegionID { get; set; }
         public virtual Regions Regions { get; set; }
-
-        public List<ProductDictionaryParam> ProductDictionaryParams { get; set; } = [];
-
     }
 }
