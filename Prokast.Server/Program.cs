@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Prokast.Server;
 using Prokast.Server.Entities;
 using Prokast.Server.Models;
@@ -27,7 +27,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ProkastServerDbContext>(opt=>
 {
-    opt.UseSqlServer(builder.Configuration.GetConnectionString("LocalConnection"));
+    opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 }
 );
 
