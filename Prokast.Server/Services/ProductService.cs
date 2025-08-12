@@ -83,7 +83,7 @@ namespace Prokast.Server.Services
                     Region = item.Region,
                     Value = item.Value.ToString()
                 };
-                _dbContext.AdditionalName.Add(name);
+                _dbContext.AdditionalNames.Add(name);
                 _dbContext.SaveChanges();
             }
 
@@ -108,7 +108,7 @@ namespace Prokast.Server.Services
 
 
                     Value = item.Value.ToString(),
-                    ProductId = newProduct.ID,
+                    ProductID = newProduct.ID,
                     ClientID = clientID
                 };
                 _dbContext.Photos.Add(param);
@@ -143,7 +143,7 @@ namespace Prokast.Server.Services
             List<int> additionalNames = new List<int>();
             foreach (var item in productCreateDto.AdditionalNames)
             {
-                additionalNames.Add(_dbContext.AdditionalName.FirstOrDefault(x => x.Title == item.Title && x.ClientID == clientID).ID);
+                additionalNames.Add(_dbContext.AdditionalNames.FirstOrDefault(x => x.Title == item.Title && x.ClientID == clientID).ID);
             }
 
             List<int> dictionaryParams = new List<int>();
@@ -157,7 +157,7 @@ namespace Prokast.Server.Services
             List<int> photos = new List<int>();
             foreach (var item in productCreateDto.Photos)
             {
-                photos.Add(_dbContext.Photos.FirstOrDefault(x => x.Name == item.Name && x.ClientID == clientID).Id);
+                photos.Add(_dbContext.Photos.FirstOrDefault(x => x.Name == item.Name && x.ClientID == clientID).ID);
             }
 
             List<int> customParams = new List<int>();
@@ -350,7 +350,7 @@ namespace Prokast.Server.Services
 
             var returnList = new List<ProductGet>();
 
-            var additionalNames = _dbContext.AdditionalName.ToList();
+            var additionalNames = _dbContext.AdditionalNames.ToList();
             var customParams = _dbContext.CustomParams.ToList();
             var dictionaryParams = _dbContext.DictionaryParams.ToList();
             var priceList = _dbContext.PriceLists.ToList();
