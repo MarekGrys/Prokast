@@ -169,28 +169,29 @@ namespace Prokast.Server.Services
             return response;
         }
 
+        //TODO: poprawić
         public Response GetAllPricesInProduct(int clientID, int productID)
         {
-            var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), errorMsg = "Nie ma takiego cennika" };
+            //var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), errorMsg = "Nie ma takiego cennika" };
 
-            var product = _dbContext.Products.FirstOrDefault(x => x.ClientID == clientID && x.ID == productID);
-            if (product == null)
-            {
-                responseNull.errorMsg = "Nie ma takiego produktu!";
-                return responseNull;
-            }
-            var pricelistID = product.PriceListID;
+            //var product = _dbContext.Products.FirstOrDefault(x => x.ClientID == clientID && x.ID == productID);
+            //if (product == null)
+            //{
+            //    responseNull.errorMsg = "Nie ma takiego produktu!";
+            //    return responseNull;
+            //}
+            //var pricelistID = product.PriceListID;
 
-            var prices = _dbContext.Prices.Where(x => x.PriceListID == pricelistID).ToList();
+            //var prices = _dbContext.Prices.Where(x => x.PriceListID == pricelistID).ToList();
 
-            if (prices.Count() == 0)
-            {
-                return responseNull;
-            }
+            //if (prices.Count() == 0)
+            //{
+            //    return responseNull;
+            //}
 
-            var response = new PricesGetResponse() { ID = random.Next(1, 100000), Model = prices };
-            return response;
-
+            //var response = new PricesGetResponse() { ID = random.Next(1, 100000), Model = prices };
+            //return response;
+            return null;
         }
         #endregion
 

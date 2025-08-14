@@ -94,29 +94,30 @@ namespace Prokast.Server.Services
             return response;
         }
 
-        public Response GetAllParamsInProduct(int clientID, int productID)
-        {
-            var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), errorMsg = "Nie ma takiego parametru" };
+        //TODO: poprawić
+        //public Response GetAllParamsInProduct(int clientID, int productID)
+        //{
+        //    var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), errorMsg = "Nie ma takiego parametru" };
 
-            var product = _dbContext.Products.FirstOrDefault(x => x.ClientID == clientID && x.ID == productID);
-            if (product == null)
-            {
-                responseNull.errorMsg = "Nie ma takiego produktu!";
-                return responseNull;
-            }
-            var customParamsIDList = product.CustomParams.Split(",")
-                              .Select(x => int.Parse(x)).ToList();
+        //    var product = _dbContext.Products.FirstOrDefault(x => x.ClientID == clientID && x.ID == productID);
+        //    if (product == null)
+        //    {
+        //        responseNull.errorMsg = "Nie ma takiego produktu!";
+        //        return responseNull;
+        //    }
+        //    var customParamsIDList = product.CustomParams.Split(",")
+        //                      .Select(x => int.Parse(x)).ToList();
 
-            var customParamsList = _dbContext.CustomParams.Where(x => customParamsIDList.Contains(x.ID)).ToList();
-            if (customParamsList.Count() == 0)
-            {
-                return responseNull;
-            }
+        //    var customParamsList = _dbContext.CustomParams.Where(x => customParamsIDList.Contains(x.ID)).ToList();
+        //    if (customParamsList.Count() == 0)
+        //    {
+        //        return responseNull;
+        //    }
 
-            var response = new ParamsGetResponse() { ID = random.Next(1, 100000), Model = customParamsList };
-            return response;
+        //    var response = new ParamsGetResponse() { ID = random.Next(1, 100000), Model = customParamsList };
+        //    return response;
 
-        }
+        //}
         #endregion
 
         #region Edit
