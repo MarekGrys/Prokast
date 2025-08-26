@@ -440,6 +440,7 @@ const handlePriceListSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
                 onChange={(e) => setNewDictionaryParam(prev => ({ ...prev, value: e.target.value }))}
                 className="w-full p-2 border rounded-xl"
               />
+              <div className="flex items-center w-full max-w-md">
               <input
                 type="number"
                 placeholder="Region ID"
@@ -448,6 +449,8 @@ const handlePriceListSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
                 onChange={(e) => setNewDictionaryParam(prev => ({ ...prev, regionID: Number(e.target.value) }))}
                 className="w-full p-2 border rounded-xl"
               />
+              <p className="p-2 font-semibold bg-gray-100 border rounded-r-xl whitespace-nowrap">Region ID</p>
+              </div>
               <div className="flex justify-end gap-2">
                 <button type="button" onClick={() => setShowDictionaryParamModal(false)} className="px-4 py-2 bg-gray-300 rounded-xl">Anuluj</button>
                 <button type="button" onClick={handleAddDictionaryParam} className="px-4 py-2 bg-blue-500 text-white rounded-xl">Dodaj</button>
