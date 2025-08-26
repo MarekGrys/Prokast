@@ -1,5 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Navbar from '../Components/Navbar';
+import axios from 'axios';
+
+
+type CustomParam = {
+  id: number;       
+  name: string;
+  type: string;
+  value: string;
+  clientID: number;  
+};
+
 
 const AddProducts: React.FC = () => {
   const [form, setForm] = useState({
@@ -14,7 +25,7 @@ const AddProducts: React.FC = () => {
       { regionID: 0 , name: '', type: '', value: '' }
     ],
     customParams: [
-      { name: '', type: '', value: '' }
+      {id: 1, name: '', type: '', value: '', clientID: 1 }
     ],
     photos: [
       { name: '', value: '' }
@@ -44,10 +55,8 @@ const AddProducts: React.FC = () => {
   const [newDictionaryParam, setNewDictionaryParam] = useState({ regionID: 0, name: '', type: '', value: '' });
 
 
-  const [availableCustomParams, setAvailableCustomParams] = useState([
-  { name: 'Materiał', type: 'tekst', value: 'bawełna' },
-  { name: 'Sezon', type: 'tekst', value: 'lato' }
-  ]);
+ const [availableCustomParams, setAvailableCustomParams] = useState<CustomParam[]>([]);
+
 
   const [availablePhotos, setAvailablePhotos] = useState([
   { name: 'Front', value: '/images/front.jpg' },
@@ -100,6 +109,26 @@ const [newPriceList, setNewPriceList] = useState({ name: '' });
 const [showPriceListModal, setShowPriceListModal] = useState(false);
 
 
+useEffect(() => {
+  async function fetchCustomParams() {
+    try {
+      const resp = await axios.get(
+        "https://prokast-axgwbmd6cnezbmet.germanywestcentral-01.azurewebsites.net/api/params?clientID=1"
+      );
+      const data = resp.data.model;
+
+      if (Array.isArray(data)) {
+        setAvailableCustomParams(data);
+        setForm(prev => ({ ...prev, customParams: data })); // <-- od razu ustawiamy w formularzu
+      }
+    } catch (err) {
+      console.error("Nie udało się pobrać parametrów:", err);
+    }
+  }
+  fetchCustomParams();
+}, []);
+
+
 
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -150,16 +179,16 @@ const [showPriceListModal, setShowPriceListModal] = useState(false);
     }
   };
 
-  const handleCustomParamSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
-  const selectedValue = e.target.value;
-  if (selectedValue === '__add_new__') {
+const handleCustomParamSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const selectedId = parseInt(e.target.value, 10);
+  if (e.target.value === '__add_new__') {
     setShowCustomParamModal(true);
   } else {
-    const selected = availableCustomParams.find(item => item.value === selectedValue || item.name === selectedValue);
+    const selected = availableCustomParams.find(item => item.id === selectedId);
     if (selected) {
       setForm(prev => ({
         ...prev,
-        customParams: [selected]
+        customParams: [selected] // <-- wkładamy cały obiekt
       }));
     }
   }
@@ -225,12 +254,18 @@ const handlePriceListSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setShowDictionaryParamModal(false);
   };
 
-  const handleAddCustomParam = () => {
-  setAvailableCustomParams(prev => [...prev, newCustomParam]);
-  setForm(prev => ({ ...prev, customParams: [newCustomParam] }));
-  setNewCustomParam({ name: '', type: '', value: '' });
-  setShowCustomParamModal(false);
+const handleAddCustomParam = () => {
+  const newParam: CustomParam = {
+    id: Date.now(),       // lokalne id (żeby TS się nie czepiał)
+    clientID: 1,          // albo pobierz dynamicznie
+    ...newCustomParam,
   };
+
+  setAvailableCustomParams(prev => [...prev, newParam]);
+  setForm(prev => ({ ...prev, customParams: [newParam] }));
+  setNewCustomParam({ name: "", type: "", value: "" });
+  setShowCustomParamModal(false);
+};
 
   const handleAddPhoto = () => {
     setAvailablePhotos(prev => [...prev, newPhoto]);
@@ -271,7 +306,7 @@ const handlePriceListSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     <div className="min-h-screen flex flex-col  bg-gradient-to-br from-blue-100 via-white to-blue-200">
         <Navbar />
         <main className="flex flex-col items-center justify-center w-screen mt-10">
-      <form onSubmit={handleSubmit} className="w-full max-w-2xl p-6 bg-white/80 backdrop-blur-md shadow-lg rounded-2xl space-y-4">
+      <form onSubmit={handleSubmit} className="w-full max-w-2xl p-6 bg-white/80 backdrop-blur-md shadow-lg rounded-2xl space-y-2">
         <h2 className="text-2xl font-bold text-center text-gray-800">Dodaj produkt</h2>
 
         <input name="name" placeholder="Nazwa" className="w-full p-2 border rounded-xl" value={form.name} onChange={handleChange} />
@@ -310,19 +345,19 @@ const handlePriceListSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
         </select>
 
         <h3 className="font-semibold mt-4">Własne parametry</h3>
-        <select
-          value={form.customParams[0]?.name || ''}
-          onChange={handleCustomParamSelect}
-          className="w-full p-2 border rounded-xl"
-        >
-          <option value="">-- Wybierz własny parametr --</option>
-          {availableCustomParams.map((item, i) => (
-            <option key={i} value={item.name}>
-              {item.name} ({item.type}) – {item.value}
-            </option>
-          ))}
-          <option value="__add_new__" className="text-blue-500 font-semibold">+ Dodaj nowy parametr</option>
-        </select>
+          <select
+            value={form.customParams[0]?.name || ''}
+            onChange={handleCustomParamSelect}
+            className="w-full p-2 border rounded-xl"
+          >
+            <option value="">-- Wybierz własny parametr --</option>
+            {availableCustomParams.map((item, i) => (
+              <option key={item.id} value={item.id}>
+                {item.name} ({item.type}) – {item.value}
+              </option>
+            ))}
+            <option value="__add_new__" className="text-blue-500 font-semibold">+ Dodaj nowy parametr</option>
+          </select>
 
 
         <h3 className="font-semibold mt-4">Zdjęcie</h3>
