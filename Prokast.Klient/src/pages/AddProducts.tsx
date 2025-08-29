@@ -12,6 +12,15 @@ type CustomParam = {
 };
 
 
+type AdditionalName = {
+  id: number;
+  clientID: number;
+  title: string;
+  region: number;
+  value: string;
+};
+
+
 const AddProducts: React.FC = () => {
   const [form, setForm] = useState({
     name: '',
@@ -38,10 +47,7 @@ const AddProducts: React.FC = () => {
     }
   });
 
-  const [availableAdditionalNames, setAvailableAdditionalNames] = useState([
-    { title: 'Alias 1', region: 1, value: 'alias-1' },
-    { title: 'Alias 2', region: 2, value: 'alias-2' }
-  ]);
+  const [availableAdditionalNames, setAvailableAdditionalNames] = useState<AdditionalName[]>([]);
 
   const [availableDictionaryParams, setAvailableDictionaryParams] = useState([
     { regionID: 1, name: 'Kolor', type: 'tekst', value: 'czerwony' },
@@ -129,6 +135,26 @@ useEffect(() => {
 }, []);
 
 
+useEffect(() => {
+    async function fetchAdditionalNames() {
+      try {
+        const resp = await axios.get(
+          "https://prokast-axgwbmd6cnezbmet.germanywestcentral-01.azurewebsites.net/api/additionaldescriptions?clientID=1"
+        );
+        const data = resp.data.model;
+
+        if (Array.isArray(data)) {
+          setAvailableAdditionalNames(data);
+          setForm(prev => ({ ...prev, additionalNames: data }));
+        }
+      } catch (err) {
+        console.error("Nie udało się pobrać dodatkowych nazw:", err);
+      }
+    }
+    fetchAdditionalNames();
+  }, []);
+
+
 
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -188,7 +214,7 @@ const handleCustomParamSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     if (selected) {
       setForm(prev => ({
         ...prev,
-        customParams: [selected] // <-- wkładamy cały obiekt
+        customParams: [selected]
       }));
     }
   }
@@ -241,11 +267,17 @@ const handlePriceListSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
 
 
   const handleAddAdditionalName = () => {
-    setAvailableAdditionalNames(prev => [...prev, newAdditionalName]);
-    setForm(prev => ({ ...prev, additionalNames: [newAdditionalName] }));
-    setNewAdditionalName({ title: '', region: 0, value: '' });
-    setShowAdditionalNameModal(false);
+  const newName: AdditionalName = {
+    id: Date.now(),        
+    clientID: 1,           
+    ...newAdditionalName   
   };
+
+  setAvailableAdditionalNames(prev => [...prev, newName]);
+  setForm(prev => ({ ...prev, additionalNames: [newName] }));
+  setNewAdditionalName({ title: '', region: 0, value: '' });
+  setShowAdditionalNameModal(false);
+};
 
   const handleAddDictionaryParam = () => {
     setAvailableDictionaryParams(prev => [...prev, newDictionaryParam]);
@@ -256,8 +288,8 @@ const handlePriceListSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
 
 const handleAddCustomParam = () => {
   const newParam: CustomParam = {
-    id: Date.now(),       // lokalne id (żeby TS się nie czepiał)
-    clientID: 1,          // albo pobierz dynamicznie
+    id: Date.now(),       
+    clientID: 1,          
     ...newCustomParam,
   };
 
