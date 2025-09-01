@@ -55,14 +55,13 @@ namespace Prokast.Server.Services
                 Login = registration.Login,
                 Password = getHashed(registration.Password)
             };
-           
+
             _dbContext.Accounts.Add(account);
-            _dbContext.SaveChanges(); 
-                var test = _dbContext.Accounts.FirstOrDefault(x => x.Login == account.Login);
+            _dbContext.SaveChanges();
+            var test = _dbContext.Accounts.FirstOrDefault(x => x.Login == account.Login);
 
             var client = new Client
             {
-                AccountID = test.ID,
                 FirstName = reg.FirstName,
                 LastName = reg.LastName,
                 BusinessName = reg.BusinessName,
@@ -72,7 +71,6 @@ namespace Prokast.Server.Services
                 PostalCode = reg.PostalCode,
                 City = reg.City,
                 Country = reg.Country
-
             };
             _dbContext.Clients.Add(client);
             _dbContext.SaveChanges(); 

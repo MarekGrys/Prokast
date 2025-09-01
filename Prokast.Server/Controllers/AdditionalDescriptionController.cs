@@ -20,11 +20,11 @@ namespace Prokast.Server.Controllers
         [HttpPost]
         [ProducesResponseType(typeof(Response), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
-        public ActionResult<Response> CreateAdditionalDescription([FromBody] AdditionalDescriptionCreateDto additionalDescription, [FromQuery] int clientID)
+        public ActionResult<Response> CreateAdditionalDescription([FromBody] AdditionalDescriptionCreateDto additionalDescription, [FromQuery] int clientID, [FromQuery]int regionID, [FromQuery] int productID)
         {
             try
             {
-                var result = _additionalDescriptionService.CreateAdditionalDescription(additionalDescription, clientID);
+                var result = _additionalDescriptionService.CreateAdditionalDescription(additionalDescription, clientID, regionID, productID);
                 if (result is ErrorResponse) return BadRequest(result);
                 return Created();
             }
