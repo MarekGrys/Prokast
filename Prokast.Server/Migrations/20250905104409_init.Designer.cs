@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Prokast.Server.Entities;
 
@@ -11,9 +12,11 @@ using Prokast.Server.Entities;
 namespace Prokast.Server.Migrations
 {
     [DbContext(typeof(ProkastServerDbContext))]
-    partial class ProkastServerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250905104409_init")]
+    partial class init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -540,7 +543,6 @@ namespace Prokast.Server.Migrations
                         .HasColumnType("int");
 
                     b.Property<int?>("ProductID")
-
                         .HasColumnType("int");
 
                     b.Property<int>("Quantity")
@@ -554,7 +556,6 @@ namespace Prokast.Server.Migrations
                     b.HasIndex("ProductID")
                         .IsUnique()
                         .HasFilter("[ProductID] IS NOT NULL");
-
 
                     b.HasIndex("WarehouseID");
 
@@ -781,7 +782,6 @@ namespace Prokast.Server.Migrations
                     b.HasOne("Prokast.Server.Entities.Product", "Product")
                         .WithOne("StoredProduct")
                         .HasForeignKey("Prokast.Server.Entities.StoredProduct", "ProductID");
-
 
                     b.HasOne("Prokast.Server.Entities.Warehouse", "Warehouse")
                         .WithMany("StoredProducts")
