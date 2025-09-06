@@ -30,6 +30,13 @@ namespace Prokast.Server.Services
                 return responseNull;
             }
 
+            var client = _dbContext.Clients.FirstOrDefault(x => x.ID == clientID);
+            if (client == null)
+            {
+                responseNull.errorMsg = "Nie ma takiego klienta!";
+                return responseNull;
+            }
+
             var warehouse = new Warehouse
             {
                 Name = warehouseCreateDto.Name,
@@ -41,7 +48,7 @@ namespace Prokast.Server.Services
                 ClientID = clientID,
             };
 
-            _dbContext.Warehouses.Add(warehouse);
+            client.Warehouses.Add(warehouse);
             _dbContext.SaveChanges();
 
             var response = new Response() { ID = random.Next(1,100000), ClientID = clientID };
@@ -64,13 +71,13 @@ namespace Prokast.Server.Services
 
         public Response GetWarehouseById(int clientID, int ID)
         {
-            var warehouse = _dbContext.Warehouses.Where(x => x.ID == ID && x.ClientID == clientID).ToList();
+            var warehouse = _dbContext.Warehouses.FirstOrDefault(x => x.ID == ID && x.ClientID == clientID);
             if (warehouse == null)
             {
                 var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Brak magazynów!" };
                 return responseNull;
             }
-            var response = new WarehouseGetResponse() { ID = random.Next(1,100000), ClientID = clientID, Model = warehouse};
+            var response = new WarehouseGetOneResponse() { ID = random.Next(1,100000), ClientID = clientID, Model = warehouse};
             return response;
         }
         public Response GetWarehousesByName(int clientID, string name)
@@ -165,10 +172,17 @@ namespace Prokast.Server.Services
         #region Delete
         public Response DeleteWarehouse(int clientID, int ID)
         {
+            var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Nie ma takiego magazynu!" };
             var warehouse = _dbContext.Warehouses.FirstOrDefault(x => x.ClientID == clientID && x.ID == ID);
             if (warehouse == null)
             {
-                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Nie ma takiego magazynu!" };
+                return responseNull;
+            }
+
+            var client = _dbContext.Clients.FirstOrDefault(x => x.ID == clientID);
+            if (client == null)
+            {
+                responseNull.errorMsg = "Nie ma takiego klienta!";
                 return responseNull;
             }
 
@@ -185,6 +199,8 @@ namespace Prokast.Server.Services
                 worker.WarehouseID = null;
                 _dbContext.SaveChanges();
             }
+
+            client.Warehouses.Remove(warehouse);
 
             _dbContext.Warehouses.Remove(warehouse);
             _dbContext.SaveChanges();

@@ -29,17 +29,27 @@ namespace Prokast.Server.Services
         #region Create
         public Response CreatePriceList([FromBody] PriceListsCreateDto priceLists, int clientID, int productID)
         {
+            var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Błędnie podane dane" };
             if (priceLists == null)
             {
-                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Błędnie podane dane" };
                 return responseNull;
             }
-            var priceList = new PriceLists
+
+            var product = _dbContext.Products.FirstOrDefault(x => x.ID == productID && x.ClientID == clientID);
+            if (product == null)
+            {
+                responseNull.errorMsg = "Nie ma takiego produktu!";
+                return responseNull;
+            }
+
+            var priceList = new PriceList
             {
                 Name = priceLists.Name.ToString(),
                 ProductID = productID
             };
-            _dbContext.PriceLists.Add(priceList);
+
+
+            product.PriceList = priceList;
             _dbContext.SaveChanges();
 
             var response = new Response() { ID = random.Next(1, 100000), ClientID = clientID };
@@ -48,17 +58,17 @@ namespace Prokast.Server.Services
 
         public Response CreatePrice([FromBody] PricesDto prices, int productID, int clientID)
         {
-            //var input = _mapper.Map<PricesDto>(prices);
+            var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Błędnie podane dane" };
+
             if (prices == null)
             {
-                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Błędnie podane dane" };
                 return responseNull;
             }
 
-            var priceListID = _dbContext.Products.FirstOrDefault(x => x.ID == productID).PriceLists.ID;
-            if (priceListID == null)
+            var priceList = _dbContext.PriceLists.FirstOrDefault(x => x.ProductID == productID && x.Product.ClientID == clientID);
+            if (priceList == null)
             {
-                var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Nie ma takiej listy" };
+                responseNull.errorMsg = "Nie ma takiej listy!";
                 return responseNull;
             }
 
@@ -69,10 +79,10 @@ namespace Prokast.Server.Services
                 VAT = prices.VAT,
                 Brutto = prices.Brutto,
                 RegionID = prices.RegionID,
-                PriceListID = priceListID,
+                PriceListID = priceList.ID,
             };
 
-            _dbContext.Prices.Add(price);
+            priceList.Prices.Add(price);
             _dbContext.SaveChanges();
 
             var response = new Response() { ID = random.Next(1, 100000), ClientID = clientID };
