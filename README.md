@@ -13,9 +13,6 @@ Projekt jest podzielony na trzy główne podprojekty:
 
 ## Zespół
 
-- **Opieka projektu**:
-  - [Bartłomiej Całus](https://github.com/BartlomiejCalus)
-
 - **FontEnd**: 
   - [Jacek Pelikan](https://github.com/Jacek912)
   - [Jakub Reszczyński](https://github.com/JakubReszczynski)
@@ -23,3 +20,4 @@ Projekt jest podzielony na trzy główne podprojekty:
 - **BackEnd**: 
   - [Marek Grys](https://github.com/MarekGrys)
   - [Hubert Ciura](https://github.com/HubertCiura)
+  - [Bartłomiej Całus](https://github.com/BartlomiejCalus)
