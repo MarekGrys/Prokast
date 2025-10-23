@@ -181,18 +181,12 @@ namespace Prokast.Server.Services
 
         public Response CreateProduct(ProductCreateDto productCreateDto, int clientID, int regionID)
         {
-            var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Błędnie podane dane" };
             if (productCreateDto == null)
-            {
-                return responseNull;
-            }
+                return new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Błędnie podane dane" };
 
             var client = _dbContext.Clients.FirstOrDefault(x => x.ID == clientID);
             if (client == null)
-            {
-                responseNull.errorMsg = "Nie ma takiego klienta!";
-                return responseNull;
-            }
+                return new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Nie ma takiego klienta!" };
 
             var product = new Product
             {
@@ -266,18 +260,15 @@ namespace Prokast.Server.Services
                 }
             }
 
-            var createdProduct = _dbContext.Products.OrderByDescending(x => x.ID).FirstOrDefault();
+            /*var createdProduct = _dbContext.Products.OrderByDescending(x => x.ID).FirstOrDefault();
             if (createdProduct == null)
-            {
-                responseNull.errorMsg = "Błąd produktu!";
-                return responseNull;
-            }
+                return new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Błąd produktu!" };*/
 
-            client.Products.Add(createdProduct);
+            client.Products.Add(newProduct);
             _dbContext.SaveChanges();
 
             var response = new Response() { ID = random.Next(1, 100000), ClientID = clientID };
-            return response;
+            return new Response() { ID = random.Next(1, 100000), ClientID = clientID };
         }
 
 
@@ -440,6 +431,26 @@ namespace Prokast.Server.Services
             return response;
 
         }*/
+
+        public Response GetOneProduct(int clientID, int productID)
+        {
+            var product = _dbContext.Products
+                .Include(x => x.AdditionalDescriptions)
+                .Include(x => x.AdditionalNames)
+                .Include(x => x.DictionaryParams)
+                .Include(x => x.CustomParams)
+                .Include(x => x.Photos)
+                .Include(x => x.PriceList)
+                .ThenInclude(y => y.Prices)
+                .FirstOrDefault(x => x.ClientID == clientID && x.ID == productID);
+            if (product == null)
+                return new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Nie ma takiego produktu!" };
+            
+            var dto = _mapper.Map<ProductGetDto>(product);
+
+            return new ProductsGetResponse() { ID = random.Next(1, 100000), ClientID = clientID, Model = dto };
+        }
+
         #endregion
 
         #region Delete
@@ -449,9 +460,12 @@ namespace Prokast.Server.Services
 
             var product = _dbContext.Products.FirstOrDefault(x => x.ID == productID && x.ClientID == clientID);
             if (product == null)
-            {
-                return new DeleteResponse() { ID = random.Next(1, 100000), ClientID = clientID, deleteMsg = "Nie ma takiego produktu!" };
+                return new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Nie ma takiego produktu!" };
 
+            var storedproduct = _dbContext.StoredProducts.FirstOrDefault(x => x.ProductID == product.ID);
+            if (storedproduct != null)
+            {
+                _dbContext.StoredProducts.Remove(storedproduct);
             }
 
             _dbContext.Products.Remove(product);
@@ -507,18 +521,20 @@ namespace Prokast.Server.Services
         {
             var product = _dbContext.Products.FirstOrDefault(x => x.ID == productID && x.ClientID == clientID);
             if (product == null)
-            {
                 return new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Nie ma takiego produktu!" };
-            }
 
-            product.Name = productEdit.Name;
-            product.SKU = productEdit.SKU;
-            product.EAN = productEdit.EAN;
-            product.Description = productEdit.Description;
+            product.Name = productEdit.Name ?? product.Name;
+
+            product.SKU = productEdit.SKU ?? product.SKU;
+
+            product.EAN = productEdit.EAN ?? product.EAN;
+
+            product.Description = productEdit.Description ?? product.Description;
             product.ModificationDate = DateTime.Now;
             _dbContext.SaveChanges();
 
             return new ProductEditResponse() { ID = random.Next(1, 100000), ClientID = clientID, Model = productEdit };
+
         }
 
         #endregion
