@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Prokast.Server.Entities;
+using System.ComponentModel.DataAnnotations;
 
 namespace Prokast.Server.Models.AccountModels
 {
@@ -8,9 +9,7 @@ namespace Prokast.Server.Models.AccountModels
         public string FirstName { get; set; }
         [Required]
         public string LastName { get; set; }
-        [Required]
-        public string Email { get; set; }
         public int? WarehouseID { get; set; }
-        public int? Role { get; set; }
+        public int RoleId { get; set; }
     }
 }

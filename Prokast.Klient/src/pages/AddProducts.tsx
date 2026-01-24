@@ -2,6 +2,7 @@
 import Navbar from '../Components/Navbar';
 import axios from 'axios';
 
+const API_URL = process.env.REACT_APP_API_URL; 
 
 type CustomParam = {
   id: number;       
@@ -127,7 +128,7 @@ useEffect(() => {
   async function fetchCustomParams() {
     try {
       const resp = await axios.get(
-        "https://prokast-axgwbmd6cnezbmet.germanywestcentral-01.azurewebsites.net/api/params?clientID=1"
+        `${API_URL}/api/params?clientID=1`
       );
       const data = resp.data.model;
 
@@ -147,7 +148,7 @@ useEffect(() => {
     async function fetchAdditionalNames() {
       try {
         const resp = await axios.get(
-          "https://prokast-axgwbmd6cnezbmet.germanywestcentral-01.azurewebsites.net/api/additionaldescriptions?clientID=1"
+          `${API_URL}/api/additionaldescriptions?clientID=1`
           
         );
         const data = resp.data.model;
@@ -344,7 +345,7 @@ const handleAddCustomParam = () => {
 
   return (
     
-    <div className="min-h-screen flex flex-col  bg-gradient-to-br from-blue-100 via-white to-blue-200">
+    <div className="min-h-screen flex flex-col  bg-gradient-to-br from-green-100 via-white to-green-200">
         <Navbar />
         <main className="flex flex-col items-center justify-center w-screen mt-10">
       <form onSubmit={handleSubmit} className="w-full max-w-2xl p-6 bg-white/80 backdrop-blur-md shadow-lg rounded-2xl space-y-2">

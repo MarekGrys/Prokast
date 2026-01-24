@@ -50,16 +50,9 @@ namespace Prokast.Server.Services
             if (reg == null)
                 return new ErrorResponse() { ID = random.Next(1, 100000), errorMsg = "Błędne dane rejestracji" };
             
-            var account = new Account
-            {
-                Login = registration.Login,
-                Password = getHashed(registration.Password),
-                Role = 1
-            };
-
-            _dbContext.Accounts.Add(account);
-            _dbContext.SaveChanges();
-            var test = _dbContext.Accounts.FirstOrDefault(x => x.Login == account.Login);
+            var role = _dbContext.Roles.FirstOrDefault(x => x.ID == 2);
+            if (role == null)
+                return new ErrorResponse() { ID = random.Next(1, 100000), errorMsg = "Błąd przy przypisaniu roli" };
 
             var client = new Client
             {
@@ -74,9 +67,22 @@ namespace Prokast.Server.Services
                 Country = reg.Country
             };
             _dbContext.Clients.Add(client);
-            _dbContext.SaveChanges(); 
+            _dbContext.SaveChanges();
+            
+            var account = new Account
+            {
+                Login = registration.Login,
+                Password = getHashed(registration.Password),
+                RoleID = role.ID,
+                ClientID = client.ID,
+                FirstName = client.FirstName,
+                LastName = client.LastName
+            };
 
-            return new ClientRegisterResponse() { ID = random.Next(1, 100000), ClientID = test.ID, Registration = reg };
+            _dbContext.Accounts.Add(account);
+            _dbContext.SaveChanges();
+
+            return new ClientRegisterResponse() { ID = random.Next(1, 100000), ClientID = client.ID, Registration = reg };
         }
         #endregion
 

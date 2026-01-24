@@ -1,15 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Prokast.Server.Entities;
+using System.ComponentModel.DataAnnotations;
 
 namespace Prokast.Server.Models.AccountModels
 {
     public class AccountEditDto
     {
-        [Required]
-        public string Login { get; set; }
-        [Required]
-        public int WarehouseID { get; set; }
-        [Required]
-        public int Role { get; set; }
-
+        public int Id { get; set; }
+        public required string FirstName { get; set; }
+        public required string LastName { get; set; }
+        public int? WarehouseID { get; set; }
+        public int RoleId { get; set; }
     }
 }

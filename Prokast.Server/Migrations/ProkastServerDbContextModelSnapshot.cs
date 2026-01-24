@@ -17,7 +17,7 @@ namespace Prokast.Server.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.10")
+                .HasAnnotation("ProductVersion", "9.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -47,7 +47,7 @@ namespace Prokast.Server.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("Role")
+                    b.Property<int?>("RoleID")
                         .HasColumnType("int");
 
                     b.Property<int?>("WarehouseID")
@@ -56,6 +56,8 @@ namespace Prokast.Server.Migrations
                     b.HasKey("ID");
 
                     b.HasIndex("ClientID");
+
+                    b.HasIndex("RoleID");
 
                     b.HasIndex("WarehouseID");
 
@@ -525,6 +527,23 @@ namespace Prokast.Server.Migrations
                     b.ToTable("Regions");
                 });
 
+            modelBuilder.Entity("Prokast.Server.Entities.Role", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<string>("RoleName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Roles");
+                });
+
             modelBuilder.Entity("Prokast.Server.Entities.StoredProduct", b =>
                 {
                     b.Property<int>("ID")
@@ -540,7 +559,6 @@ namespace Prokast.Server.Migrations
                         .HasColumnType("int");
 
                     b.Property<int?>("ProductID")
-
                         .HasColumnType("int");
 
                     b.Property<int>("Quantity")
@@ -554,7 +572,6 @@ namespace Prokast.Server.Migrations
                     b.HasIndex("ProductID")
                         .IsUnique()
                         .HasFilter("[ProductID] IS NOT NULL");
-
 
                     b.HasIndex("WarehouseID");
 
@@ -609,11 +626,17 @@ namespace Prokast.Server.Migrations
                         .WithMany("Accounts")
                         .HasForeignKey("ClientID");
 
+                    b.HasOne("Prokast.Server.Entities.Role", "Role")
+                        .WithMany()
+                        .HasForeignKey("RoleID");
+
                     b.HasOne("Prokast.Server.Entities.Warehouse", "Warehouse")
                         .WithMany("Accounts")
                         .HasForeignKey("WarehouseID");
 
                     b.Navigation("Client");
+
+                    b.Navigation("Role");
 
                     b.Navigation("Warehouse");
                 });
@@ -781,7 +804,6 @@ namespace Prokast.Server.Migrations
                     b.HasOne("Prokast.Server.Entities.Product", "Product")
                         .WithOne("StoredProduct")
                         .HasForeignKey("Prokast.Server.Entities.StoredProduct", "ProductID");
-
 
                     b.HasOne("Prokast.Server.Entities.Warehouse", "Warehouse")
                         .WithMany("StoredProducts")

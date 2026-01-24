@@ -7,6 +7,8 @@ const EditParams: React.FC = () => {
   const [type, setType] = useState('');
   const [value, setValue] = useState('');
 
+  const API_URL = process.env.REACT_APP_API_URL; 
+
   useEffect(() => {
  
     setParams(['Rozmiar', 'Kolor', 'Materiał']);
@@ -23,7 +25,7 @@ const EditParams: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-white to-blue-200 p-4">
+    <div className="min-h-screen bg-gradient-to-br from-green-100 via-white to-green-200 p-4">
       <Navbar />
       <div className="max-w-xl mx-auto bg-white/80 backdrop-blur-md shadow-lg rounded-2xl p-6 mt-8">
         <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">Edytuj Parametr</h1>

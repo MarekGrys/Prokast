@@ -40,6 +40,7 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.Services.AddDbContext<ProkastServerDbContext>(opt=>
 {
+    // DefaultConnection jak konczysz to zmien a jak robisz u siebie to wpisz DOCKER
     opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), sqlOptions =>
         sqlOptions.EnableRetryOnFailure(
             maxRetryCount: 5,
@@ -89,6 +90,7 @@ builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IBlobPhotoStorageService,BlobPhotoStorageService>();
 builder.Services.AddScoped<ISeeder, RegionSeeder>();
 builder.Services.AddScoped<ISeeder, DictionaryParamSeeder>();
+builder.Services.AddScoped<ISeeder, RoleSeeder>();
 builder.Services.AddScoped<ISeeder, ClientSeeder>();
 builder.Services.AddScoped<ISeeder, ProductSeeder>();
 builder.Services.AddScoped<ISeeder, WarehouseSeeder>();

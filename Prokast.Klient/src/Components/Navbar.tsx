@@ -1,49 +1,124 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React from "react";
+import { Link } from "react-router-dom";
+import Cookies from "js-cookie";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Navbar: React.FC = () => {
+  const [openDropdown, setOpenDropdown] = React.useState<string | null>(null);
+
   return (
-    <nav className="bg-white shadow-md rounded-2xl px-6 py-3 flex justify-between items-center">
+    <>
+    <nav
+      className="bg-white shadow-md rounded-2xl px-4 py-3 flex flex-wrap justify-between items-center relative"
+      onMouseLeave={() => setOpenDropdown(null)}
+    >
+      {/* Logo */}
       <Link to="/dashboard">
         <h1 className="text-xl font-bold text-gray-800">Prokast</h1>
       </Link>
-      <ul className="flex space-x-4">
+
+      {/* Menu */}
+      <ul className="flex flex-wrap gap-4 items-center mt-2 md:mt-0">
+        {/* Strona główna */}
+
+        {/* Produkty */}
+        <li
+          className="relative"
+          onMouseEnter={() => setOpenDropdown("products")}
+        >
+          <button className="cursor-pointer text-gray-700 hover:text-blue-500 transition font-medium px-2 py-1 min-w-[100px]">
+            Produkty
+          </button>
+          <div
+            className={`absolute left-0 mt-2 bg-white shadow-lg rounded-xl py-2 w-48 z-50 origin-top-left
+              transform transition-all duration-150
+              ${openDropdown === "products"
+                ? "opacity-100 scale-100 translate-y-0 pointer-events-auto"
+                : "opacity-0 scale-95 -translate-y-1 pointer-events-none"
+              }`}
+          >
+            <Link
+              to="/CreateProduct"
+              className="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition"
+            >
+              Dodaj Produkt
+            </Link>
+            <Link
+              to="/ProductsList"
+              className="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition"
+            >
+              Lista Produktów
+            </Link>
+          </div>
+        </li>
+
+        {/* Użytkownicy */}
         <li>
           <Link
-            to="/RegisterForm"
-            className="text-gray-700 hover:text-blue-500 transition font-medium"
-          >
-            Rejestracja
+            to="/UsersList"
+            className="text-gray-700 hover:text-blue-500 transition font-medium">
+            Lista użytkowników
           </Link>
         </li>
+
+        {/* Magazyny */}
+        <li
+          className="relative"
+          onMouseEnter={() => setOpenDropdown("warehouses")}
+        >
+          <button className="cursor-pointer text-gray-700 hover:text-blue-500 transition font-medium px-2 py-1 min-w-[100px]">
+            Magazyny
+          </button>
+          <div
+            className={`absolute left-0 mt-2 bg-white shadow-lg rounded-xl py-2 w-48 z-50 origin-top-left
+              transform transition-all duration-150
+              ${openDropdown === "warehouses"
+                ? "opacity-100 scale-100 translate-y-0 pointer-events-auto"
+                : "opacity-0 scale-95 -translate-y-1 pointer-events-none"
+              }`}
+          >
+            <Link
+              to="/AddWarehouse"
+              className="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition"
+            >
+              Dodaj Magazyn
+            </Link>
+            <Link
+              to="/WarehouseList"
+              className="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition"
+            >
+              Lista Magazynów
+            </Link>
+          </div>
+        </li>
+
+        {/* Cenniki */}
         <li>
           <Link
-            to="/AddParams"
+            to="/PriceList"
             className="text-gray-700 hover:text-blue-500 transition font-medium"
           >
-            Dodaj Parametry
+            Cenniki
           </Link>
         </li>
+
+        {/* Wyloguj */}
         <li>
-          <Link
-            to="/addProducts"
-            className="text-gray-700 hover:text-blue-500 transition font-medium"
-          >
-            Dodaj Produkt
-          </Link>
-          
-        </li>
-        <li>
-          <Link
-            to="/logout"
-            className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-xl transition"
+          <button
+            onClick={() => {
+              Cookies.remove("token");
+              window.location.href = "/";
+            }}
+            className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-xl transition"
           >
             Wyloguj
-          </Link>
+          </button>
         </li>
-        
       </ul>
     </nav>
+    <ToastContainer position="top-right" autoClose={3000} hideProgressBar />
+    </>
   );
 };
 

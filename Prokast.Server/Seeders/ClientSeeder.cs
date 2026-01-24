@@ -9,7 +9,7 @@ namespace Prokast.Server.Seeders
 {
     public class ClientSeeder: ISeeder
     {
-        public int SeedOrder { get; init; } = 3;
+        public int SeedOrder { get; init; } = 4;
 
         public static string getHashed(string text)
         {
@@ -27,6 +27,9 @@ namespace Prokast.Server.Seeders
         {
             if (!dbContext.Clients.Any())
             {
+                var roleMaster = dbContext.Roles.FirstOrDefault(x => x.RoleName == "Master");
+                var roleAdmin = dbContext.Roles.FirstOrDefault(x => x.RoleName == "Admin");
+                var roleHeadAdmin = dbContext.Roles.FirstOrDefault(x => x.RoleName == "HeadAdmin");
                 var clientList = new List<Client>()
                 {
                     new()
@@ -45,13 +48,19 @@ namespace Prokast.Server.Seeders
                         {
                             new()
                             {
+                                FirstName = "Mariusz",
+                                LastName = "Metalowiec II",
                                 Login = "mariuszmetalowiec",
                                 Password = getHashed("password"),
+                                RoleID = roleAdmin.ID,
                             },
                             new()
                             {
+                                FirstName = "Marcin",
+                                LastName = "Marożek",
                                 Login = "marmar123",
                                 Password = getHashed("marmar"),
+                                RoleID = roleHeadAdmin.ID,
                             }
                         }
                     },
@@ -71,13 +80,19 @@ namespace Prokast.Server.Seeders
                         {
                             new()
                             {
+                                FirstName = "Albert",
+                                LastName = "Korniszon Jr.",
                                 Login = "albertkorniszon",
                                 Password = getHashed("albert"),
+                                RoleID = 2
                             },
                             new()
                             {
+                                FirstName = "Uga",
+                                LastName = "Uga",
                                 Login = "ugauga444",
                                 Password = getHashed("ugaaa"),
+                                RoleID = 3
                             }
                         }
                     }

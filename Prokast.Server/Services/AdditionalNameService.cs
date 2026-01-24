@@ -28,7 +28,7 @@ namespace Prokast.Server.Services
         }
 
         #region Create
-        public Response CreateAdditionalName([FromBody] AdditionalNameDto additionalNameDto, int clientID, int regionID, int productID)
+        public Response CreateAdditionalName([FromBody] AdditionalNameDto additionalNameDto, int clientID, int productID)
         {    
             var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Błędnie podane dane" };
 
@@ -43,7 +43,7 @@ namespace Prokast.Server.Services
             {
                 Title = additionalNameDto.Title.ToString(),
                 Value = additionalNameDto.Value.ToString(),
-                RegionID = regionID,
+                RegionID = additionalNameDto.RegionID,
                 Product = product
             };
 
@@ -110,7 +110,7 @@ namespace Prokast.Server.Services
         {
 
             var addNameList = _dbContext.AdditionalNames.Where(x => x.ProductID == productID).ToList();
-            if (addNameList.Count() == 0)
+            if (addNameList is null)
                 return new ErrorResponse() { ID = random.Next(1, 100000), errorMsg = "Brak parametrów" };
 
             return new AdditionalNameGetResponse() { ID = random.Next(1, 100000), Model = addNameList };

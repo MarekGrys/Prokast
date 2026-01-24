@@ -12,6 +12,11 @@ using System.Text;
 using System.IdentityModel.Tokens.Jwt;
 using Prokast.Server.Models.JWT;
 using Microsoft.AspNetCore.Authorization;
+using Prokast.Server.Models.ResponseModels.CustomParamsResponseModels;
+using Prokast.Server.Services;
+using Microsoft.Identity.Client;
+using Prokast.Server.Models.ClientModels;
+using Azure.Storage.Blobs.Models;
 
 namespace Prokast.Server.Controllers
 {
@@ -25,19 +30,63 @@ namespace Prokast.Server.Controllers
             _LogInService = logInService;
         }
 
+        private int GetClientIdFromToken()
+        {
+            var claim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+            if (claim == null)
+                throw new UnauthorizedAccessException("Token nie zawiera ClientID!");
+
+            return int.Parse(claim.Value);
+        }
+
+        private int GetAccountIdFromToken()
+        {
+            var claim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.UserData);
+            if (claim == null)
+                throw new UnauthorizedAccessException("Token nie zawiera AccountID!");
+
+            return int.Parse(claim.Value);
+        }
+
+        private int GetRoleIdFromToken()
+        {
+            var claim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role);
+            if (claim == null)
+                throw new UnauthorizedAccessException("Token nie zawiera RoleID!");
+
+            return int.Parse(claim.Value);
+        }
+
         #region LogIn
         [HttpPost]
-        [ProducesResponseType(typeof(LogInLoginResponse),StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(LogInLoginResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
-        public ActionResult<TokenResponseDto> Log_In([FromBody] LoginRequest loginRequest) 
-        {            
-            try 
-            { 
-                var response =  _LogInService.Log_In(loginRequest);
-                if (response is null) return BadRequest();
-                    return Ok(response);
+        public ActionResult<TokenResponseDto> Log_In([FromBody] LoginRequest loginRequest)
+        {
+            try
+            {
+                var response = _LogInService.Log_In(loginRequest);
+                if (response is ErrorResponse) return BadRequest();
+                return Ok(response);
             }
-            catch (Exception ex) { 
+            catch (Exception ex) {
+                return BadRequest(ex.Message);
+            }
+        }
+        
+        [HttpPost("WarehouseLogIn")]
+        [ProducesResponseType(typeof(LogInLoginResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        public ActionResult<TokenResponseDto> Log_In_Warehouse([FromBody] LoginRequest loginRequest)
+        {
+            try
+            {
+                var response = _LogInService.Log_In_Warehouse(loginRequest);
+                if (response is ErrorResponse) return BadRequest();
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
                 return BadRequest(ex.Message);
             }
         }
@@ -45,14 +94,15 @@ namespace Prokast.Server.Controllers
 
         #region GetAll
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "1,2,3,4,5")]
         [ProducesResponseType(typeof(LogInGetResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
-        public ActionResult<Response> GetAll([FromQuery] int clientID) 
+        public ActionResult<Response> GetAll() 
         {
+            var clientIdFromToken = GetClientIdFromToken();
             try
             {
-                var logins = _LogInService.GetLogIns(clientID);
+                var logins = _LogInService.GetLogIns(clientIdFromToken);
                 if (logins is ErrorResponse) return BadRequest(logins);
                 return Ok(logins);
             }
@@ -63,14 +113,16 @@ namespace Prokast.Server.Controllers
         }
         #endregion
         [HttpPost("create")]
-        [Authorize]
+        [Authorize(Roles = "1,2,3,4,5")]
         [ProducesResponseType(typeof(Response), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
-        public ActionResult<Response> CreateAccount([FromBody] AccountCreateDto accountCreate,[FromQuery] int clientID)
+        public ActionResult<Response> CreateAccount([FromBody] AccountCreateDto accountCreate, [FromQuery] string mail)
         {
+            var clientIdFromToken = GetClientIdFromToken();
+
             try
             {
-                var result = _LogInService.CreateAccount(accountCreate, clientID);
+                var result = _LogInService.CreateAccount(accountCreate, clientIdFromToken, mail);
                 if (result is ErrorResponse) return BadRequest(result);
                 return Ok(result);
             }
@@ -80,18 +132,20 @@ namespace Prokast.Server.Controllers
             }
         }
         [HttpPut]
-        [Authorize]
+        [Authorize(Roles = "1,2,3,4,5")]
         [ProducesResponseType(typeof(AccountEditResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
-        public ActionResult<Response> EditAccount([FromBody] AccountEditDto accountEdit, [FromQuery] int clientID)
+        public ActionResult<Response> EditAccount([FromBody] AccountEditDto accountEdit)
         {
+            var clientIdFromToken = GetClientIdFromToken();
+
             if (!ModelState.IsValid)
             {
                 return BadRequest("Błędne dane");
             }
             try
             {
-                var result = _LogInService.EditAccount(accountEdit, clientID);
+                var result = _LogInService.EditAccount(accountEdit, clientIdFromToken);
                 if (result is ErrorResponse) return BadRequest(result);
 
                 if (result == null) return NotFound(result);
@@ -103,18 +157,20 @@ namespace Prokast.Server.Controllers
             }
         }
         [HttpPut("Password")]
-        [Authorize]
+        [Authorize(Roles = "1,2,3,4,5")]
         [ProducesResponseType(typeof(AccountEditPasswordResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
-        public ActionResult<Response> EditPassword([FromBody] AccountEditPasswordDto editPasswordDto, [FromQuery] int clientID)
+        public ActionResult<Response> EditPassword([FromBody] AccountEditPasswordDto editPasswordDto)
         {
+            var clientIdFromToken = GetClientIdFromToken();
+
             if (!ModelState.IsValid)
             {
                 return BadRequest("Błędne dane");
             }
             try
             {
-                var result = _LogInService.EditPassword(editPasswordDto, clientID);
+                var result = _LogInService.EditPassword(editPasswordDto, clientIdFromToken);
                 if (result is ErrorResponse) return BadRequest(result);
 
                 if (result == null) return NotFound(result);
@@ -126,14 +182,82 @@ namespace Prokast.Server.Controllers
             }
         }
         [HttpDelete("{ID}")]
-        [Authorize]
+        [Authorize(Roles = "1,2,3,4,5")]
         [ProducesResponseType(typeof(DeleteResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
-        public ActionResult<Response> DeleteAccount([FromQuery] int clientID, [FromRoute] int ID)
+        public ActionResult<Response> DeleteAccount( [FromRoute] int ID)
         {
+            var clientIdFromToken = GetClientIdFromToken();
+
             try
             {
-                var result = _LogInService.DeleteAccount(clientID, ID);
+                var result = _LogInService.DeleteAccount(clientIdFromToken, ID);
+                if (result is ErrorResponse) return BadRequest(result);
+
+                if (result == null) return NotFound(result);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("Role")]
+        [Authorize(Roles = "1,2,3,4,5")]
+        [ProducesResponseType(typeof(ParamsGetResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        public ActionResult<Response> GetAllRoles()
+        {
+            var clientIdFromToken = GetClientIdFromToken();
+
+            try
+            {
+                var result = _LogInService.GetAllRoles(clientIdFromToken);
+                if (result is ErrorResponse) return BadRequest(result);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("Role/{ID}")]
+        [Authorize(Roles = "1,2,3,4,5")]
+        [ProducesResponseType(typeof(ParamsGetResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        public ActionResult<Response> GetRole([FromRoute]int ID)
+        {
+            var clientIdFromToken = GetClientIdFromToken();
+
+            try
+            {
+                var result = _LogInService.GetRole(clientIdFromToken, ID);
+                if (result is ErrorResponse) return BadRequest(result);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("EditRole")]
+        [Authorize(Roles = "1,2,3")]
+        [ProducesResponseType(typeof(AccountEditResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        public ActionResult<Response> EditRole( int accountID, int newRoleID)
+        {
+            var clientIdFromToken = GetClientIdFromToken();
+            var roleIDFromToken = GetRoleIdFromToken();
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Błędne dane");
+            }
+            try
+            {
+                var result = _LogInService.EditRole(clientIdFromToken, accountID, newRoleID, roleIDFromToken);
                 if (result is ErrorResponse) return BadRequest(result);
 
                 if (result == null) return NotFound(result);
@@ -153,7 +277,7 @@ namespace Prokast.Server.Controllers
         }
 
         [HttpGet("admin-only")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "3")]
         public IActionResult AdminOnlyEndpoint()
         {
             return Ok("You are and admin!");

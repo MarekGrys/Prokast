@@ -179,7 +179,7 @@ namespace Prokast.Server.Services
             return response;
         }*/
 
-        public Response CreateProduct(ProductCreateDto productCreateDto, int clientID, int regionID)
+        public Response CreateProduct(ProductCreateDto productCreateDto, int clientID)
         {
             if (productCreateDto == null)
                 return new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Błędnie podane dane" };
@@ -204,7 +204,7 @@ namespace Prokast.Server.Services
 
             foreach(var additionalDescription in productCreateDto.AdditionalDescriptions)
             {
-                var result = _additionalDescriptionService.CreateAdditionalDescription(additionalDescription, clientID, regionID, newProduct.ID);
+                var result = _additionalDescriptionService.CreateAdditionalDescription(additionalDescription, clientID, newProduct.ID);
                 if (result != null && result.GetType() == typeof(ErrorResponse))
                 {
                     return result;
@@ -213,7 +213,7 @@ namespace Prokast.Server.Services
 
             foreach(var additionalName in productCreateDto.AdditionalNames)
             {
-               var result = _additionalNameService.CreateAdditionalName(additionalName, clientID, regionID, newProduct.ID);
+               var result = _additionalNameService.CreateAdditionalName(additionalName, clientID, newProduct.ID);
                 if (result != null && result.GetType() == typeof(ErrorResponse))
                 {
                     return result;
@@ -223,7 +223,7 @@ namespace Prokast.Server.Services
 
             foreach(var customParam in productCreateDto.CustomParams)
             {
-                var result = _paramsService.CreateCustomParam(customParam, clientID, regionID, newProduct.ID);
+                var result = _paramsService.CreateCustomParam(customParam, clientID, newProduct.ID);
                 if (result != null && result.GetType() == typeof(ErrorResponse))
                 {
                     return result;
@@ -292,7 +292,7 @@ namespace Prokast.Server.Services
 
             if (products.Count() == 0)
             {
-                return new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Brak produktów!" };    
+                return new Response() { ID = random.Next(1, 100000), ClientID = clientID };
             }
 
             var productList = result.Items.Select(x => new ProductGetMin
@@ -301,10 +301,13 @@ namespace Prokast.Server.Services
                 Name = x.Name,
                 SKU = x.SKU,
                 AdditionDate = x.AdditionDate,
-                Photo = x.Photos?.FirstOrDefault().Value
+                Photo = x.Photos.Select(p => p.Value).FirstOrDefault(),
+                EAN = x.EAN,
+                Description = x.Description
             }).ToList();
 
-            return new ProductGetMinResponse() { ID = random.Next(1, 100000), Model = productList };
+
+            return new ProductGetMinResponse() { ID = random.Next(1, 100000), Model = productList, TotalItems = result.TotalItems };
         }
 
             /*var responseNull = new ErrorResponse() { ID = random.Next(1, 100000), ClientID = clientID, errorMsg = "Błędnie podane dane" };

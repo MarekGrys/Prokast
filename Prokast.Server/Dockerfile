@@ -2,12 +2,12 @@
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
 
-# Skopiuj projekt API i przywróć zależności
-COPY Prokast.Server.csproj ./
-RUN dotnet restore Prokast.Server.csproj
+# Kopiujemy tylko plik csproj, żeby warstwa restore dobrze się keszowała
+COPY *.csproj ./
+RUN dotnet restore
 
-# Skopiuj resztę kodu projektu
-COPY . ./
+# Kopiujemy cały kod
+COPY . .
 RUN dotnet publish Prokast.Server.csproj -c Release -o /app/publish
 
 # Etap 2: runtime

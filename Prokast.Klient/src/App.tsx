@@ -9,21 +9,142 @@ import CreateEmployee from './pages/CreateEmployee';
 import PriceList from './pages/PriceList';
 import ProductsList from './pages/ProductsList';
 import AddProducts from './pages/AddProducts';
+import EditProducts from './pages/EditProducts';
+import ProtectedRoute from './Components/ProtectedRoute';
+import UsersList from './pages/UsersList';
+import WarehouseEdit from './pages/EditWarehouse';
+import AddWarehouse from './pages/AddWarehouse';
+import CreateProduct from './pages/CreateProduct';
+import WarehouseList from './pages/WarehouseList';
 
 function App() {
   return (
     <Router>
       <Routes>
+        {/* Publiczna ścieżka (logowanie / rejestracja) */}
         <Route path="/" element={<Home />} />
-        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/RegisterForm" element={<RegisterForm />} />
-        <Route path="/AddParams" element={<AddParams/>} />
-        <Route path="/DictionaryParams" element={<DictionaryParams />} />
-        <Route path="/EditParams" element={<EditParams />} />
-        <Route path="/CreateEmployee" element={<CreateEmployee />} />
-        <Route path="/PriceList" element={<PriceList />} />
-        <Route path="/ProductsList" element={<ProductsList />} />
-        <Route path="/AddProducts" element={<AddProducts />} />
+
+        {/* Chronione ścieżki */}
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/AddParams"
+          element={
+            <ProtectedRoute>
+              <AddParams />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/DictionaryParams"
+          element={
+            <ProtectedRoute>
+              <DictionaryParams />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/EditParams"
+          element={
+            <ProtectedRoute>
+              <EditParams />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/CreateEmployee"
+          element={
+            <ProtectedRoute>
+              <CreateEmployee />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/PriceList"
+          element={
+            <ProtectedRoute>
+              <PriceList />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/CreateProduct"
+          element={
+            <ProtectedRoute>
+              <CreateProduct />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/ProductsList"
+          element={
+            <ProtectedRoute>
+              <ProductsList />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/WarehouseList"
+          element={
+            <ProtectedRoute>
+              <WarehouseList />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/AddProducts"
+          element={
+            <ProtectedRoute>
+              <AddProducts />
+            </ProtectedRoute>
+      
+          }
+        />
+        <Route
+          path="/EditProducts/:id"
+          element={
+            <ProtectedRoute>
+              <EditProducts />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/UsersList"
+          element={
+            <ProtectedRoute>
+              <UsersList />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/EditWarehouse/:id"
+          element={
+            <ProtectedRoute>
+              <WarehouseEdit />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/AddWarehouse"
+          element={
+            <ProtectedRoute>
+              <AddWarehouse />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* 404 */}
+        <Route path="*" element={<h1>404 Not Found</h1>} />
       </Routes>
     </Router>
   );
